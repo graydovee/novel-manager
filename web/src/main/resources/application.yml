@@ -1,0 +1,16 @@
+server:
+  port: 8088
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://cdb-qx80diyu.cd.tencentcdb.com:10017/book?useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: Du87688524
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+
+logging:
+  path: ./logs
