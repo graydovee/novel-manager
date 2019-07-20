@@ -40,8 +40,9 @@ public class ChapterServiceImpl implements ChapterService {
         List<Map<String,Object>> listMap = new ArrayList<>();
         for(Object[] o:list){
             Map<String,Object> map = new HashMap<>();
-            map.put("nextPage",o[0]);
-            map.put("title",o[1]);
+            map.put("id",o[0]);
+            map.put("thisPage",o[1]);
+            map.put("title",o[2]);
             map.put("bookId",bookId);
             listMap.add(map);
         }
