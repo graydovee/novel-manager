@@ -50,9 +50,13 @@ public class WebApplicationTests {
 //        System.out.println(book);
 //        System.out.println(bookService.selBookByName("天牧"));
 //        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
-//        Chapter chapter1 = chapterRepository.findById(book.getFirstChapter()).get();
+//        System.out.println(book);
+//        Book book = bookRepository.selBookByName("天").get(0);
+//        List<Book> books = bookRepository.findAll();
+//        System.out.println(books);
+//        Chapter chapter1 = chapterRepository.findById(2).get();
 //        System.out.println(chapter1);
-//        Chapter chapter2 =  chapterRepository.selChapterByThisPage(chapter1.getNextPage());
+//        Chapter chapter2 =  chapterRepository.selChapterByThisPage(chapter1.getNextPage(),book.getId());
 //        System.out.println(chapter2);
 //        book.setType(1143);
 //        bookRepository.save(book);

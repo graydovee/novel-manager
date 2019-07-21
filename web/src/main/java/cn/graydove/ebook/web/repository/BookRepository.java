@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecificationExecutor<Book> {
 
-    @Query("from Book where name like %?1%")
+    @Query("from Book where name like %?1% or author like %?1%")
     List<Book> selBookByName(String name);
 
     @Query("from Book where name=?1 and author=?2")
