@@ -23,10 +23,10 @@ public class Book {
     @Column(name = "name", columnDefinition = "varchar(255) not null")
     private String name;
 
-    @Column(name = "author", columnDefinition = "varchar(255) default ''")
-    private String author;
+    @Column(name = "author")
+    private Integer author;
 
-    @Column(name = "type", columnDefinition = "int default 0")
+    @Column(name = "type")
     private Integer type;
 
     @Column(name = "first_chapter", columnDefinition = "int default 0")

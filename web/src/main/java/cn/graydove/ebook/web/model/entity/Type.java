@@ -19,6 +19,6 @@ public class Type {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column
+    @Column(name = "name")
     private String name;
 }

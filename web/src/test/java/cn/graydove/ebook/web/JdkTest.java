@@ -14,12 +14,12 @@ public class JdkTest {
         List<Book> books = new ArrayList<>();
 
         Book book = new Book();
-        book.setAuthor("222");
+//        book.setAuthor("222");
         book.setName("111");
         book.setFirstChapter(1);
         books.add(book);
 
-        book.setAuthor("333");
+//        book.setAuthor("333");
         book.setName("222");
         book.setFirstChapter(2);
         books.add(book);

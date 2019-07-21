@@ -1,8 +1,10 @@
 package cn.graydove.ebook.web;
 
+import cn.graydove.ebook.web.model.entity.Author;
 import cn.graydove.ebook.web.model.entity.Book;
 import cn.graydove.ebook.web.model.entity.Chapter;
 import cn.graydove.ebook.web.model.entity.Type;
+import cn.graydove.ebook.web.repository.AuthorRepository;
 import cn.graydove.ebook.web.repository.BookRepository;
 import cn.graydove.ebook.web.repository.ChapterRepository;
 import cn.graydove.ebook.web.repository.TypeRepository;
@@ -37,8 +39,18 @@ public class WebApplicationTests {
     @Autowired
     private BookService bookService;
 
+    @Autowired
+    private AuthorRepository authorRepository;
+
     @Test
     public void contextLoads() {
+    }
+
+    @Test
+    public void viewTest(){
+//        List<Book> books = bookRepository.findAll();
+        System.out.println(bookRepository.selBookVOByNameAndAuthor("天牧","厌笔萧生"));
+
     }
 
     @Test

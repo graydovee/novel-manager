@@ -36,7 +36,7 @@ public class SpiderServiceImpl implements SpiderService {
 
         book = new Book();
         book.setName(bookName);
-        book.setAuthor(author);
+//        book.setAuthor(author);
         bookRepository.save(book);
 
         book = bookRepository.selBookByNameAndAuthor(bookName, author);
