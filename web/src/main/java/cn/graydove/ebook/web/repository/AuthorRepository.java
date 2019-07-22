@@ -8,4 +8,7 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
     @Query("select count(id) from Author where name=?1")
     Integer countAuthorByName(String name);
+
+    @Query("from Author where name=?1")
+    Author findByAuthorName(String name);
 }

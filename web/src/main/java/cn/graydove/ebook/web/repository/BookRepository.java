@@ -12,7 +12,7 @@ public interface BookRepository extends JpaRepository<Book, Integer>, JpaSpecifi
     @Query("from Book where name like %?1% or author.name like %?1%")
     List<Book> selBookByName(String name);
 
-    @Query("from Book where name=?1 and author.name=?2")
+    @Query("from Book book where book.name=?1 and book.author.name=?2")
     Book selBookByNameAndAuthor(String name, String author);
 
 }

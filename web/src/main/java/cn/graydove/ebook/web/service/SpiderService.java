@@ -1,5 +1,5 @@
 package cn.graydove.ebook.web.service;
 
 public interface SpiderService {
-    void downBook(String bookName, String author, String bookId, String firstPage, String finalPage);
+    void downBook(String bookName, String authorName, String bookId, String firstPage, String finalPage);
 }

@@ -99,7 +99,8 @@ public class WebApplicationTests {
 
     @Test
     public void serviceTest(){
-//        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
+        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
+        System.out.println(book);
 //        Book book = bookRepository.selBookByNameAndAuthor("遮天","辰东");
 //        Chapter c = chapterService.getFirstChapter(book);
 //        System.out.println(StringUtils.formatContent(c.getContent()));

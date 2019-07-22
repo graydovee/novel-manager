@@ -1,5 +1,7 @@
 package cn.graydove.ebook.web.service.impl;
 
+import cn.graydove.ebook.web.model.entity.Author;
+import cn.graydove.ebook.web.repository.AuthorRepository;
 import cn.graydove.ebook.web.repository.BookRepository;
 import cn.graydove.ebook.web.repository.ChapterRepository;
 import cn.graydove.ebook.web.service.SpiderService;
@@ -25,21 +27,30 @@ public class SpiderServiceImpl implements SpiderService {
     @Autowired
     private ChapterRepository chapterRepository;
 
+    @Autowired
+    private AuthorRepository authorRepository;
+
     @Async
     @Override
-    public void downBook(@NonNull String bookName, @NonNull String author, @NonNull String bookNumber, @NonNull String firstPage, @NonNull String finalPage) {
-        Book book = bookRepository.selBookByNameAndAuthor(bookName, author);
+    public void downBook(@NonNull String bookName, @NonNull String authorName, @NonNull String bookNumber, @NonNull String firstPage, @NonNull String finalPage) {
+        Book book = bookRepository.selBookByNameAndAuthor(bookName, authorName);
 
         if (book != null){
             return;
         }
 
+        Author author = authorRepository.findByAuthorName(authorName);
+
+        if(author==null){
+            author = new Author();
+            author.setName(authorName);
+            authorRepository.save(author);
+        }
+
         book = new Book();
         book.setName(bookName);
-//        book.setAuthor(author);
+        book.setAuthor(author);
         bookRepository.save(book);
-
-        book = bookRepository.selBookByNameAndAuthor(bookName, author);
 
         NovelSpider spider = new BiqugeSpider(bookNumber, firstPage);
 
