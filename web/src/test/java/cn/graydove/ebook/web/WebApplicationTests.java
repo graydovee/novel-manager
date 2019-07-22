@@ -2,7 +2,6 @@ package cn.graydove.ebook.web;
 
 import cn.graydove.ebook.web.model.entity.Author;
 import cn.graydove.ebook.web.model.entity.Book;
-import cn.graydove.ebook.web.model.entity.Chapter;
 import cn.graydove.ebook.web.model.entity.Type;
 import cn.graydove.ebook.web.repository.AuthorRepository;
 import cn.graydove.ebook.web.repository.BookRepository;
@@ -10,8 +9,6 @@ import cn.graydove.ebook.web.repository.ChapterRepository;
 import cn.graydove.ebook.web.repository.TypeRepository;
 import cn.graydove.ebook.web.service.BookService;
 import cn.graydove.ebook.web.service.ChapterService;
-import cn.graydove.ebook.web.utils.StringUtils;
-import lombok.ToString;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,30 +45,30 @@ public class WebApplicationTests {
 
     @Test
     public void viewTest(){
-        Book book = new Book();
-        Author author = new Author();
-        book.setName("天牧");
-        author.setName("厌笔萧生");
-        authorRepository.save(author);
-        book.setAuthor(author);
-        Type type1 = new Type();
-        type1.setName("玄幻");
-        Type type2 = new Type();
-        type2.setName("其他");
-
-        typeRepository.save(type1);
-        typeRepository.save(type2);
-
-        book.getType().add(type1);
-        book.getType().add(type2);
-
-        bookRepository.save(book);
-        System.out.println(book);
-
-        Book book2 = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
-        System.out.println(book2);
-        List<Book> books = bookRepository.findAll();
-        System.out.println(books);
+//        Book book = new Book();
+//        Author author = new Author();
+//        book.setName("天牧");
+//        author.setName("厌笔萧生");
+//        authorRepository.save(author);
+//        book.setAuthor(author);
+//        Type type1 = new Type();
+//        type1.setName("玄幻");
+//        Type type2 = new Type();
+//        type2.setName("其他");
+//
+//        typeRepository.save(type1);
+//        typeRepository.save(type2);
+//
+//        book.getType().add(type1);
+//        book.getType().add(type2);
+//
+//        bookRepository.save(book);
+//        System.out.println(book);
+//
+//        Book book2 = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
+//        System.out.println(book2);
+//        List<Book> books = bookRepository.findAll();
+//        System.out.println(books);
     }
 
     @Test
@@ -82,9 +79,9 @@ public class WebApplicationTests {
 //        bookRepository.save(book);
 //        System.out.println(book);
 //        System.out.println(bookService.selBookByName("天牧"));
-        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
-        System.out.println(book);
-        bookRepository.delete(book);
+//        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
+//        System.out.println(book);
+//        bookRepository.delete(book);
 //        Book book = bookRepository.selBookByName("天").get(0);
 //        List<Book> books = bookRepository.findAll();
 //        System.out.println(books);
