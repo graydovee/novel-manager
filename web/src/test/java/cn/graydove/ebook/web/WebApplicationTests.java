@@ -100,8 +100,8 @@ public class WebApplicationTests {
 //        System.out.println();
     }
 
-//    @Test
-//    public void serviceTest(){
+    @Test
+    public void serviceTest(){
 //        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
 //        Book book = bookRepository.selBookByNameAndAuthor("遮天","辰东");
 //        Chapter c = chapterService.getFirstChapter(book);
@@ -113,7 +113,7 @@ public class WebApplicationTests {
 //            c = chapterService.getNextChapter(c);
 //        }
 //        System.out.println(StringUtils.formatContent(c.getContent()));
-//    }
+    }
 
 //    @Test
 //    public void unique(){

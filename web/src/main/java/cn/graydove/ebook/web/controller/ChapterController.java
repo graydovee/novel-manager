@@ -3,6 +3,7 @@ package cn.graydove.ebook.web.controller;
 import cn.graydove.ebook.web.model.dto.BookDTO;
 import cn.graydove.ebook.web.model.dto.ChapterDTO;
 import cn.graydove.ebook.web.model.entity.Chapter;
+import cn.graydove.ebook.web.model.vo.ChapterVO;
 import cn.graydove.ebook.web.service.ChapterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public class ChapterController {
     }
 
     @GetMapping("/all_chapter")
-    public List<Map<String,Object>>  getAllChapter(Integer bookId){
+    public List<ChapterVO>  getAllChapter(Integer bookId){
         return chapterService.findAllByBookId(bookId);
     }
 }

@@ -2,6 +2,7 @@ package cn.graydove.ebook.web.service.impl;
 
 import cn.graydove.ebook.web.model.entity.Book;
 import cn.graydove.ebook.web.model.entity.Chapter;
+import cn.graydove.ebook.web.model.vo.ChapterVO;
 import cn.graydove.ebook.web.repository.ChapterRepository;
 import cn.graydove.ebook.web.service.ChapterService;
 import cn.graydove.ebook.web.utils.OptionalUtils;
@@ -35,18 +36,8 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public List<Map<String,Object>> findAllByBookId(Integer bookId){
-        List<Object[]> list = chapterRepository.findAllChapterByBookId(bookId);
-        List<Map<String,Object>> listMap = new ArrayList<>();
-        for(Object[] o:list){
-            Map<String,Object> map = new HashMap<>();
-            map.put("id",o[0]);
-            map.put("thisPage",o[1]);
-            map.put("title",o[2]);
-            map.put("bookId",bookId);
-            listMap.add(map);
-        }
-        return listMap;
+    public List<ChapterVO> findAllByBookId(Integer bookId){
+        return chapterRepository.findAllChapterByBookId(bookId);
     }
 
 }

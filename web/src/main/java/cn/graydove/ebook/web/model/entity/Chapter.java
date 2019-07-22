@@ -1,15 +1,10 @@
 package cn.graydove.ebook.web.model.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Setter
-@Getter
-@ToString
+@Data
 @EqualsAndHashCode
 @Table(name = "chapter")
 @Entity
