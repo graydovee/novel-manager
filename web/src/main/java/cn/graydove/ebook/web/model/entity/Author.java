@@ -11,6 +11,7 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     Integer id;
 
     @Column(name = "name")

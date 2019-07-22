@@ -1,17 +1,22 @@
 package cn.graydove.ebook.web;
 
 import cn.graydove.ebook.web.model.dto.BookDTO;
+import cn.graydove.ebook.web.model.dto.TypeDTO;
+import cn.graydove.ebook.web.model.dto.base.BaseDTO;
 import cn.graydove.ebook.web.model.entity.Book;
 import cn.graydove.ebook.web.model.entity.Chapter;
+import cn.graydove.ebook.web.model.entity.Type;
 import cn.graydove.ebook.web.repository.BookRepository;
 import cn.graydove.ebook.web.repository.ChapterRepository;
 import cn.graydove.ebook.web.service.ChapterService;
+import cn.graydove.ebook.web.utils.ReflectUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import sun.reflect.misc.ReflectUtil;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -19,8 +24,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -76,5 +80,13 @@ public class ReflectTests {
         System.out.println(bookDTO);
         Book b = bookDTO.writeToDomain();
         System.out.println(b);
+    }
+
+    @Test
+    public void transTest2(){
+        Book book = bookRepository.selBookByNameAndAuthor("天牧","厌笔萧生");
+        BookDTO bookDTO = new BookDTO().init(book);
+//        System.out.println(ReflectUtils.getParameterizedType(HashSet.class));
+        System.out.println(bookDTO);
     }
 }

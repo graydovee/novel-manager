@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@EqualsAndHashCode
 public class StatusDTO {
     private Integer code;
     private String info;

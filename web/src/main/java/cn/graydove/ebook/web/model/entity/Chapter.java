@@ -17,6 +17,7 @@ public class Chapter {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "book_id", columnDefinition = "int not null")

@@ -10,14 +10,12 @@ import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
+@SuppressWarnings("unchecked")
 public class ReflectUtils {
 
     private ReflectUtils(){
@@ -54,11 +52,52 @@ public class ReflectUtils {
         return map;
     }
 
+    public static Type[] getCollectionType(Class c, String fieldName){
+        Field listField;
+        Type[] listActualTypeArguments = new Type[0];
+        try {
+            listField = c.getDeclaredField(fieldName);
+        } catch (NoSuchFieldException e) {
+            log.error(e.getMessage(),e);
+            return listActualTypeArguments;
+        }
+        //获取 fieldName 字段的泛型参数
+        ParameterizedType listGenericType = (ParameterizedType) listField.getGenericType();
+        listActualTypeArguments = listGenericType.getActualTypeArguments();
+        return listActualTypeArguments;
+    }
+
     public static void setValues(Object obj, Map<String, Object> map){
         for (PropertyDescriptor descriptor : ReflectUtils.getDescriptors(obj)) {
             Method writeMethod = descriptor.getWriteMethod();
+            Class clazz = descriptor.getPropertyType();
             try {
-                writeMethod.invoke(obj,map.get(descriptor.getName()));
+                Object value = map.get(descriptor.getName());
+
+                if(BaseDTO.class.isAssignableFrom(clazz)){
+                    //如果属性是DOMAIN则转化为相应DTO
+                    BaseDTO baseDTO = newBean((Class<BaseDTO>) clazz);
+                    if(baseDTO!=null)
+                        writeMethod.invoke(obj, baseDTO.init(value));
+                } else if(Collection.class.isAssignableFrom(clazz)){
+                    //如果属性是Collection,且容器内的值的属性类型为DOMAIN,则转化为相应DTO的容器
+
+                    Class type = (Class) getCollectionType(obj.getClass(),descriptor.getName())[0];
+                    if(BaseDTO.class.isAssignableFrom(type)){
+                        Collection domainCollection = (Collection) value;
+                        Collection dtoCollection = (Collection)descriptor.getReadMethod().invoke(obj);
+                        for (Object o : domainCollection){
+                            BaseDTO baseDTO = newBean((Class<BaseDTO>) type);
+                            if (baseDTO != null)
+                                dtoCollection.add(baseDTO.init(o));
+                        }
+                    }else {
+
+                        writeMethod.invoke(obj, value);
+                    }
+                } else {
+                    writeMethod.invoke(obj, value);
+                }
             } catch (IllegalAccessException | InvocationTargetException e) {
                 log.error(e.getMessage(),e);
             }
