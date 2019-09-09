@@ -1,6 +1,6 @@
-package com.ndovel.ebook.spider.connect;
+package com.ndovel.ebook.spider.util;
 
-import com.ndovel.ebook.spider.exception.RequestException;
+import com.ndovel.ebook.exception.RequestException;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -26,9 +26,9 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 
-public class HttpClientUtil {
+public class HttpClientUtils {
 
-    private HttpClientUtil() {
+    private HttpClientUtils() {
 
     }
 

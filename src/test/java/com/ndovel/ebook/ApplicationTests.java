@@ -1,7 +1,11 @@
 package com.ndovel.ebook;
 
-import com.ndovel.ebook.model.entity.Author;
-import com.ndovel.ebook.repository.AuthorRepository;
+import com.ndovel.ebook.model.dto.*;
+import com.ndovel.ebook.model.entity.*;
+import com.ndovel.ebook.repository.*;
+import com.ndovel.ebook.service.AsyncSpiderService;
+import com.ndovel.ebook.spider.core.AbstractSpider;
+import com.ndovel.ebook.spider.core.impl.CommonSpider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +21,25 @@ public class ApplicationTests {
 	@Autowired
 	AuthorRepository authorRepository;
 
+	@Autowired
+	MatchRexRepository matchRexRepository;
+
+	@Autowired
+	BookRepository bookRepository;
+
+	@Autowired
+	ContentRepository contentRepository;
+
+	@Autowired
+	ChapterRepository chapterRepository;
+
+	@Autowired
+	AsyncSpiderService asyncSpiderService;
+
+
 	@Test
 	public void contextLoads() {
+
 	}
 
 	@Test
@@ -38,4 +59,29 @@ public class ApplicationTests {
 		System.out.println("1:"+authorRepository.findOneIsExist(2));
 	}
 
+	@Test
+	public void testSpider(){
+		MatchRex matchRex;
+		matchRex = new MatchRex();
+
+		matchRex.setContentRex("<div id=\"content\">([\\s\\S]*)<");
+		matchRex.setTitleRex("<h1>(.*)</h1>");
+		matchRex.setNextPageRex("<a[^<]*href=\"([^<]*.html)\"[^<]*>下一章</a>");
+		matchRex.setName("笔趣阁爬虫方案");
+		matchRex.setInfo("可以爬取笔趣阁的小说");
+		matchRexRepository.save(matchRex);
+
+		MatchRex m = matchRexRepository.findOneByName("笔趣阁爬虫方案");
+		System.out.println(m);
+		MatchRexDTO matchRexDTO = new MatchRexDTO();
+		matchRexDTO.init(m);
+		System.out.println(matchRexDTO);
+
+		BookDTO book = new BookDTO();
+		book.setName("盖世帝尊");
+		AuthorDTO author = new AuthorDTO("一叶青天");
+		book.setAuthor(author);
+
+		asyncSpiderService.downBook(book, "https://www.bequge.com/10_10771/13420103.html", "gbk", matchRex.getId());
+	}
 }

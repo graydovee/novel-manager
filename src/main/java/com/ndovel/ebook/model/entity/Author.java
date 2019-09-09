@@ -1,9 +1,7 @@
 package com.ndovel.ebook.model.entity;
 
 import com.ndovel.ebook.model.entity.base.BaseEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,8 +10,10 @@ import javax.persistence.*;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Author extends BaseEntity {
 
     @Column(name = "name")
-    String name;
+    private String name;
 }

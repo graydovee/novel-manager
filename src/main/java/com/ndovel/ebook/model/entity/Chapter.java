@@ -15,11 +15,8 @@ public class Chapter extends BaseEntity {
     @Column(name = "book_id", columnDefinition = "int not null")
     private Integer bookId;
 
-    @Column(name = "this_page", columnDefinition = "varchar(255) default ''")
-    private String thisPage;
-
-    @Column(name = "next_page", columnDefinition = "varchar(255) default ''")
-    private String nextPage;
+    @Column(name = "next_chapter")
+    private Integer nextChapterId;
 
     @Column(name = "content_id", columnDefinition = "int not null")
     private Integer contentId;

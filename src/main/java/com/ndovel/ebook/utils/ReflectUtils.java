@@ -89,6 +89,43 @@ public class ReflectUtils {
                                 dtoCollection.add(baseDTO.init(o));
                         }
                     }else {
+                        writeMethod.invoke(obj, value);
+                    }
+                } else {
+                    writeMethod.invoke(obj, value);
+                }
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                log.error(e.getMessage(),e);
+            }
+        }
+    }
+
+    public static void setValuesToDOMAIN(Object obj, Map<String, Object> map, Class clazz){
+        for (PropertyDescriptor descriptor : ReflectUtils.getDescriptors(obj)) {
+            Method writeMethod = descriptor.getWriteMethod();
+            try {
+                Object value = map.get(descriptor.getName());
+                if(value==null)
+                    continue;
+
+                if(BaseDTO.class.isAssignableFrom(value.getClass())){
+                    //如果属性是DTO则转化为相应DOMAIN
+                    value = ((BaseDTO)value).writeToDomain();
+                    if(value!=null)
+                        writeMethod.invoke(obj, value);
+                } else if(Collection.class.isAssignableFrom(value.getClass())){
+                    //如果属性是Collection,且容器内的值的属性类型为DTO,则转化为相应DOMAIN的容器
+
+                    Class type = (Class) getCollectionType(clazz,descriptor.getName())[0];
+                    if(BaseDTO.class.isAssignableFrom(type)){
+                        Collection dtoCollection = (Collection) value;
+                        Collection domainCollection = (Collection)descriptor.getReadMethod().invoke(obj);
+                        for (Object o : dtoCollection){
+                            Object baseEntity = ((BaseDTO)o).writeToDomain();
+                            if (baseEntity != null)
+                                domainCollection.add(baseEntity);
+                        }
+                    }else {
 
                         writeMethod.invoke(obj, value);
                     }

@@ -1,4 +1,4 @@
-package com.ndovel.ebook.excepition;
+package com.ndovel.ebook.exception;
 
 public class BeanUtilsException extends RuntimeException {
     public BeanUtilsException() {

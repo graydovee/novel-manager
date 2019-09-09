@@ -1,87 +1,111 @@
 package com.ndovel.ebook.spider.core;
 
 
-import com.ndovel.ebook.spider.NovelSpider;
-import com.ndovel.ebook.spider.connect.HttpClientUtil;
+import com.ndovel.ebook.model.dto.ChapterDTO;
+import com.ndovel.ebook.model.dto.ContentDTO;
+import com.ndovel.ebook.spider.util.HttpClientUtils;
+import com.ndovel.ebook.spider.util.UrlUtils;
+import com.ndovel.ebook.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public abstract class AbstractSpider implements NovelSpider {
-    protected static String url;
-    protected static String encode = "utf-8";
+    protected String url;
+    protected boolean urlUes = false;
+    protected Encode encode = Encode.UTF8;
 
-    private String bookId;
-    private String nextPage;
-    private String title;
-    private String content;
+    protected Integer bookId;
+    protected ChapterDTO chapter;
+    protected ContentDTO content;
 
-    protected AbstractSpider(String bookId, String page) {
+    protected AbstractSpider(Integer bookId, String firstPageUrl) {
         this.bookId = bookId;
-        this.nextPage = page;
+
+        this.url = UrlUtils.urlFormat(firstPageUrl);
     }
 
     private String getFullPath() {
-
-        if (bookId == null || nextPage == null)
-            return null;
-
-        if (bookId.startsWith("/")) {
-            bookId = bookId.substring(1);
-        }
-
-        if (bookId.endsWith("/")) {
-            bookId = bookId.substring(0, bookId.length() - 1);
-        }
-
-        if (nextPage.lastIndexOf('/') > 0)
-            nextPage = nextPage.substring(nextPage.lastIndexOf('/'));
-
-        return url + bookId + "/" + nextPage;
+        return UrlUtils.urlFormat(url);
     }
 
     protected String getHtmlCode() {
-        return HttpClientUtil.get(getFullPath(), encode);
+        return HttpClientUtils.get(getFullPath(), encode.value);
     }
 
 
-    @Override
-    public boolean hasNext() {
-        return nextPage != null;
-    }
 
-    @Override
-    public String getNextPage() {
-        return this.nextPage;
-    }
-
-    protected abstract String getConetntFormCode(String code);
+    protected abstract String getContentFormCode(String code);
 
     protected abstract String getTitleFormCode(String code);
 
-    protected abstract String getNextpageFormCode(String code);
+    protected abstract String getNextPageFormCode(String code);
 
     @Override
-    public void nextPage() {
+    public boolean hasNext() {
+        return !StringUtils.isEmpty(url) && !isUrlUes();
+    }
 
-        if (nextPage == null) {
-            this.content = null;
-            this.title = null;
+    public void setNewUrl(String url){
+        this.url = url;
+        urlUes = false;
+    }
+
+    @Override
+    public void run() {
+        if(this.urlUes){
             return;
         }
+
+        this.urlUes = true;
+
+        //获取页面源代码
         String code = getHtmlCode();
+
         if (code == null) {
             return;
         }
-        this.content = getConetntFormCode(code);
 
-        this.title = getTitleFormCode(code);
+        //获取正文内容
+        String content = getContentFormCode(code);
 
-        this.nextPage = getNextpageFormCode(code);
+        if (StringUtils.isEmpty(content)) {
+            return;
+        }
 
-        if(this.content == null){
-            this.nextPage = null;
+        //重新初始化
+        this.content = new ContentDTO();
+        this.chapter = new ChapterDTO();
+        this.chapter.setBookId(bookId);
+
+
+        this.content.setInfo(content);
+
+        if(StringUtils.isEmpty(content)){
+            this.chapter = null;
+            this.content = null;
+            return;
+        }
+
+        this.chapter.setTitle(getTitleFormCode(code));
+
+        String nextPage = getNextPageFormCode(code);
+
+        if(!StringUtils.isEmpty(nextPage)){
+            setNewUrl(UrlUtils.jump(url, nextPage));
+        }
+
+
+    }
+
+    public enum Encode{
+        UTF8("utf-8"),GBK("GBK");
+
+        public String value;
+
+        Encode(String encode) {
+            this.value = encode;
         }
     }
 }

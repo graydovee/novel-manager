@@ -26,7 +26,7 @@ public interface BaseDTO<U extends BaseDTO<U, T>, T>{
 
         Map<String,Object> map = getFieldNameAndValue(this);
 
-        setValues(domain, map);
+        setValuesToDOMAIN(domain, map, this.getClass());
 
         return domain;
     }

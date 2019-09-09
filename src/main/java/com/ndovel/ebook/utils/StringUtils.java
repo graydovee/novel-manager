@@ -5,6 +5,10 @@ public class StringUtils {
 
     }
 
+    public static Boolean isEmpty(String str){
+        return str == null || "".equals(str);
+    }
+
     public static String formatContent(String content){
         return content.replaceAll("</?br\\s?/?>","\n")
                 .replaceAll("&nbsp;"," ")

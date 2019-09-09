@@ -16,6 +16,6 @@ import javax.persistence.Table;
 @Table(name = "content")
 public class Content extends BaseEntity {
 
-    @Column(name = "info")
+    @Column(name = "info",columnDefinition = "text")
     private String info;
 }
