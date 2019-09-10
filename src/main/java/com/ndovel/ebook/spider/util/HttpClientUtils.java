@@ -135,8 +135,11 @@ public class HttpClientUtils {
             httpClient = getHttpClient();
             // 配置请求信息
             http.setConfig(requestConfig);
+
+            //设置请求头
+            http.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36");
             // 执行请求
-            response = httpClient.execute(http);
+           response = httpClient.execute(http);
             // 得到响应实例
             HttpEntity entity = response.getEntity();
 

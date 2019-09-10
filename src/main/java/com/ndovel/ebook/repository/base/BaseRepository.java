@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 @NoRepositoryBean
-public interface BaseRepository<DOMAIN extends BaseEntity, ID extends Serializable> extends JpaRepository<DOMAIN, ID> {
+public interface BaseRepository<DOMAIN extends BaseEntity> extends JpaRepository<DOMAIN, Integer> {
 
     List<DOMAIN> findAllIsExist();
 
-    Optional<DOMAIN> findOneIsExist(ID id);
+    Optional<DOMAIN> findOneIsExist(Integer id);
 
 }

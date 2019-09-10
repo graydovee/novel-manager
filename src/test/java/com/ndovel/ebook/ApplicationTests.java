@@ -64,8 +64,8 @@ public class ApplicationTests {
 		MatchRex matchRex;
 		matchRex = new MatchRex();
 
-		matchRex.setContentRex("<div id=\"content\">([\\s\\S]*)<");
-		matchRex.setTitleRex("<h1>(.*)</h1>");
+		matchRex.setContentRex("<div[^<]*id=\"content\"[^<]*>([\\s\\S]*?)</div>");
+		matchRex.setTitleRex("<h1>([^<]*)</h1>");
 		matchRex.setNextPageRex("<a[^<]*href=\"([^<]*.html)\"[^<]*>下一章</a>");
 		matchRex.setName("笔趣阁爬虫方案");
 		matchRex.setInfo("可以爬取笔趣阁的小说");

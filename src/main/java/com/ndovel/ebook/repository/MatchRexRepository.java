@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface MatchRexRepository extends BaseRepository<MatchRex, Integer>, JpaSpecificationExecutor<MatchRex> {
+public interface MatchRexRepository extends BaseRepository<MatchRex>, JpaSpecificationExecutor<MatchRex> {
 
     @Query("from MatchRex where name=?1 and deleted=0")
     MatchRex findOneByName(String name);

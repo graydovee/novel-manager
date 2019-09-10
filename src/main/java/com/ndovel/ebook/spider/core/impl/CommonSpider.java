@@ -2,6 +2,7 @@ package com.ndovel.ebook.spider.core.impl;
 
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.spider.core.AbstractSpider;
+import com.ndovel.ebook.utils.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +17,10 @@ public class CommonSpider extends AbstractSpider {
 
     @Override
     protected String getContentFormCode(String code) {
-        return match(code, matchRex.getContentRex());
+        String content =  match(code, matchRex.getContentRex());
+        if (content == null)
+            return null;
+        return StringUtils.formatContent(content);
     }
 
     @Override

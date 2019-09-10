@@ -9,13 +9,12 @@ import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncSpiderService;
 import com.ndovel.ebook.spider.core.impl.CommonSpider;
-import com.ndovel.ebook.utils.OptionalUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-@SuppressWarnings("ResultOfMethodCallIgnored")
+@Slf4j
 @Service
 public class AsyncSpiderServiceImpl implements AsyncSpiderService {
 
@@ -34,6 +33,7 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
     @Autowired
     ChapterRepository chapterRepository;
 
+    @Async
     @Override
     public void downBook(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId) {
         MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
@@ -56,8 +56,6 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
 
         if ("GBK".equalsIgnoreCase(encode)) {
             spider.setEncode(CommonSpider.Encode.GBK);
-        } else {
-            spider.setEncode(CommonSpider.Encode.UTF8);
         }
 
 
@@ -70,6 +68,7 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
             ChapterDTO chapter = spider.getChapter();
             ContentDTO content = spider.getContent();
             if(chapter!=null && content!=null){
+                log.info(chapter.getTitle());
 
                 Content ct = content.writeToDomain();
                 contentRepository.save(ct);

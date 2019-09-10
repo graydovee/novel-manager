@@ -1,5 +1,6 @@
 package com.ndovel.ebook.repository.base;
 
+import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.entity.base.BaseEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
@@ -11,9 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public class BaseRepositoryImpl<DOMAIN extends BaseEntity, ID extends Serializable>
-        extends SimpleJpaRepository<DOMAIN, ID>
-        implements BaseRepository<DOMAIN, ID> {
+public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
+        extends SimpleJpaRepository<DOMAIN, Integer>
+        implements BaseRepository<DOMAIN> {
 
     private final EntityManager entityManager; //父类没有不带参数的构造方法，这里手动构造父类
 
@@ -26,6 +27,14 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity, ID extends Serializab
     public void delete(DOMAIN entity) {
         entity.setDeleted(true);
         save(entity);
+    }
+
+    @Override
+    public void deleteById(Integer id){
+        findById(id).ifPresent(domain -> {
+            domain.setDeleted(true);
+            save(domain);
+        });
     }
 
 
@@ -46,7 +55,7 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity, ID extends Serializab
 
 
     @Override
-    public Optional<DOMAIN> findOneIsExist(ID id) {
+    public Optional<DOMAIN> findOneIsExist(Integer id) {
         Specification<DOMAIN> spec = new Specification<DOMAIN>() {
             @Override
             public Predicate toPredicate(Root<DOMAIN> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {

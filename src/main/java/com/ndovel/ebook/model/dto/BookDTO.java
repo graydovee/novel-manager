@@ -11,6 +11,8 @@ import java.util.Set;
 @Data
 @EqualsAndHashCode
 public class BookDTO implements BaseDTO<BookDTO, Book> {
+    private Integer id;
+
     private String name;
 
     private AuthorDTO author;
