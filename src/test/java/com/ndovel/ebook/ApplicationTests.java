@@ -78,10 +78,10 @@ public class ApplicationTests {
 		System.out.println(matchRexDTO);
 
 		BookDTO book = new BookDTO();
-		book.setName("盖世帝尊");
-		AuthorDTO author = new AuthorDTO("一叶青天");
+		book.setName("牧神记");
+		AuthorDTO author = new AuthorDTO("宅猪");
 		book.setAuthor(author);
 
-		asyncSpiderService.downBook(book, "https://www.bequge.com/10_10771/13420103.html", "gbk", matchRex.getId());
+		asyncSpiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", "gbk", matchRex.getId());
 	}
 }

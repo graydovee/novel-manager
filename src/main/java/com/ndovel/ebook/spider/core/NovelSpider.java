@@ -12,7 +12,10 @@ public interface NovelSpider {
      */
     void run();
 
+    void update();
+
     ContentDTO getContent();
 
     ChapterDTO getChapter();
+
 }

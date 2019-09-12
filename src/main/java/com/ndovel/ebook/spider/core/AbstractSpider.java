@@ -9,6 +9,8 @@ import com.ndovel.ebook.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.Valid;
+
 @Getter
 @Setter
 public abstract class AbstractSpider implements NovelSpider {
@@ -19,6 +21,8 @@ public abstract class AbstractSpider implements NovelSpider {
     protected Integer bookId;
     protected ChapterDTO chapter;
     protected ContentDTO content;
+
+    private String validUrl = null;
 
     protected AbstractSpider(Integer bookId, String firstPageUrl) {
         this.bookId = bookId;
@@ -54,6 +58,8 @@ public abstract class AbstractSpider implements NovelSpider {
 
     @Override
     public void run() {
+        this.content = null;
+        this.chapter = null;
         if(this.urlUes){
             return;
         }
@@ -82,13 +88,9 @@ public abstract class AbstractSpider implements NovelSpider {
 
         this.content.setInfo(content);
 
-        if(StringUtils.isEmpty(content)){
-            this.chapter = null;
-            this.content = null;
-            return;
-        }
-
         this.chapter.setTitle(getTitleFormCode(code));
+
+        this.validUrl = url;
 
         String nextPage = getNextPageFormCode(code);
 
@@ -98,6 +100,12 @@ public abstract class AbstractSpider implements NovelSpider {
 
 
     }
+
+    @Override
+    public void update() {
+        setNewUrl(validUrl);
+    }
+
 
     public enum Encode{
         UTF8("utf-8"),GBK("GBK");

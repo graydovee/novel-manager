@@ -9,6 +9,7 @@ import com.ndovel.ebook.service.AsyncSpiderService;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.service.MatchRexService;
+import com.ndovel.ebook.spider.bean.TaskCollection;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,18 +37,19 @@ public class AdminSpiderController {
     private ChapterService chapterService;
 
 
+
     @PostMapping("/book")
-    public String spider(String bookName,String authorName, String url, String encode, Integer matchRexId){
+    public BookDTO spider(String bookName,String authorName, String url, String encode, Integer matchRexId){
 
         if(bookName == null || authorName == null || url == null || matchRexId == null)
-            return ERROR;
+            return null;
         BookDTO bookDTO = new BookDTO();
         bookDTO.setAuthor(new AuthorDTO(authorName));
         bookDTO.setName(bookName);
 
 
-        asyncSpiderService.downBook(bookDTO, url, encode ,matchRexId);
-        return OK;
+        Book book = asyncSpiderService.spider(bookDTO, url, encode ,matchRexId);
+        return new BookDTO().init(book);
     }
 
     @GetMapping("/rex")

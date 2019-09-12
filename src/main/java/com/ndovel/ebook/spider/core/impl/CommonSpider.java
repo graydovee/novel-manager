@@ -21,6 +21,7 @@ public class CommonSpider extends AbstractSpider {
         if (content == null)
             return null;
         return StringUtils.formatContent(content);
+
     }
 
     @Override

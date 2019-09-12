@@ -5,37 +5,45 @@ import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
+import com.ndovel.ebook.model.dto.base.BaseDTO;
 import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncSpiderService;
+import com.ndovel.ebook.spider.bean.TaskCollection;
+import com.ndovel.ebook.spider.core.NovelSpider;
 import com.ndovel.ebook.spider.core.impl.CommonSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 public class AsyncSpiderServiceImpl implements AsyncSpiderService {
 
     @Autowired
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
     @Autowired
-    MatchRexRepository matchRexRepository;
+    private MatchRexRepository matchRexRepository;
 
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     @Autowired
-    ContentRepository contentRepository;
+    private ContentRepository contentRepository;
 
     @Autowired
-    ChapterRepository chapterRepository;
+    private ChapterRepository chapterRepository;
 
-    @Async
+    @Autowired
+    private TaskCollection taskCollection;
+
+
     @Override
-    public void downBook(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId) {
+    public Book spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId) {
         MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
                 .orElseThrow(DataIsNotExistException::new);
 
@@ -58,8 +66,19 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
             spider.setEncode(CommonSpider.Encode.GBK);
         }
 
+        down(book, spider);
 
-        Chapter oldChapter = null;
+        return book;
+    }
+
+    @Async
+    public void down(Book book, NovelSpider spider, Boolean flag){
+        Chapter oldChapter = Optional.ofNullable(spider.getChapter())
+                .map(BaseDTO::writeToDomain)
+                .orElse(null);
+        if (flag){
+            spider.run();
+        }
 
         //爬取
         while (spider.hasNext()){
@@ -87,6 +106,6 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
                 oldChapter = cp;
             }
         }
-
+        taskCollection.put(new BookDTO().init(book), spider);
     }
 }
