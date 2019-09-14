@@ -1,5 +1,7 @@
 package com.ndovel.ebook.model.dto.base;
 
+import com.ndovel.ebook.model.entity.base.BaseEntity;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +12,7 @@ import static com.ndovel.ebook.utils.ReflectUtils.*;
 
 @SuppressWarnings("unchecked")
 public interface BaseDTO<U extends BaseDTO<U, T>, T>{
+
 
     default <D extends BaseDTO> D init(T entity) {
 

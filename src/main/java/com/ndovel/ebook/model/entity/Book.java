@@ -2,6 +2,7 @@ package com.ndovel.ebook.model.entity;
 
 import com.ndovel.ebook.model.entity.base.BaseEntity;
 import lombok.*;
+import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
 import java.util.HashSet;

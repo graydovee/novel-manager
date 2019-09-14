@@ -21,19 +21,12 @@ public class ChapterController {
 
     @GetMapping("/chapter")
     public List<ChapterDTO> findAllChapter(Integer bookId){
-        List<ChapterDTO> list = new ArrayList<>();
-        List<Chapter> l = chapterService.findAllChapterByBookId(bookId);
-
-        l.forEach(chapter -> list.add(new ChapterDTO().init(chapter)));
-        return list;
+        return chapterService.findAllChapterByBookId(bookId);
     }
 
     @GetMapping("/content")
     public ContentDTO findContent(Integer id){
-        ContentDTO contentDTO = new ContentDTO();
-
-        chapterService.findContentById(id).ifPresent(contentDTO::init);
-
-        return contentDTO;
+        return chapterService.findContentById(id)
+                .orElse(null);
     }
 }

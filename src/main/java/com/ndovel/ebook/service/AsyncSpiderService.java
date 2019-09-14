@@ -7,7 +7,7 @@ import com.ndovel.ebook.spider.core.NovelSpider;
 
 public interface AsyncSpiderService {
 
-    Book spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId);
+    BookDTO spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId);
 
     void down(Book book, NovelSpider spider, Boolean flag);
 

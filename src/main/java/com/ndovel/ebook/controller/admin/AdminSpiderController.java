@@ -48,26 +48,17 @@ public class AdminSpiderController {
         bookDTO.setName(bookName);
 
 
-        Book book = asyncSpiderService.spider(bookDTO, url, encode ,matchRexId);
-        return new BookDTO().init(book);
+        return asyncSpiderService.spider(bookDTO, url, encode ,matchRexId);
     }
 
     @GetMapping("/rex")
     public List<MatchRexDTO> getAllRex(){
-        List<MatchRexDTO> list = new ArrayList<>();
-        List<MatchRex> l = matchRexService.getAllRex();
-
-        l.forEach(matchRex -> list.add(new MatchRexDTO().init(matchRex)));
-
-        return list;
+        return matchRexService.getAllRex();
     }
 
     @PostMapping("/rex")
     public MatchRexDTO updMatchRex(MatchRexDTO matchRexDTO){
-        log.info(matchRexDTO.toString());
-        MatchRex matchRex = matchRexService.save(matchRexDTO.writeToDomain());
-
-        return new MatchRexDTO().init(matchRex);
+        return matchRexService.save(matchRexDTO.writeToDomain());
     }
 
     @DeleteMapping("/rex")

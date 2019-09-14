@@ -21,31 +21,19 @@ public class BookController {
 
     @GetMapping("/book")
     public List<BookDTO> getAllBook(){
-        List<BookDTO> list = new ArrayList<>();
-        List<Book> bookList = bookService.getAllBook();
-
-        bookList.forEach(book -> list.add(new BookDTO().init(book)));
-
-        return list;
+        return bookService.getAllBook();
     }
 
     @GetMapping("/find")
     public BookDTO exactBook(Integer id){
-        BookDTO bookDTO = new BookDTO();
 
-        bookService.findOneById(id)
-                .ifPresent(bookDTO::init);
 
-        return bookDTO;
+        return bookService.findOneById(id)
+                .orElse(null);
     }
 
     @PostMapping("/find")
     public List<BookDTO> likeBook(String name){
-        List<BookDTO> list = new ArrayList<>();
-        List<Book> bookList = bookService.findByName(name);
-
-        bookList.forEach(book -> list.add(new BookDTO().init(book)));
-
-        return list;
+        return bookService.findByName(name);
     }
 }

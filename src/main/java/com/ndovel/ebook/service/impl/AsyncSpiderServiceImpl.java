@@ -14,6 +14,7 @@ import com.ndovel.ebook.spider.core.NovelSpider;
 import com.ndovel.ebook.spider.core.impl.CommonSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +43,9 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
     private TaskCollection taskCollection;
 
 
+    @CacheEvict(cacheNames = {"book"}, allEntries = true)
     @Override
-    public Book spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId) {
+    public BookDTO spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId) {
         MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
                 .orElseThrow(DataIsNotExistException::new);
 
@@ -68,9 +70,10 @@ public class AsyncSpiderServiceImpl implements AsyncSpiderService {
 
         down(book, spider);
 
-        return book;
+        return new BookDTO().init(book);
     }
 
+    @CacheEvict(cacheNames = {"chapter"}, key = "#book.id")
     @Async
     public void down(Book book, NovelSpider spider, Boolean flag){
         Chapter oldChapter = Optional.ofNullable(spider.getChapter())

@@ -5,12 +5,16 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/book?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: Du87688524
+    password: 123456
   jpa:
     hibernate:
       ddl-auto: create
-    show-sql: false
+    show-sql: true
     open-in-view: false
+
+  redis:
+    host: localhost
+    port: 6379
 
 logging:
   path: ./logs
