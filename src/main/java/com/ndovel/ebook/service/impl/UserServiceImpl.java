@@ -9,6 +9,8 @@ import com.ndovel.ebook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -20,7 +22,22 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User addUser(User user) {
+    public List<Authority> getAuthorities() {
+        return authorityRepository.findAll();
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public User findUserById(Integer id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 

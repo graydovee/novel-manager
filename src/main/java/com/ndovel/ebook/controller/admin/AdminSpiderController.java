@@ -8,6 +8,7 @@ import com.ndovel.ebook.model.entity.Authority;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.model.entity.MatchRex;
 import com.ndovel.ebook.model.entity.User;
+import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.repository.AuthorityRepository;
 import com.ndovel.ebook.service.*;
 import com.ndovel.ebook.spider.bean.TaskCollection;
@@ -23,8 +24,6 @@ import java.util.List;
 @RequestMapping("/admin")
 @RestController
 public class AdminSpiderController {
-    private static String OK = "OK";
-    private static String ERROR = "ERROR";
 
     @Autowired
     private AsyncSpiderService asyncSpiderService;
@@ -38,11 +37,8 @@ public class AdminSpiderController {
     @Autowired
     private ChapterService chapterService;
 
-    @Autowired
-    private UserService userService;
-
     @PostMapping("/book")
-    public BookDTO spider(String bookName,String authorName, String url, String encode, Integer matchRexId){
+    public Response spider(String bookName, String authorName, String url, String encode, Integer matchRexId){
 
         if(bookName == null || authorName == null || url == null || matchRexId == null)
             return null;
@@ -51,55 +47,38 @@ public class AdminSpiderController {
         bookDTO.setName(bookName);
 
 
-        return asyncSpiderService.spider(bookDTO, url, encode ,matchRexId);
+        return Response.success(asyncSpiderService.spider(bookDTO, url, encode ,matchRexId));
     }
 
     @GetMapping("/rex")
-    public List<MatchRexDTO> getAllRex(){
-        return matchRexService.getAllRex();
+    public Response getAllRex(){
+        return Response.success(matchRexService.getAllRex());
     }
 
     @PostMapping("/rex")
-    public MatchRexDTO updMatchRex(MatchRexDTO matchRexDTO){
-        return matchRexService.save(matchRexDTO.writeToDomain());
+    public Response updMatchRex(MatchRexDTO matchRexDTO){
+        return Response.success(matchRexService.save(matchRexDTO.writeToDomain()));
     }
 
     @DeleteMapping("/rex")
-    public String delMatchRex(Integer id){
+    public Response delMatchRex(Integer id){
         if(id != null){
             matchRexService.delById(id);
-            return OK;
+            return Response.success("success");
         }
-        return ERROR;
+        return Response.error("无效参数");
     }
 
     @DeleteMapping("/book")
-    public String delBook(Integer id){
+    public Response delBook(Integer id){
         if(id != null){
             log.info("delete:" + id.toString());
             bookService.deleteBookById(id);
             chapterService.delChapterByBookId(id);
-            return OK;
+            return Response.success("success");
         }
-        return ERROR;
+        return Response.error("无效参数");
     }
 
 
-    @PostMapping("/role")
-    public Authority add_role(String name){
-        Authority authority = new Authority();
-
-        if(StringUtils.isEmpty(name))
-            throw new InvalidArgsException();
-
-        authority.setName(name);
-        return userService.addRole(authority);
-    }
-
-    @PutMapping("/role")
-    public User add_role(Integer userId,Integer roleId){
-        User u = userService.userAddRole(userId, roleId);
-        u.setPassword(null);
-        return u;
-    }
 }
