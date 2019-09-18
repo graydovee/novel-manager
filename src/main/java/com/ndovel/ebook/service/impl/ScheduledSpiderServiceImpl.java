@@ -1,7 +1,8 @@
 package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.service.AsyncSpiderService;
+import com.ndovel.ebook.service.AsyncService;
+import com.ndovel.ebook.service.SpiderService;
 import com.ndovel.ebook.service.ScheduledSpiderService;
 import com.ndovel.ebook.spider.bean.TaskCollection;
 import com.ndovel.ebook.spider.core.NovelSpider;
@@ -20,7 +21,7 @@ public class ScheduledSpiderServiceImpl implements ScheduledSpiderService {
     private TaskCollection taskCollection;
 
     @Autowired
-    private AsyncSpiderService asyncSpiderService;
+    private AsyncService asyncService;
 
     //second, minute, hour, day of month,mouth, day of week
     @Scheduled(cron = "0 0 1 * * ?")
@@ -33,7 +34,7 @@ public class ScheduledSpiderServiceImpl implements ScheduledSpiderService {
             NovelSpider spider = map.get(bookDTO);
 
             spider.update();
-            asyncSpiderService.down(bookDTO.writeToDomain(), spider, true);
+            asyncService.down(bookDTO.writeToDomain(), spider, true);
         }
     }
 

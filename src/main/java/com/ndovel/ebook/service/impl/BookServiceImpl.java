@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +45,7 @@ public class BookServiceImpl implements BookService {
                 .map(book -> new BookDTO().init(book));
     }
 
+    @Transactional
     @CacheEvict(cacheNames = {"book"}, allEntries = true)
     @Override
     public void deleteBookById(Integer id) {

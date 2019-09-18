@@ -4,14 +4,13 @@ import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.spider.core.NovelSpider;
 
+import java.util.Map;
 
-public interface AsyncSpiderService {
+
+public interface SpiderService {
 
     BookDTO spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId);
 
-    void down(Book book, NovelSpider spider, Boolean flag);
+    Map<String, String> spiderOne(String url, String encode, Integer matchRexDTOId);
 
-    default void down(Book book, NovelSpider spider){
-        down(book,spider,false);
-    }
 }

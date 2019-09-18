@@ -13,6 +13,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +33,7 @@ public class ChapterServiceImpl implements ChapterService {
         return DTOUtils.listToDTOs(list, ChapterDTO.class);
     }
 
+    @Transactional
     @CacheEvict(value = {"chapter"}, key = "#bookId")
     @Override
     public void delChapterByBookId(Integer bookId) {

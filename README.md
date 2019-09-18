@@ -27,6 +27,7 @@
 接口url | 请求方法 | 权限 | 参数 | 说明
 -|-|-|-|-
 /book | get | - | - | 获取所有小说
+/spider | get | - | url, encode, matchRexId | 爬取一章（不保存）
 /find | get | - | id | 获取指定的一本小说
 /find | post | - | name | 获取所有符合“作者名或书名含有参数”的小说
 /chapter| get | - | bookId | 获取指定小说的章节目录

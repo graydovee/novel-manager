@@ -1,24 +1,13 @@
 package com.ndovel.ebook.controller.admin;
 
-import com.ndovel.ebook.exception.InvalidArgsException;
 import com.ndovel.ebook.model.dto.AuthorDTO;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
-import com.ndovel.ebook.model.entity.Authority;
-import com.ndovel.ebook.model.entity.Book;
-import com.ndovel.ebook.model.entity.MatchRex;
-import com.ndovel.ebook.model.entity.User;
 import com.ndovel.ebook.model.vo.Response;
-import com.ndovel.ebook.repository.AuthorityRepository;
 import com.ndovel.ebook.service.*;
-import com.ndovel.ebook.spider.bean.TaskCollection;
-import com.ndovel.ebook.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @RequestMapping("/admin")
@@ -26,7 +15,7 @@ import java.util.List;
 public class AdminSpiderController {
 
     @Autowired
-    private AsyncSpiderService asyncSpiderService;
+    private SpiderService spiderService;
 
     @Autowired
     private MatchRexService matchRexService;
@@ -47,7 +36,7 @@ public class AdminSpiderController {
         bookDTO.setName(bookName);
 
 
-        return Response.success(asyncSpiderService.spider(bookDTO, url, encode ,matchRexId));
+        return Response.success(spiderService.spider(bookDTO, url, encode ,matchRexId));
     }
 
     @GetMapping("/rex")
