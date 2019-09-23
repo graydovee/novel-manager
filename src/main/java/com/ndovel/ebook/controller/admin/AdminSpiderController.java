@@ -27,7 +27,7 @@ public class AdminSpiderController {
     private ChapterService chapterService;
 
     @PostMapping("/book")
-    public Response spider(String bookName, String authorName, String url, String encode, Integer matchRexId){
+    public Response spider(String bookName, String authorName, String url, Integer matchRexId){
 
         if(bookName == null || authorName == null || url == null || matchRexId == null)
             return null;
@@ -36,7 +36,7 @@ public class AdminSpiderController {
         bookDTO.setName(bookName);
 
 
-        return Response.success(spiderService.spider(bookDTO, url, encode ,matchRexId));
+        return Response.success(spiderService.spider(bookDTO, url ,matchRexId));
     }
 
     @GetMapping("/rex")

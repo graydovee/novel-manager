@@ -29,8 +29,8 @@ public class BookController {
     }
 
     @GetMapping("/spider")
-    public Response spiderOne(String url, String encode, Integer matchRexId){
-        return Response.success(spiderService.spiderOne(url, encode, matchRexId));
+    public Response spiderOne(String url, Integer matchRexId){
+        return Response.success(spiderService.spiderOne(url, matchRexId));
     }
 
     @GetMapping("/find")

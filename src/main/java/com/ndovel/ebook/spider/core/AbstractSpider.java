@@ -9,14 +9,11 @@ import com.ndovel.ebook.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.Valid;
-
 @Getter
 @Setter
 public abstract class AbstractSpider implements NovelSpider {
     protected String url;
     protected boolean urlUes = false;
-    protected Encode encode = Encode.UTF8;
 
     protected Integer bookId;
     protected ChapterDTO chapter;
@@ -35,7 +32,7 @@ public abstract class AbstractSpider implements NovelSpider {
     }
 
     protected String getHtmlCode() {
-        return HttpClientUtils.get(getFullPath(), encode.value);
+        return HttpClientUtils.get(getFullPath());
     }
 
 
@@ -106,14 +103,4 @@ public abstract class AbstractSpider implements NovelSpider {
         setNewUrl(validUrl);
     }
 
-
-    public enum Encode{
-        UTF8("utf-8"),GBK("GBK");
-
-        public String value;
-
-        Encode(String encode) {
-            this.value = encode;
-        }
-    }
 }

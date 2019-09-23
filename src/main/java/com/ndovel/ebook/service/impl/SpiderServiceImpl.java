@@ -41,7 +41,7 @@ public class SpiderServiceImpl implements SpiderService {
 
     @CacheEvict(cacheNames = {"book"}, allEntries = true)
     @Override
-    public BookDTO spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId) {
+    public BookDTO spider(BookDTO bookDTO, String url, Integer matchRexDTOId) {
         MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
                 .orElseThrow(DataIsNotExistException::new);
 
@@ -60,17 +60,13 @@ public class SpiderServiceImpl implements SpiderService {
 
         CommonSpider spider = new CommonSpider(book.getId(),url,matchRex);
 
-        if ("GBK".equalsIgnoreCase(encode)) {
-            spider.setEncode(CommonSpider.Encode.GBK);
-        }
-
         asyncService.down(book, spider);
 
         return new BookDTO().init(book);
     }
 
     @Override
-    public Map<String, String> spiderOne(String url, String encode, Integer matchRexDTOId) {
+    public Map<String, String> spiderOne(String url, Integer matchRexDTOId) {
         MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
                 .orElseGet(()-> Optional.ofNullable(matchRexRepository.findAll())
                         .map(m->{
@@ -83,10 +79,6 @@ public class SpiderServiceImpl implements SpiderService {
         MatchRexDTO matchRex = new MatchRexDTO().init(mr);
 
         CommonSpider spider = new CommonSpider(0,url,matchRex);
-
-        if ("GBK".equalsIgnoreCase(encode)) {
-            spider.setEncode(CommonSpider.Encode.GBK);
-        }
 
         spider.run();
 

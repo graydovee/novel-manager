@@ -9,8 +9,8 @@ import java.util.Map;
 
 public interface SpiderService {
 
-    BookDTO spider(BookDTO bookDTO, String url, String encode, Integer matchRexDTOId);
+    BookDTO spider(BookDTO bookDTO, String url, Integer matchRexDTOId);
 
-    Map<String, String> spiderOne(String url, String encode, Integer matchRexDTOId);
+    Map<String, String> spiderOne(String url, Integer matchRexDTOId);
 
 }
