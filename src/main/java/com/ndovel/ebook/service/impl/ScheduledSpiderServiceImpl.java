@@ -2,7 +2,6 @@ package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.service.AsyncService;
-import com.ndovel.ebook.service.SpiderService;
 import com.ndovel.ebook.service.ScheduledSpiderService;
 import com.ndovel.ebook.spider.bean.TaskCollection;
 import com.ndovel.ebook.spider.core.NovelSpider;

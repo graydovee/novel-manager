@@ -15,6 +15,10 @@ public interface UserService {
 
     User saveUser(User user);
 
+    User delUser(User user);
+
+    void refresh(Integer id);
+
     Authority addRole(Authority authority);
 
     User userAddRole(Integer userId, Integer role_id);

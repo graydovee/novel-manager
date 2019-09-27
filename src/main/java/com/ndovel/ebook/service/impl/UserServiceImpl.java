@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.exception.InvalidArgsException;
 import com.ndovel.ebook.model.entity.Authority;
 import com.ndovel.ebook.model.entity.User;
 import com.ndovel.ebook.repository.AuthorityRepository;
@@ -9,7 +8,9 @@ import com.ndovel.ebook.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -39,6 +40,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User delUser(User user) {
+        return userRepository.findById(user.getId()).flatMap(ur->{
+            userRepository.delete(ur);
+            return Optional.of(ur);
+        }).orElse(null);
+    }
+
+    @Transactional
+    @Override
+    public void refresh(Integer id){
+        userRepository.redo(id);
     }
 
     @Override

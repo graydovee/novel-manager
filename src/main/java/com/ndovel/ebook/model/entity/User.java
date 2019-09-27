@@ -1,8 +1,8 @@
 package com.ndovel.ebook.model.entity;
 
+import com.ndovel.ebook.model.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -12,14 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "user")
 @Entity
-public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
-    private Integer id;
+public class User extends BaseEntity implements UserDetails {
 
     @Column(name = "username", columnDefinition = "varchar(50)",unique = true)
     private String username;
@@ -64,6 +60,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return !this.getDeleted();
     }
 }

@@ -2,21 +2,16 @@ package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
-import com.ndovel.ebook.model.dto.base.BaseDTO;
 import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.service.SpiderService;
-import com.ndovel.ebook.spider.bean.TaskCollection;
-import com.ndovel.ebook.spider.core.NovelSpider;
 import com.ndovel.ebook.spider.core.impl.CommonSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

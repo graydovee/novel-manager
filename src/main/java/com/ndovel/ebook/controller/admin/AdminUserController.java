@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/root")
 public class AdminUserController {
@@ -31,17 +33,41 @@ public class AdminUserController {
         return Response.success(user);
     }
 
-    @PutMapping("user")
+    @GetMapping("/user")
+    public Response getUser(){
+        List<User> users = userService.getUsers();
+        users.forEach(user -> user.setPassword(null));
+        return Response.success(users);
+    }
+
+    @DeleteMapping("/user")
+    public Response delUser(User user){
+        User u = userService.delUser(user);
+        if(u!=null){
+            u.setPassword(null);
+            return Response.success(u);
+        }
+        else
+            return Response.error(null);
+    }
+
+    @PostMapping("/user")
+    public Response refreshUser(Integer id){
+        userService.refresh(id);
+        return Response.success("OK");
+    }
+
+    @PutMapping("/user")
     public Response updUser(User user){
         User u = userService.findUserById(user.getId());
         if(u==null)
             return Response.error("用户不存在");
 
-        if(user.getPassword()!=null){
+        if(!StringUtils.isEmpty(user.getPassword())){
             u.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-        if(user.getUsername()!=null){
+        if(!StringUtils.isEmpty(user.getUsername())){
             u.setUsername(user.getUsername());
         }
 

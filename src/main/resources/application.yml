@@ -16,5 +16,10 @@ spring:
     host: 101.132.76.208
     port: 6379
 
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+
 logging:
   path: ./logs

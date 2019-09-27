@@ -10,4 +10,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("from User where username=?1")
     Optional<User> findByName(String username);
+
+    @Query("update User set deleted=0 where id=?0")
+    void redo(Integer id);
 }

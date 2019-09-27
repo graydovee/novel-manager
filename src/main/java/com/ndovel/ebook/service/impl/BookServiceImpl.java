@@ -3,7 +3,6 @@ package com.ndovel.ebook.service.impl;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.repository.BookRepository;
-import com.ndovel.ebook.repository.ChapterRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;

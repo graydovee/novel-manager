@@ -1,8 +1,6 @@
 package com.ndovel.ebook.service;
 
 import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.entity.Book;
-import com.ndovel.ebook.spider.core.NovelSpider;
 
 import java.util.Map;
 
