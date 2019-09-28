@@ -31,7 +31,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/admin/**").authenticated()
+                .antMatchers("/root/**").hasRole("ROOT")
                 .anyRequest().permitAll()
+                .and().cors()
                 .and().csrf().disable();
     }
 

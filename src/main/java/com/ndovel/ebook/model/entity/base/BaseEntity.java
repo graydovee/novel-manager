@@ -1,9 +1,8 @@
 package com.ndovel.ebook.model.entity.base;
 
 
-import lombok.*;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;

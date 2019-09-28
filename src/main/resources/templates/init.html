@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>manage-system-init</title>
+</head>
+<body>
+<div class="main">
+    <div class="login">
+        <form action="/init" method="post">
+            <div class="logo">
+                首次使用初始化用户名密码！
+            </div>
+            <h1>用户名</h1>
+            <input type="text" id="username" name="username" placeholder="用户名"/>
+
+            <h1>密码</h1>
+            <input type="password" id="password" name="password" placeholder="密码"/>
+            <input type="submit" value="确认" id="submit">
+        </form>
+    </div>
+</div>
+</body>
+<style>
+    body{
+        margin: 0;
+        padding: 0;
+        background-color: rgb(50, 50, 50);
+    }
+
+    body,html{
+        height: 100%;
+    }
+
+    .main{
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login{
+        padding: 20px;
+        background-color: rgb(252,252,252);
+        height: 300px;
+        width: 300px;
+    }
+
+    .login .logo{
+        font-size: 20px;
+        color: #757575;
+        text-align: center;
+    }
+
+    .login h1{
+        font-size: 20px;
+        color: #757575;
+    }
+
+    .login input[type="text"],input[type="password"]{
+        border: none;
+        border-bottom: 3px solid #757575;
+        width: 100%;
+        padding: 5px 5px;
+        letter-spacing: 1px;
+        background-color: rgba(0,0,0,0);
+        transition: border-bottom-color .45s;
+    }
+
+    .login input[type="text"]:focus,input[type="password"]:focus{
+        border-bottom-color: #f7abe9;
+    }
+
+    .login input[type="submit"]{
+        border: 2px solid #fff;
+        height: 30px;
+        width: 100%;
+        background-color: #1eeb8e;
+        color: #fff;
+        transition: border .5s;
+        margin: 40px 0;
+    }
+
+    .login input[type="submit"]:hover{
+        border: 2px solid #1eeb8e;
+    }
+</style>
+</html>

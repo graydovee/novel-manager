@@ -3,7 +3,6 @@ package com.ndovel.ebook.service.impl;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.repository.BookRepository;
-import com.ndovel.ebook.repository.ChapterRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
@@ -12,6 +11,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,6 +44,7 @@ public class BookServiceImpl implements BookService {
                 .map(book -> new BookDTO().init(book));
     }
 
+    @Transactional
     @CacheEvict(cacheNames = {"book"}, allEntries = true)
     @Override
     public void deleteBookById(Integer id) {

@@ -3,9 +3,7 @@ package com.ndovel.ebook;
 import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
-import com.ndovel.ebook.service.AsyncSpiderService;
-import com.ndovel.ebook.spider.core.AbstractSpider;
-import com.ndovel.ebook.spider.core.impl.CommonSpider;
+import com.ndovel.ebook.service.SpiderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +32,7 @@ public class ApplicationTests {
 	ChapterRepository chapterRepository;
 
 	@Autowired
-	AsyncSpiderService asyncSpiderService;
+    SpiderService spiderService;
 
 
 	@Test
@@ -42,7 +40,6 @@ public class ApplicationTests {
 
 	}
 
-	@Test
 	public void textRepository(){
 		Author author = new Author();
 		author.setName("aasd");
@@ -59,7 +56,6 @@ public class ApplicationTests {
 		System.out.println("1:"+authorRepository.findOneIsExist(2));
 	}
 
-	@Test
 	public void testSpider(){
 		MatchRex matchRex;
 		matchRex = new MatchRex();
@@ -82,6 +78,6 @@ public class ApplicationTests {
 		AuthorDTO author = new AuthorDTO("宅猪");
 		book.setAuthor(author);
 
-		asyncSpiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", "gbk", matchRex.getId());
+		spiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", matchRex.getId());
 	}
 }

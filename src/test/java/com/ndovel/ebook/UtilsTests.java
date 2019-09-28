@@ -9,7 +9,6 @@ import org.junit.Test;
 
 public class UtilsTests {
 
-    @Test
     public void testUrl(){
         String url = "https://www.bilibili.com/video/av67080456";
         String url2 = "www.bilibili.com/video/av67080456";
@@ -18,7 +17,6 @@ public class UtilsTests {
         System.out.println(UrlUtils.jump(url,"av67080458"));
     }
 
-    @Test
     public void reflectTest(){
         BookDTO bookDTO = new BookDTO();
         bookDTO.setName("12345");

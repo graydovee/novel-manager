@@ -1,11 +1,11 @@
 server:
-  port: 8088
+  port: 8090
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/book?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/ebook?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: 123456
+    password: Du87688524
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,8 +13,15 @@ spring:
     open-in-view: false
 
   redis:
-    host: localhost
+    host: 101.132.76.208
     port: 6379
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  resources:
+    static-locations: classpath:/static
 
 logging:
   path: ./logs

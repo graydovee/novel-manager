@@ -1,7 +1,6 @@
 package com.ndovel.ebook.service;
 
 import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.entity.Book;
 
 import java.util.List;
 import java.util.Optional;

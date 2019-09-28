@@ -1,14 +1,11 @@
 package com.ndovel.ebook.repository.base;
 
-import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.entity.base.BaseEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,5 +66,12 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
             }
         };
         return findOne(spec);
+    }
+
+    @Override
+    public Optional<DOMAIN> refresh(DOMAIN domain) {
+        domain.setDeleted(true);
+        save(domain);
+        return Optional.of(domain);
     }
 }

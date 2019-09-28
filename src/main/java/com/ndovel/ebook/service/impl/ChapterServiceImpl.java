@@ -3,7 +3,6 @@ package com.ndovel.ebook.service.impl;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.entity.Chapter;
-import com.ndovel.ebook.model.entity.Content;
 import com.ndovel.ebook.repository.ChapterRepository;
 import com.ndovel.ebook.repository.ContentRepository;
 import com.ndovel.ebook.service.ChapterService;
@@ -13,6 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +32,7 @@ public class ChapterServiceImpl implements ChapterService {
         return DTOUtils.listToDTOs(list, ChapterDTO.class);
     }
 
+    @Transactional
     @CacheEvict(value = {"chapter"}, key = "#bookId")
     @Override
     public void delChapterByBookId(Integer bookId) {
