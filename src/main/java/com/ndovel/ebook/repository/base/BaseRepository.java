@@ -14,4 +14,6 @@ public interface BaseRepository<DOMAIN extends BaseEntity> extends JpaRepository
 
     Optional<DOMAIN> findOneIsExist(Integer id);
 
+    Optional<DOMAIN> refresh(DOMAIN domain);
+
 }

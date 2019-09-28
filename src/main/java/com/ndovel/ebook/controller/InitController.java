@@ -26,15 +26,23 @@ public class InitController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
-    public String init(HttpServletResponse response){
-        isFirst(response);
-        return "init";
+    public String init(){
+        if(isFirst())
+            return "init";
+        else
+            return "redirect:index.html";
     }
 
     @PostMapping("/init")
     public String init(String username, String password, HttpServletResponse response){
 
-        if(!isFirst(response)){
+        if(!isFirst()){
+            try {
+                response.sendError(HttpStatus.NOT_FOUND.value());
+            } catch (IOException e) {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                log.error(e.getMessage());
+            }
             return "success";
         }
 
@@ -59,22 +67,11 @@ public class InitController {
         return "success";
     }
 
-    private synchronized boolean isFirst(HttpServletResponse response){
+    private synchronized boolean isFirst(){
         List<User> users = userService.getUsers();
         List<Authority> authorities = userService.getAuthorities();
 
-        if(users.isEmpty() && authorities.isEmpty()){
-            return true;
-        }
-
-        try {
-            response.sendError(HttpStatus.NOT_FOUND.value());
-        } catch (IOException e) {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            log.error(e.getMessage());
-        }
-
-        return false;
+        return users.isEmpty() && authorities.isEmpty();
     }
 
 }

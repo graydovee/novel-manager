@@ -67,4 +67,11 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
         };
         return findOne(spec);
     }
+
+    @Override
+    public Optional<DOMAIN> refresh(DOMAIN domain) {
+        domain.setDeleted(true);
+        save(domain);
+        return Optional.of(domain);
+    }
 }
