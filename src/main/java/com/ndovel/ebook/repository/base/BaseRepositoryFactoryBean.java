@@ -12,6 +12,7 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
 import javax.persistence.EntityManager;
 import java.io.Serializable;
 
+@SuppressWarnings("unchecked")
 public class BaseRepositoryFactoryBean<T extends JpaRepository<DOMAIN, ID>, DOMAIN extends BaseEntity, ID extends Serializable>
         extends JpaRepositoryFactoryBean<T, DOMAIN, ID> {
 

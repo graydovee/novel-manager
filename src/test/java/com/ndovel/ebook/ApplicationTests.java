@@ -40,7 +40,6 @@ public class ApplicationTests {
 
 	}
 
-	@Test
 	public void textRepository(){
 		Author author = new Author();
 		author.setName("aasd");
@@ -57,7 +56,6 @@ public class ApplicationTests {
 		System.out.println("1:"+authorRepository.findOneIsExist(2));
 	}
 
-	@Test
 	public void testSpider(){
 		MatchRex matchRex;
 		matchRex = new MatchRex();
