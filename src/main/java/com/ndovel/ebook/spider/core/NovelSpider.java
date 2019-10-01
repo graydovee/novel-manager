@@ -7,12 +7,12 @@ public interface NovelSpider {
 
     boolean hasNext();
 
+    String getUrl();
+
     /**
      * 爬取下一章节
      */
     void run();
-
-    void update();
 
     ContentDTO getContent();
 

@@ -19,7 +19,10 @@ public abstract class AbstractSpider implements NovelSpider {
     protected ChapterDTO chapter;
     protected ContentDTO content;
 
-    private String validUrl = null;
+    @Override
+    public String getUrl() {
+        return url;
+    }
 
     protected AbstractSpider(Integer bookId, String firstPageUrl) {
         this.bookId = bookId;
@@ -87,8 +90,6 @@ public abstract class AbstractSpider implements NovelSpider {
 
         this.chapter.setTitle(getTitleFormCode(code));
 
-        this.validUrl = url;
-
         String nextPage = getNextPageFormCode(code);
 
         if(!StringUtils.isEmpty(nextPage)){
@@ -96,11 +97,6 @@ public abstract class AbstractSpider implements NovelSpider {
         }
 
 
-    }
-
-    @Override
-    public void update() {
-        setNewUrl(validUrl);
     }
 
 }

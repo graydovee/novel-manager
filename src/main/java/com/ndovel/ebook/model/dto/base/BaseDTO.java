@@ -16,6 +16,9 @@ public interface BaseDTO<U extends BaseDTO<U, T>, T>{
 
     default <D extends BaseDTO> D init(T entity) {
 
+        if(entity==null)
+            return null;
+
         Map<String,Object> map = getFieldNameAndValue(entity);
 
         setValues(this,map);

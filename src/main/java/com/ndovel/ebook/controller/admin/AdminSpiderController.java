@@ -3,6 +3,8 @@ package com.ndovel.ebook.controller.admin;
 import com.ndovel.ebook.model.dto.AuthorDTO;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
+import com.ndovel.ebook.model.entity.Author;
+import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +33,9 @@ public class AdminSpiderController {
 
         if(bookName == null || authorName == null || url == null || matchRexId == null)
             return null;
-        BookDTO bookDTO = new BookDTO();
-        bookDTO.setAuthor(new AuthorDTO(authorName));
-        bookDTO.setName(bookName);
 
 
-        return Response.success(spiderService.spider(bookDTO, url ,matchRexId));
+        return Response.success(spiderService.spider(bookName, authorName, url ,matchRexId));
     }
 
     @GetMapping("/rex")

@@ -37,13 +37,10 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
 
     @Override
     public List<DOMAIN> findAllIsExist() {
-        Specification<DOMAIN> spec = new Specification<DOMAIN>() {
-            @Override
-            public Predicate toPredicate(Root<DOMAIN> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                Path<Object> deleted = root.get("deleted");
+        Specification<DOMAIN> spec = (Specification<DOMAIN>) (root, query, criteriaBuilder) -> {
+            Path<Object> deleted = root.get("deleted");
 
-                return criteriaBuilder.equal(deleted, 0);
-            }
+            return criteriaBuilder.equal(deleted, 0);
         };
         return findAll(spec);
     }
@@ -53,24 +50,21 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
 
     @Override
     public Optional<DOMAIN> findOneIsExist(Integer id) {
-        Specification<DOMAIN> spec = new Specification<DOMAIN>() {
-            @Override
-            public Predicate toPredicate(Root<DOMAIN> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                Path<Object> deleted = root.get("deleted");
-                Path<Object> idp = root.get("id");
+        Specification<DOMAIN> spec = (Specification<DOMAIN>) (root, query, criteriaBuilder) -> {
+            Path<Object> deleted = root.get("deleted");
+            Path<Object> idp = root.get("id");
 
-                Predicate p1 = criteriaBuilder.equal(deleted, 0);
-                Predicate p2 = criteriaBuilder.equal(idp, id);
+            Predicate p1 = criteriaBuilder.equal(deleted, 0);
+            Predicate p2 = criteriaBuilder.equal(idp, id);
 
-                return criteriaBuilder.and(p1, p2);
-            }
+            return criteriaBuilder.and(p1, p2);
         };
         return findOne(spec);
     }
 
     @Override
     public Optional<DOMAIN> refresh(DOMAIN domain) {
-        domain.setDeleted(true);
+        domain.setDeleted(false);
         save(domain);
         return Optional.of(domain);
     }

@@ -4,6 +4,7 @@ import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
+import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncService;
@@ -36,55 +37,52 @@ public class SpiderServiceImpl implements SpiderService {
 
     @CacheEvict(cacheNames = {"book"}, allEntries = true)
     @Override
-    public BookDTO spider(BookDTO bookDTO, String url, Integer matchRexDTOId) {
-        MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
-                .orElseThrow(DataIsNotExistException::new);
+    public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
+        SpiderInfo spiderInfo = new SpiderInfo();
+        spiderInfo.setUrl(url);
 
-        MatchRexDTO matchRex = new MatchRexDTO().init(mr);
+        spiderInfo.setMatchRex(matchRexRepository.findOneIsExist(matchRexDTOId)
+                .orElseThrow(DataIsNotExistException::new));
 
 
-        Book book = bookDTO.writeToDomain();
-        Author author = authorRepository.findOneByName(book.getAuthor().getName());
+        Book book = new Book();
+        book.setName(bookName);
+
+        Author author = authorRepository.findOneByName(authorName);
         if(author == null) {
-            author = book.getAuthor();
+            author = new Author();
+            author.setName(authorName);
             authorRepository.save(author);
         }
-
         book.setAuthor(author);
+
         bookRepository.save(book);
 
-        CommonSpider spider = new CommonSpider(book.getId(),url,matchRex);
+        spiderInfo.setBook(book);
 
-        asyncService.down(book, spider);
+        asyncService.down(spiderInfo);
 
         return new BookDTO().init(book);
     }
 
     @Override
-    public Map<String, String> spiderOne(String url, Integer matchRexDTOId) {
-        MatchRex mr = matchRexRepository.findOneIsExist(matchRexDTOId)
-                .orElseGet(()-> Optional.ofNullable(matchRexRepository.findAll())
-                        .map(m->{
-                            if(m.isEmpty())
-                                return null;
-                            else
-                                return m.get(0);
-                        }).orElseThrow(DataIsNotExistException::new));
+    public Map<String, String> spiderOne(String url, Integer matchRexId) {
+        SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
+        spiderInfo.setUrl(url);
+        spiderInfo.setMatchRex(new MatchRexDTO()
+                .init(matchRexRepository.findOneIsExist(matchRexId)
+                        .orElseThrow(DataIsNotExistException::new)));
 
-        MatchRexDTO matchRex = new MatchRexDTO().init(mr);
-
-        CommonSpider spider = new CommonSpider(0,url,matchRex);
-
+        CommonSpider spider = new CommonSpider(spiderInfo);
         spider.run();
 
         Map<String, String> map = new HashMap<>();
-
         String contentStr = Optional.ofNullable(spider.getContent())
                 .map(ContentDTO::getInfo)
                 .orElse("");
-
         map.put("content", contentStr);
         map.put("next", spider.getUrl());
+
         return map;
     }
 

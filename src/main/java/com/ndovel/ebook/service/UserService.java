@@ -17,7 +17,7 @@ public interface UserService {
 
     User delUser(User user);
 
-    void refresh(Integer id);
+    User refresh(Integer id);
 
     Authority addRole(Authority authority);
 
