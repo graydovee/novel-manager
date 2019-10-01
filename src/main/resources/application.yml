@@ -8,7 +8,7 @@ spring:
     password: Du87688524
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: false
     open-in-view: false
 

@@ -5,6 +5,7 @@ import com.ndovel.ebook.model.entity.Book;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,4 +21,6 @@ public class BookDTO implements BaseDTO<BookDTO, Book> {
     private Set<TypeDTO> type = new HashSet<>();
 
     private Integer firstChapter;
+
+    private Date createTime;
 }

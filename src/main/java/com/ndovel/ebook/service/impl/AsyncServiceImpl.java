@@ -40,14 +40,14 @@ public class AsyncServiceImpl implements AsyncService {
     @CacheEvict(cacheNames = {"chapter"}, key = "#spiderInfo.book.id")
     @Async
     @Override
-    public void down(SpiderInfo spiderInfo, Boolean onlyTemp){
+    public void down(SpiderInfo spiderInfo, Boolean isNotFist){
         Book book = spiderInfo.getBook();
         if(book==null)
             throw new InvalidArgsException();
 
         NovelSpider spider = new CommonSpider(new SpiderInfoDTO().init(spiderInfo));
 
-        if (onlyTemp)
+        if (isNotFist)
             spider.run();
 
 
@@ -71,7 +71,7 @@ public class AsyncServiceImpl implements AsyncService {
 
                 Chapter oldChapter = spiderInfo.getFinalChapter();
                 if(spiderInfo.getFinalChapter() == null){
-                    if(!onlyTemp){
+                    if(!isNotFist){
                         book.setFirstChapter(newChapter.getId());
                         bookRepository.save(book);
                     }
