@@ -4,6 +4,8 @@ import com.ndovel.ebook.model.dto.base.BaseDTO;
 import com.ndovel.ebook.model.entity.SpiderInfo;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class SpiderInfoDTO implements BaseDTO<SpiderInfoDTO, SpiderInfo> {
 
@@ -15,8 +17,10 @@ public class SpiderInfoDTO implements BaseDTO<SpiderInfoDTO, SpiderInfo> {
 
     private MatchRexDTO matchRex;
 
-    private ChapterDTO chapter;
+    private ChapterDTO finalChapter;
 
     private Boolean deleted;
+
+    private Date createTime;
 
 }

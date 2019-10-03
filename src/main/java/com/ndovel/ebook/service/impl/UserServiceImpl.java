@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public User refresh(Integer id){
-        return userRepository.findById(id).flatMap(user -> userRepository.refresh(user)).orElse(null);
+        return userRepository.findById(id).map(user -> userRepository.refresh(user)).orElse(null);
     }
 
     @Override

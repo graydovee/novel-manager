@@ -1,15 +1,16 @@
 package com.ndovel.ebook.controller.admin;
 
-import com.ndovel.ebook.model.dto.AuthorDTO;
-import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
-import com.ndovel.ebook.model.entity.Author;
-import com.ndovel.ebook.model.entity.Book;
+import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import com.ndovel.ebook.model.dto.base.BaseDTO;
+import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping("/admin")
@@ -27,6 +28,9 @@ public class AdminSpiderController {
 
     @Autowired
     private ChapterService chapterService;
+
+    @Autowired
+    private SpiderInfoService spiderInfoService;
 
     @PostMapping("/book")
     public Response spider(String bookName, String authorName, String url, Integer matchRexId){
@@ -66,6 +70,39 @@ public class AdminSpiderController {
             return Response.success("success");
         }
         return Response.error("无效参数");
+    }
+
+    @GetMapping("/spider_info")
+    public Response getSpiderInfo(){
+        return Response.success(spiderInfoService.findAll().stream()
+                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo))
+                .collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/spider_info")
+    public Response delSpiderInfo(Integer id, Integer refresh){
+        if(refresh!=null && refresh > 0){
+            SpiderInfoDTO spiderInfo = new SpiderInfoDTO().init(spiderInfoService.refresh(id));
+            if(spiderInfo == null){
+                Response.error("无信息");
+            }
+            return Response.success(spiderInfo);
+        }else{
+            SpiderInfoDTO spiderInfo  = new SpiderInfoDTO().init(spiderInfoService.delete(id));
+            if (spiderInfo == null){
+                return Response.error("无信息");
+            }
+            return Response.success(spiderInfo);
+        }
+    }
+
+    @PutMapping("/spider_info")
+    public Response refreshSpiderInfo(Integer id, String url, Integer matchRexId){
+        SpiderInfo s = spiderInfoService.save(id, url, matchRexId);
+        if(s!=null){
+            return Response.success(s);
+        }
+        return Response.error("err");
     }
 
 }

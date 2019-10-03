@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -6,13 +6,19 @@
     <title>success</title>
 </head>
 <body class="main">
-    <h1 class="title">初始化完成！</h1>
+    <div>
+        <p class='info'>用户名：<span th:text="${username}"></span></p>
+        <p class='info'>密&emsp;码：<span th:text="${password}"></span></p>
+        <h1 class="title">初始化完成！<span id="num">10</span>秒后返回主页</h1>
+    </div>
 </body>
 <script>
 
     var i=10;
+    var num = document.getElementById("num");
     window.setInterval(function () {
         i--;
+        num.innerText = i;
         if(i===0)
             location.href="/"
     },1000)
@@ -40,6 +46,11 @@
         color: white;
         font-size: 40px;
         letter-spacing: 4px;
+    }
+
+    .info{
+        color: white;
+        font-size: 25px;
     }
 </style>
 </html>

@@ -3,7 +3,6 @@ package com.ndovel.ebook.repository.base;
 import com.ndovel.ebook.model.entity.base.BaseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
@@ -63,20 +62,20 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
 
     @Override
     public Long countIsExistById(Integer id){
-        return count(new IdAndIsExist<>());
+        return count(new IdAndIsExist<>(id));
     }
 
 
     @Override
     public Optional<DOMAIN> findOneIsExist(Integer id) {
-        return findOne(new IdAndIsExist<>());
+        return findOne(new IdAndIsExist<>(id));
     }
 
     @Override
-    public Optional<DOMAIN> refresh(DOMAIN domain) {
+    public DOMAIN refresh(DOMAIN domain) {
         domain.setDeleted(false);
         save(domain);
-        return Optional.of(domain);
+        return domain;
     }
 
     private class IsExist<T extends BaseEntity> implements Specification<T>{
@@ -91,13 +90,19 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
 
     private class IdAndIsExist<T extends BaseEntity> implements Specification<T>{
 
+        private Integer id;
+
+        public IdAndIsExist(Integer id) {
+            this.id = id;
+        }
+
         @Override
         public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
             Path<Object> deleted = root.get("deleted");
             Path<Object> idp = root.get("id");
 
             Predicate p1 = criteriaBuilder.equal(deleted, 0);
-            Predicate p2 = criteriaBuilder.equal(idp, idp);
+            Predicate p2 = criteriaBuilder.equal(idp, id);
 
             return criteriaBuilder.and(p1, p2);
         }
