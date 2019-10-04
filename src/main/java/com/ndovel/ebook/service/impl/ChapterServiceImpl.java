@@ -5,6 +5,7 @@ import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.entity.Chapter;
 import com.ndovel.ebook.repository.ChapterRepository;
 import com.ndovel.ebook.repository.ContentRepository;
+import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class ChapterServiceImpl implements ChapterService {
     @Autowired
     private ContentRepository contentRepository;
 
+    @Autowired
+    private VisitRepository visitRepository;
+
     @Cacheable(value = {"chapter"},key = "#bookId")
     @Override
     public List<ChapterDTO> findAllChapterByBookId(Integer bookId) {
@@ -47,7 +51,10 @@ public class ChapterServiceImpl implements ChapterService {
     @Override
     public Optional<ContentDTO> findContentById(Integer contentId) {
         return contentRepository.findOneIsExist(contentId)
-                .map(content -> new ContentDTO().init(content));
+                .map(content -> {
+                    visitRepository.addVisit(content.getId());
+                    return new ContentDTO().init(content);
+                });
     }
 
     @Override

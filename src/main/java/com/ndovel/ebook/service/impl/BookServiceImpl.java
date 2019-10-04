@@ -2,7 +2,9 @@ package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.entity.Book;
+import com.ndovel.ebook.model.entity.Visit;
 import com.ndovel.ebook.repository.BookRepository;
+import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
@@ -23,6 +25,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private ChapterService chapterService;
+
+    @Autowired
+    private VisitRepository visitRepository;
 
     @Cacheable(cacheNames = {"book"})
     @Override
@@ -52,4 +57,15 @@ public class BookServiceImpl implements BookService {
         chapterService.delChapterByBookId(id);
     }
 
+    @Override
+    public Long visit(Integer bookId){
+        return visitRepository.findByBookId(bookId)
+                .map(Visit::getVisit)
+                .orElse(0L);
+    }
+
+    @Override
+    public Long sumVisit() {
+        return visitRepository.sum();
+    }
 }

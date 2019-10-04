@@ -35,6 +35,9 @@ public class SpiderServiceImpl implements SpiderService {
     @Autowired
     private AsyncService asyncService;
 
+    @Autowired
+    private VisitRepository visitRepository;
+
     @CacheEvict(cacheNames = {"book"}, allEntries = true)
     @Override
     public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
@@ -57,6 +60,12 @@ public class SpiderServiceImpl implements SpiderService {
         book.setAuthor(author);
 
         bookRepository.save(book);
+
+        //访问量表
+        Visit visit = new Visit();
+        visit.setBookId(book.getId());
+        visit.setVisit(0L);
+        visitRepository.save(visit);
 
         spiderInfo.setBook(book);
 

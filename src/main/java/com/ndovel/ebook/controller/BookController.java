@@ -40,4 +40,12 @@ public class BookController {
     public Response likeBook(String name){
         return Response.success(bookService.findByName(name));
     }
+
+    @GetMapping("/visit")
+    public Response visit(Integer bookId){
+        if(bookId!=null && bookId>0){
+            return Response.success(bookService.visit(bookId));
+        }
+        return Response.success(bookService.sumVisit());
+    }
 }
