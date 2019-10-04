@@ -15,9 +15,18 @@ public class ChapterController {
     private ChapterService chapterService;
 
     @GetMapping("/chapter")
-    public Response findAllChapter(Integer bookId){
+    public Response findAllChapter(Integer bookId, Integer pageIndex, Integer pageSize){
+        if(bookId==null || bookId==0){
+            return Response.error("查无此书");
+        }
+
+        if(pageIndex!=null && pageSize !=null){
+            return Response.success(chapterService.find(bookId,pageIndex,pageSize));
+        }
+
         return Response.success(chapterService.findAllChapterByBookId(bookId));
     }
+
 
     @GetMapping("/content")
     public Response findContent(Integer id){

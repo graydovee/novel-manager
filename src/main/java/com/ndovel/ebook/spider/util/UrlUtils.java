@@ -27,6 +27,11 @@ public class UrlUtils {
         if (StringUtils.isEmpty(url)) {
             throw new UrlNullException("跳转目标地址为空");
         }
+
+        if(path.startsWith("http://") || path.startsWith("https://")){
+            return path;
+        }
+
         if(StringUtils.isEmpty(path)){
             return url;
         }
@@ -35,10 +40,10 @@ public class UrlUtils {
 
         if (path.startsWith("/")){
             //跳转至根路径
-            newStr = url.substring(0,url.indexOf("/",httpsHeader.length())) + path;
+            newStr = newStr.substring(0,url.indexOf("/",httpsHeader.length())) + path;
         }else{
             //相对路径跳转
-            newStr = url.substring(0,url.lastIndexOf("/") + 1) + path;
+            newStr = newStr.substring(0,url.lastIndexOf("/") + 1) + path;
         }
         return newStr;
     }

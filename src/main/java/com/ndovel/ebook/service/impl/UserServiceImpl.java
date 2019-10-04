@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void refresh(Integer id){
-        userRepository.redo(id);
+    public User refresh(Integer id){
+        return userRepository.findById(id).map(user -> userRepository.refresh(user)).orElse(null);
     }
 
     @Override

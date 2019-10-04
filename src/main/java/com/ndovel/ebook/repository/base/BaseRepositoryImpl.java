@@ -1,6 +1,8 @@
 package com.ndovel.ebook.repository.base;
 
 import com.ndovel.ebook.model.entity.base.BaseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
@@ -37,41 +39,78 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
 
     @Override
     public List<DOMAIN> findAllIsExist() {
-        Specification<DOMAIN> spec = new Specification<DOMAIN>() {
-            @Override
-            public Predicate toPredicate(Root<DOMAIN> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                Path<Object> deleted = root.get("deleted");
+        return findAll(new IsExist<>());
+    }
 
-                return criteriaBuilder.equal(deleted, 0);
-            }
-        };
-        return findAll(spec);
+    @Override
+    public Long countIsExist(){
+        return count(new IsExist<>());
+    }
+
+    @Override
+    public Page<DOMAIN> findIsExist(Pageable pageable) {
+        return findAll(new IsExist<>(), pageable);
+    }
+
+    @Override
+    public Page<DOMAIN> findIsExist(Specification<DOMAIN> spec, Pageable pageable) {
+
+        return findAll(and(new IsExist<>(),spec),pageable);
+
     }
 
 
+    @Override
+    public Long countIsExistById(Integer id){
+        return count(new IdAndIsExist<>(id));
+    }
 
 
     @Override
     public Optional<DOMAIN> findOneIsExist(Integer id) {
-        Specification<DOMAIN> spec = new Specification<DOMAIN>() {
-            @Override
-            public Predicate toPredicate(Root<DOMAIN> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                Path<Object> deleted = root.get("deleted");
-                Path<Object> idp = root.get("id");
-
-                Predicate p1 = criteriaBuilder.equal(deleted, 0);
-                Predicate p2 = criteriaBuilder.equal(idp, id);
-
-                return criteriaBuilder.and(p1, p2);
-            }
-        };
-        return findOne(spec);
+        return findOne(new IdAndIsExist<>(id));
     }
 
     @Override
-    public Optional<DOMAIN> refresh(DOMAIN domain) {
-        domain.setDeleted(true);
+    public DOMAIN refresh(DOMAIN domain) {
+        domain.setDeleted(false);
         save(domain);
-        return Optional.of(domain);
+        return domain;
+    }
+
+    private class IsExist<T extends BaseEntity> implements Specification<T>{
+
+        @Override
+        public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+            Path<Object> deleted = root.get("deleted");
+
+            return criteriaBuilder.equal(deleted, 0);
+        }
+    }
+
+    private class IdAndIsExist<T extends BaseEntity> implements Specification<T>{
+
+        private Integer id;
+
+        public IdAndIsExist(Integer id) {
+            this.id = id;
+        }
+
+        @Override
+        public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+            Path<Object> deleted = root.get("deleted");
+            Path<Object> idp = root.get("id");
+
+            Predicate p1 = criteriaBuilder.equal(deleted, 0);
+            Predicate p2 = criteriaBuilder.equal(idp, id);
+
+            return criteriaBuilder.and(p1, p2);
+        }
+    }
+
+    private Specification<DOMAIN> and(Specification<DOMAIN> s1, Specification<DOMAIN> s2){
+        return (root, query, criteriaBuilder) -> criteriaBuilder
+                .and(s1.toPredicate(root, query, criteriaBuilder),
+                        s2.toPredicate(root, query, criteriaBuilder));
     }
 }

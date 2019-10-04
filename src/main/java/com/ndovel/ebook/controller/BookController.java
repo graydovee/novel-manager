@@ -1,6 +1,5 @@
 package com.ndovel.ebook.controller;
 
-import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.SpiderService;
@@ -10,8 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController

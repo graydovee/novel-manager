@@ -1,12 +1,11 @@
 package com.ndovel.ebook.service;
 
-import com.ndovel.ebook.model.entity.Book;
-import com.ndovel.ebook.spider.core.NovelSpider;
+import com.ndovel.ebook.model.entity.SpiderInfo;
 
 public interface AsyncService {
 
 
-    void down(Book book, NovelSpider spider, Boolean flag);
+    void down(SpiderInfo spiderInfo, Boolean isNotFist);
 
-    void down(Book book, NovelSpider spider);
+    void down(SpiderInfo spiderInfo);
 }

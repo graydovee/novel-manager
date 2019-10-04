@@ -53,8 +53,11 @@ public class AdminUserController {
 
     @PostMapping("/user")
     public Response refreshUser(Integer id){
-        userService.refresh(id);
-        return Response.success("OK");
+        User u = userService.refresh(id);
+        if(u!=null)
+            return Response.success(u);
+        else
+            return Response.error("删除失败");
     }
 
     @PutMapping("/user")

@@ -78,6 +78,6 @@ public class ApplicationTests {
 		AuthorDTO author = new AuthorDTO("宅猪");
 		book.setAuthor(author);
 
-		spiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", matchRex.getId());
+//		spiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", matchRex.getId());
 	}
 }
