@@ -30,4 +30,5 @@
 /find | get | - | id | 获取指定的一本小说
 /find | post | - | name | 获取所有符合“作者名或书名含有参数”的小说
 /chapter| get | - | bookId,pageIndex,pageSize | 获取指定小说的章节目录后面两个参数可不传，不穿即查询全部
+/chapter| post | - | chapterId | 获取指定id的章节
 /content| get | - | id | 根据contentid获取指定章节的内容

@@ -41,6 +41,12 @@ public class ChapterServiceImpl implements ChapterService {
         return DTOUtils.listToDTOs(list, ChapterDTO.class);
     }
 
+    @Override
+    public Optional<ChapterDTO> findById(Integer chapterId) {
+        return chapterRepository.findById(chapterId)
+                .map(chapter -> new ChapterDTO().init(chapter));
+    }
+
     @Transactional
     @CacheEvict(value = {"chapter"}, key = "#bookId")
     @Override
