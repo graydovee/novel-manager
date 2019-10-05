@@ -48,6 +48,7 @@ public class ChapterServiceImpl implements ChapterService {
         chapterRepository.deleteAllByBookId(bookId);
     }
 
+    @Transactional
     @Override
     public Optional<ContentDTO> findContentById(Integer contentId) {
         return contentRepository.findOneIsExist(contentId)
