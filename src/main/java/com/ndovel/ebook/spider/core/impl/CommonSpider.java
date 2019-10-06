@@ -1,10 +1,12 @@
 package com.ndovel.ebook.spider.core.impl;
 
+import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.spider.core.AbstractSpider;
 import com.ndovel.ebook.utils.StringUtils;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,7 +19,7 @@ public class CommonSpider extends AbstractSpider {
     }
 
     public CommonSpider(SpiderInfoDTO spiderInfoDTO) {
-        super(spiderInfoDTO.getBook().getId(), spiderInfoDTO.getUrl());
+        super(Optional.ofNullable(spiderInfoDTO.getBook()).map(BookDTO::getId).orElse(null), spiderInfoDTO.getUrl());
         this.matchRex = spiderInfoDTO.getMatchRex();
     }
 

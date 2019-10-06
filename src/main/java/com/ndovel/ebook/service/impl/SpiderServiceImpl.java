@@ -16,6 +16,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -78,9 +79,15 @@ public class SpiderServiceImpl implements SpiderService {
     public Map<String, String> spiderOne(String url, Integer matchRexId) {
         SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
         spiderInfo.setUrl(url);
-        spiderInfo.setMatchRex(new MatchRexDTO()
-                .init(matchRexRepository.findOneIsExist(matchRexId)
-                        .orElseThrow(DataIsNotExistException::new)));
+        MatchRex rex = matchRexRepository.findOneIsExist(matchRexId).orElseGet(()->{
+            List<MatchRex> rexList = matchRexRepository.findAllIsExist();
+            if(rexList!=null && rexList.size()>0){
+                return rexList.get(0);
+            }else{
+                throw new DataIsNotExistException();
+            }
+        });
+        spiderInfo.setMatchRex(new MatchRexDTO().init(rex));
 
         CommonSpider spider = new CommonSpider(spiderInfo);
         spider.run();
