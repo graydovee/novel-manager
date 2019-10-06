@@ -26,4 +26,7 @@ public class SpiderInfo extends BaseEntity {
     @OneToOne(targetEntity = Chapter.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "final_chapter", referencedColumnName = "id")
     private Chapter finalChapter;
+
+    @Column(name = "finished", columnDefinition = "TINYINT default 0")
+    private Boolean finished = false;
 }

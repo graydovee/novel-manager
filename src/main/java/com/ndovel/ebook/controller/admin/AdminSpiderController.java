@@ -2,7 +2,6 @@ package com.ndovel.ebook.controller.admin;
 
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
-import com.ndovel.ebook.model.dto.base.BaseDTO;
 import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
@@ -82,17 +81,15 @@ public class AdminSpiderController {
     @DeleteMapping("/spider_info")
     public Response delSpiderInfo(Integer id, Integer refresh){
         if(refresh!=null && refresh > 0){
-            SpiderInfoDTO spiderInfo = new SpiderInfoDTO().init(spiderInfoService.refresh(id));
-            if(spiderInfo == null){
-                Response.error("无信息");
-            }
-            return Response.success(spiderInfo);
+            Integer c = spiderInfoService.continueSpider(id);
+            if(c > 0)
+                return Response.success("OK");
+            return Response.error("无信息");
         }else{
-            SpiderInfoDTO spiderInfo  = new SpiderInfoDTO().init(spiderInfoService.delete(id));
-            if (spiderInfo == null){
-                return Response.error("无信息");
-            }
-            return Response.success(spiderInfo);
+            Integer c = spiderInfoService.finishSpider(id);
+            if (c > 0)
+                return Response.success("OK");
+            return Response.error("无信息");
         }
     }
 

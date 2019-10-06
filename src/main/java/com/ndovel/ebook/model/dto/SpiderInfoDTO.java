@@ -19,7 +19,7 @@ public class SpiderInfoDTO implements BaseDTO<SpiderInfoDTO, SpiderInfo> {
 
     private ChapterDTO finalChapter;
 
-    private Boolean deleted;
+    private Boolean finished;
 
     private Date createTime;
 

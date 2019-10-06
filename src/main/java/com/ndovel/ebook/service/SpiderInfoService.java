@@ -8,9 +8,11 @@ public interface SpiderInfoService {
 
     List<SpiderInfo> findAll();
 
-    SpiderInfo delete(Integer id);
+    List<SpiderInfo> findAllNotFinished();
 
-    SpiderInfo refresh(Integer id);
+    Integer finishSpider(Integer id);
+
+    Integer continueSpider(Integer id);
 
     SpiderInfo save(Integer id, String url, Integer matchRexId);
 }

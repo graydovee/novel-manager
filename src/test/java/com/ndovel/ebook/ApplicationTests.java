@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +30,9 @@ public class ApplicationTests {
 	ChapterRepository chapterRepository;
 
 	@Autowired
+	SpiderInfoRepository spiderInfoRepository;
+
+	@Autowired
     SpiderService spiderService;
 
 	@Autowired
@@ -39,10 +40,8 @@ public class ApplicationTests {
 
 
 	@Test
-	public void contextLoads() {
-	}
-
-	public void textRepository(){
+	public void text(){
+		Assert.assertEquals(1,1);
 	}
 
 	public void testSpider(){

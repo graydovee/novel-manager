@@ -4,6 +4,7 @@ import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.model.entity.Visit;
 import com.ndovel.ebook.repository.BookRepository;
+import com.ndovel.ebook.repository.SpiderInfoRepository;
 import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
@@ -28,6 +29,9 @@ public class BookServiceImpl implements BookService {
 
     @Autowired
     private VisitRepository visitRepository;
+
+    @Autowired
+    private SpiderInfoRepository spiderInfoRepository;
 
     @Cacheable(cacheNames = {"book"})
     @Override
@@ -55,6 +59,7 @@ public class BookServiceImpl implements BookService {
     public void deleteBookById(Integer id) {
         bookRepository.deleteById(id);
         chapterService.delChapterByBookId(id);
+        spiderInfoRepository.deleteByBookId(id);
     }
 
     @Override

@@ -9,6 +9,7 @@ import com.ndovel.ebook.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -22,28 +23,24 @@ public class SpiderInfoServiceImpl implements SpiderInfoService {
 
     @Override
     public List<SpiderInfo> findAll() {
-        return spiderInfoRepository.findAll();
+        return spiderInfoRepository.findAllIsExist();
     }
 
     @Override
-    public SpiderInfo delete(Integer id) {
-        SpiderInfo spiderInfo = spiderInfoRepository.findOneIsExist(id).orElse(null);
-        if(spiderInfo!=null){
-            spiderInfo.setDeleted(true);
-            spiderInfoRepository.save(spiderInfo);
-            return spiderInfo;
-        }
-        return null;
+    public List<SpiderInfo> findAllNotFinished() {
+        return spiderInfoRepository.findAllNotFinish();
     }
 
+    @Transactional
     @Override
-    public SpiderInfo refresh(Integer id) {
-        return spiderInfoRepository.findById(id)
-                .map(spiderInfo -> {
-                    spiderInfo.setDeleted(false);
-                    return spiderInfoRepository.save(spiderInfo);
-                })
-                .orElse(null);
+    public Integer finishSpider(Integer id) {
+        return spiderInfoRepository.setFinishedTrueById(id);
+    }
+
+    @Transactional
+    @Override
+    public Integer continueSpider(Integer id) {
+        return spiderInfoRepository.setFinishedFalseById(id);
     }
 
     @Override
