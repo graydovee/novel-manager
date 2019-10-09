@@ -1,7 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.model.entity.SpiderInfo;
-import com.ndovel.ebook.repository.SpiderInfoRepository;
 import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.service.ScheduledSpiderService;
 import com.ndovel.ebook.service.SpiderInfoService;

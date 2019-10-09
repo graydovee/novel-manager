@@ -1,5 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
@@ -39,7 +40,7 @@ public class SpiderServiceImpl implements SpiderService {
     @Autowired
     private VisitRepository visitRepository;
 
-    @CacheEvict(cacheNames = {"book"}, allEntries = true)
+    @CacheEvict(cacheNames = {CacheNameConstants.BOOK}, allEntries = true)
     @Override
     public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
         SpiderInfo spiderInfo = new SpiderInfo();

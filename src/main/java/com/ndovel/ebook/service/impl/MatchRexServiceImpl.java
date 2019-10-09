@@ -1,5 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.entity.MatchRex;
 import com.ndovel.ebook.repository.MatchRexRepository;
@@ -18,14 +19,14 @@ public class MatchRexServiceImpl implements MatchRexService {
     @Autowired
     private MatchRexRepository matchRexRepository;
 
-    @Cacheable(cacheNames = {"matchRex"})
+    @Cacheable(cacheNames = {CacheNameConstants.MATCH_REX})
     @Override
     public List<MatchRexDTO> getAllRex() {
         List<MatchRex> l = matchRexRepository.findAllIsExist();
         return DTOUtils.listToDTOs(l, MatchRexDTO.class);
     }
 
-    @CacheEvict(cacheNames = {"matchRex"}, allEntries = true)
+    @CacheEvict(cacheNames = {CacheNameConstants.MATCH_REX}, allEntries = true)
     @Override
     public MatchRexDTO save(MatchRex matchRex) {
         if(!(matchRex==null ||
@@ -38,7 +39,7 @@ public class MatchRexServiceImpl implements MatchRexService {
         return new MatchRexDTO().init(matchRex);
     }
 
-    @CacheEvict(cacheNames = {"matchRex"}, allEntries = true)
+    @CacheEvict(cacheNames = {CacheNameConstants.MATCH_REX}, allEntries = true)
     @Override
     public void delById(Integer id) {
         matchRexRepository.deleteById(id);

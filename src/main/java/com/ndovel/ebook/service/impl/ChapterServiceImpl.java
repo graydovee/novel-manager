@@ -1,5 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.entity.Chapter;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class ChapterServiceImpl implements ChapterService {
 
+
     @Autowired
     private ChapterRepository chapterRepository;
 
@@ -34,7 +36,7 @@ public class ChapterServiceImpl implements ChapterService {
     @Autowired
     private VisitRepository visitRepository;
 
-    @Cacheable(value = {"chapter"},key = "#bookId")
+    @Cacheable(value = {CacheNameConstants.CHAPTER},key = "#bookId")
     @Override
     public List<ChapterDTO> findAllChapterByBookId(Integer bookId) {
         List<Chapter> list = chapterRepository.findAllByBookId(bookId);
@@ -48,7 +50,7 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Transactional
-    @CacheEvict(value = {"chapter"}, key = "#bookId")
+    @CacheEvict(value = {CacheNameConstants.CHAPTER}, key = "#bookId")
     @Override
     public void delChapterByBookId(Integer bookId) {
         chapterRepository.deleteAllByBookId(bookId);

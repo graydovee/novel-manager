@@ -83,12 +83,12 @@ public class AdminSpiderController {
         if(refresh!=null && refresh > 0){
             Integer c = spiderInfoService.continueSpider(id);
             if(c > 0)
-                return Response.success("OK");
+                return Response.success();
             return Response.error("无信息");
         }else{
             Integer c = spiderInfoService.finishSpider(id);
             if (c > 0)
-                return Response.success("OK");
+                return Response.success();
             return Response.error("无信息");
         }
     }
@@ -99,7 +99,7 @@ public class AdminSpiderController {
         if(s!=null){
             return Response.success(s);
         }
-        return Response.error("err");
+        return Response.error();
     }
 
 }

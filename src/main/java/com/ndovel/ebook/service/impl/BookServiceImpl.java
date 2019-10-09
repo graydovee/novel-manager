@@ -1,5 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.model.entity.Visit;
@@ -33,7 +34,7 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private SpiderInfoRepository spiderInfoRepository;
 
-    @Cacheable(cacheNames = {"book"})
+    @Cacheable(cacheNames = {CacheNameConstants.BOOK})
     @Override
     public List<BookDTO> getAllBook() {
         List<Book> bookList = bookRepository.findAllIsExist();
@@ -54,7 +55,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = {"book"}, allEntries = true)
+    @CacheEvict(cacheNames = {CacheNameConstants.BOOK}, allEntries = true)
     @Override
     public void deleteBookById(Integer id) {
         bookRepository.deleteById(id);
