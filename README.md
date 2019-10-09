@@ -2,8 +2,6 @@
 
 ## 新版目标：
 
-
-
 ### 已完成新功能：
 
 后台管理系统
@@ -13,6 +11,7 @@
 3. 每天自动更新未连载完的小说
 4. 使用缓存加快查询效率
 5. 爬虫板块新增用户认证功能、只有管理员才能使用爬虫爬取新书
+6. 后台管理系统
 
 ## api文档
 
@@ -31,5 +30,6 @@
 /spider | get | - | url, matchRexId | 爬取一章（不保存）
 /find | get | - | id | 获取指定的一本小说
 /find | post | - | name | 获取所有符合“作者名或书名含有参数”的小说
-/chapter| get | - | bookId | 获取指定小说的章节目录
+/chapter| get | - | bookId,pageIndex,pageSize | 获取指定小说的章节目录后面两个参数可不传，不穿即查询全部
+/chapter| post | - | chapterId | 获取指定id的章节
 /content| get | - | id | 根据contentid获取指定章节的内容

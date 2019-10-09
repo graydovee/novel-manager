@@ -1,10 +1,12 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.entity.Chapter;
 import com.ndovel.ebook.repository.ChapterRepository;
 import com.ndovel.ebook.repository.ContentRepository;
+import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,30 +26,44 @@ import java.util.stream.Collectors;
 @Service
 public class ChapterServiceImpl implements ChapterService {
 
+
     @Autowired
     private ChapterRepository chapterRepository;
 
     @Autowired
     private ContentRepository contentRepository;
 
-    @Cacheable(value = {"chapter"},key = "#bookId")
+    @Autowired
+    private VisitRepository visitRepository;
+
+    @Cacheable(value = {CacheNameConstants.CHAPTER},key = "#bookId")
     @Override
     public List<ChapterDTO> findAllChapterByBookId(Integer bookId) {
         List<Chapter> list = chapterRepository.findAllByBookId(bookId);
         return DTOUtils.listToDTOs(list, ChapterDTO.class);
     }
 
+    @Override
+    public Optional<ChapterDTO> findById(Integer chapterId) {
+        return chapterRepository.findById(chapterId)
+                .map(chapter -> new ChapterDTO().init(chapter));
+    }
+
     @Transactional
-    @CacheEvict(value = {"chapter"}, key = "#bookId")
+    @CacheEvict(value = {CacheNameConstants.CHAPTER}, key = "#bookId")
     @Override
     public void delChapterByBookId(Integer bookId) {
         chapterRepository.deleteAllByBookId(bookId);
     }
 
+    @Transactional
     @Override
     public Optional<ContentDTO> findContentById(Integer contentId) {
         return contentRepository.findOneIsExist(contentId)
-                .map(content -> new ContentDTO().init(content));
+                .map(content -> {
+                    visitRepository.addVisit(content.getId());
+                    return new ContentDTO().init(content);
+                });
     }
 
     @Override

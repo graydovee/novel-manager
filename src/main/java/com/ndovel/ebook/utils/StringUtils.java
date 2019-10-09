@@ -5,17 +5,17 @@ public class StringUtils {
 
     }
 
-    public static Boolean isEmpty(String str){
+    public static boolean isEmpty(String str){
         return str == null || "".equals(str);
     }
 
     public static String formatContent(String content){
         return content.replaceAll("</?br\\s?/?>","\n")
-                .replaceAll("&nbsp;"," ")
+                .replace("&nbsp;"," ")
                 .replaceAll("<[/]?p>","\n")
                 .replaceAll("<a[^<]*?</a>","")
                 .replaceAll("<script[^<]*?</script>","")
-                .replaceAll("　"," ")
+                .replace("　"," ")
                 .replaceAll("\\t","    ")
                 .replaceAll(" {2,}","  ")
                 .replaceAll("\\r","\n")

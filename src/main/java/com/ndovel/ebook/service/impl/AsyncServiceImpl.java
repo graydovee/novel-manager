@@ -1,5 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.InvalidArgsException;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
@@ -37,7 +38,7 @@ public class AsyncServiceImpl implements AsyncService {
     @Autowired
     private SpiderInfoRepository spiderInfoRepository;
 
-    @CacheEvict(cacheNames = {"chapter"}, key = "#spiderInfo.book.id")
+    @CacheEvict(cacheNames = {CacheNameConstants.CHAPTER}, key = "#spiderInfo.book.id")
     @Async
     @Override
     public void down(SpiderInfo spiderInfo, Boolean isNotFist){

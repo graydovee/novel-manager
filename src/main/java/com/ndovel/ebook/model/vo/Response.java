@@ -20,8 +20,16 @@ public class Response {
         this.data = data;
     }
 
+    public static Response success(){
+        return success("OK");
+    }
+
     public static Response success(Object entity){
         return new Response(HttpStatus.OK, entity);
+    }
+
+    public static Response error(){
+        return error("ERROR");
     }
 
     public static Response error(Object entity){

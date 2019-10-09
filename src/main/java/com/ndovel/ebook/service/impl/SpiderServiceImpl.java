@@ -1,5 +1,6 @@
 package com.ndovel.ebook.service.impl;
 
+import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
@@ -16,6 +17,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -35,7 +37,10 @@ public class SpiderServiceImpl implements SpiderService {
     @Autowired
     private AsyncService asyncService;
 
-    @CacheEvict(cacheNames = {"book"}, allEntries = true)
+    @Autowired
+    private VisitRepository visitRepository;
+
+    @CacheEvict(cacheNames = {CacheNameConstants.BOOK}, allEntries = true)
     @Override
     public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
         SpiderInfo spiderInfo = new SpiderInfo();
@@ -58,6 +63,12 @@ public class SpiderServiceImpl implements SpiderService {
 
         bookRepository.save(book);
 
+        //访问量表
+        Visit visit = new Visit();
+        visit.setBookId(book.getId());
+        visit.setVisit(0L);
+        visitRepository.save(visit);
+
         spiderInfo.setBook(book);
 
         asyncService.down(spiderInfo);
@@ -69,9 +80,15 @@ public class SpiderServiceImpl implements SpiderService {
     public Map<String, String> spiderOne(String url, Integer matchRexId) {
         SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
         spiderInfo.setUrl(url);
-        spiderInfo.setMatchRex(new MatchRexDTO()
-                .init(matchRexRepository.findOneIsExist(matchRexId)
-                        .orElseThrow(DataIsNotExistException::new)));
+        MatchRex rex = matchRexRepository.findOneIsExist(matchRexId).orElseGet(()->{
+            List<MatchRex> rexList = matchRexRepository.findAllIsExist();
+            if(rexList!=null && rexList.size()>0){
+                return rexList.get(0);
+            }else{
+                throw new DataIsNotExistException();
+            }
+        });
+        spiderInfo.setMatchRex(new MatchRexDTO().init(rex));
 
         CommonSpider spider = new CommonSpider(spiderInfo);
         spider.run();

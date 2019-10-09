@@ -14,4 +14,8 @@ public interface BookService {
     Optional<BookDTO> findOneById(Integer id);
 
     void deleteBookById(Integer id);
+
+    Long visit(Integer bookId);
+
+    Long sumVisit();
 }
