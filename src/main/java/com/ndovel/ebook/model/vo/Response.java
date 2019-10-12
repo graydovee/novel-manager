@@ -14,7 +14,7 @@ public class Response {
 
     private Object data;
 
-    private Response(HttpStatus status, Object data){
+    public Response(HttpStatus status, Object data){
         this.code = status.value();
         this.message = status.getReasonPhrase();
         this.data = data;

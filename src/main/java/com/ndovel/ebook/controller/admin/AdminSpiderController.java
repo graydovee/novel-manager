@@ -7,6 +7,7 @@ import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
@@ -31,12 +32,14 @@ public class AdminSpiderController {
     @Autowired
     private SpiderInfoService spiderInfoService;
 
+    @Autowired
+    private AsyncService asyncService;
+
     @PostMapping("/book")
     public Response spider(String bookName, String authorName, String url, Integer matchRexId){
 
         if(bookName == null || authorName == null || url == null || matchRexId == null)
             return null;
-
 
         return Response.success(spiderService.spider(bookName, authorName, url ,matchRexId));
     }
@@ -102,4 +105,20 @@ public class AdminSpiderController {
         return Response.error();
     }
 
+    /**
+     *
+     * @param id SpiderInfo_Id
+     * @return VO
+     */
+    @PostMapping("/update")
+    public Response update(Integer id){
+        Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR");
+        spiderInfoService.findIsExist(id).ifPresent(spiderInfo -> {
+            asyncService.down(spiderInfo, true);
+            response.setCode(200);
+            response.setMessage("OK");
+            response.setData("OK");
+        });
+        return response;
+    }
 }
