@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SpiderInfoServiceImpl implements SpiderInfoService {
@@ -29,6 +30,13 @@ public class SpiderInfoServiceImpl implements SpiderInfoService {
     @Override
     public List<SpiderInfo> findAllNotFinished() {
         return spiderInfoRepository.findAllNotFinish();
+    }
+
+    @Override
+    public Optional<SpiderInfo> findIsExist(Integer id) {
+        if (id == null)
+            return Optional.empty();
+        return spiderInfoRepository.findOneIsExist(id);
     }
 
     @Transactional
