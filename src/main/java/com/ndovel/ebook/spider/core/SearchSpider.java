@@ -1,7 +1,7 @@
 package com.ndovel.ebook.spider.core;
 
 
-import com.ndovel.ebook.spider.pojo.SpiderIndex;
+import com.ndovel.ebook.model.dto.SpiderIndex;
 
 import java.util.List;
 

@@ -1,20 +1,30 @@
 package com.ndovel.ebook;
 
-import com.ndovel.ebook.model.dto.AuthorDTO;
-import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.dto.TypeDTO;
+import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.model.entity.Book;
+import com.ndovel.ebook.spider.core.IndexSpider;
 import com.ndovel.ebook.spider.core.SearchSpider;
+import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
 import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import com.ndovel.ebook.spider.util.UrlUtils;
 import org.junit.Test;
+
+import java.util.List;
 
 public class UtilsTests {
 
     @Test
     public void testSpider(){
         SearchSpider searchSpider = new SearchSpiderImpl();
-        searchSpider.findAll("斗破苍穹");
+        IndexSpider indexSpider = new IndexSpiderImpl();
+        List<SpiderIndex> index = searchSpider.findAllIndex("斗破苍穹");
+        if (index.size()>0) {
+            SpiderInfoDTO spiderInfo = indexSpider.makeSpiderInfo(index.get(0).getUrl());
+            for (var i : index){
+                System.out.println(i);
+            }
+            System.out.println(spiderInfo);
+        }
     }
 
     public void testUrl(){

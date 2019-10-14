@@ -6,9 +6,12 @@ import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.spider.core.IndexSpider;
 import com.ndovel.ebook.spider.util.HttpClientUtils;
+import com.ndovel.ebook.spider.util.UrlUtils;
+import com.ndovel.ebook.utils.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.Optional;
 
@@ -44,12 +47,20 @@ public class IndexSpiderImpl implements IndexSpider {
                     for (Element ele : eles){
                         if (ele.tag().getName().equals("dt"))
                             dt++;
-                        else if (dt==1) {
-                            Optional.of(ele).map(element -> element.getElementsByTag("a"))
-                                    .map(elements -> elements.get(0))
-                                    .ifPresent(element -> {
-                                        spiderInfo.setUrl(element.attr("href"));
-                                    });
+                        else if (dt==2 && ele.tag().getName().equals("dd")) {
+                            Optional.of(ele).map(element -> {
+                                    Elements a = element.getElementsByTag("a");
+                                    return a.size()>0 ? a : null;
+                                })
+                                .map(elements -> elements.get(0))
+                                .ifPresent(element -> {
+                                    if (!StringUtils.isEmpty(element.attr("href")))  {
+                                        String u = UrlUtils.jump(url, element.attr("href"));
+                                        spiderInfo.setUrl(u);
+                                    }
+                                });
+                            if(!StringUtils.isEmpty(spiderInfo.getUrl()))
+                                break;
                         }
                     }
                 });
@@ -59,6 +70,6 @@ public class IndexSpiderImpl implements IndexSpider {
 
     @Override
     public SpiderInfoDTO makeSpiderInfo(String url) {
-        return null;
+        return make(url);
     }
 }

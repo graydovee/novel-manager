@@ -1,13 +1,11 @@
 package com.ndovel.ebook.spider.core.impl;
 
-import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.spider.core.SearchSpider;
-import com.ndovel.ebook.spider.pojo.SpiderIndex;
+import com.ndovel.ebook.model.dto.SpiderIndex;
 import com.ndovel.ebook.spider.util.HttpClientUtils;
 import com.ndovel.ebook.utils.StringUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.UnsupportedEncodingException;

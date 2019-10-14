@@ -1,4 +1,4 @@
-package com.ndovel.ebook.spider.pojo;
+package com.ndovel.ebook.model.dto;
 
 import lombok.Data;
 
