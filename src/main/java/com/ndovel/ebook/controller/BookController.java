@@ -21,8 +21,11 @@ public class BookController {
     private SpiderService spiderService;
 
     @GetMapping("/book")
-    public Response getAllBook(){
-        return Response.success(bookService.getAllBook());
+    public Response getAllBook(Integer index, Integer size){
+        if(index==null || size==null || size<=0)
+            return Response.success(bookService.getAllBook());
+        else
+            return Response.success(bookService.find(index, size));
     }
 
     @GetMapping("/spider")

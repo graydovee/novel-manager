@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public abstract class AbstractSpider implements NovelSpider {
+public abstract class AbstractNovelSpider implements NovelSpider {
     protected String url;
     protected boolean urlUes = false;
 
@@ -24,7 +24,7 @@ public abstract class AbstractSpider implements NovelSpider {
         return url;
     }
 
-    protected AbstractSpider(Integer bookId, String firstPageUrl) {
+    protected AbstractNovelSpider(Integer bookId, String firstPageUrl) {
         this.bookId = bookId;
 
         this.url = UrlUtils.urlFormat(firstPageUrl);

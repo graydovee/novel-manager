@@ -5,7 +5,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ebook?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     username: root
-    password: 123456
+    password: Du87688524
   jpa:
     hibernate:
       ddl-auto: update
@@ -13,7 +13,7 @@ spring:
     open-in-view: false
 
   redis:
-    host: localhost
+    host: 101.132.76.208
     port: 6379
 
   jackson:

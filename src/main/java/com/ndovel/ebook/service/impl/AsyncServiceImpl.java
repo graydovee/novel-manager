@@ -15,7 +15,7 @@ import com.ndovel.ebook.repository.ContentRepository;
 import com.ndovel.ebook.repository.SpiderInfoRepository;
 import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.spider.core.NovelSpider;
-import com.ndovel.ebook.spider.core.impl.CommonSpider;
+import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -46,7 +46,7 @@ public class AsyncServiceImpl implements AsyncService {
         if(book==null)
             throw new InvalidArgsException();
 
-        NovelSpider spider = new CommonSpider(new SpiderInfoDTO().init(spiderInfo));
+        NovelSpider spider = new CommonNovelSpider(new SpiderInfoDTO().init(spiderInfo));
 
         if (isNotFist)
             spider.run();

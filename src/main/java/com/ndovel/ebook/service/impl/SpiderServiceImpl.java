@@ -10,7 +10,7 @@ import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.service.SpiderService;
-import com.ndovel.ebook.spider.core.impl.CommonSpider;
+import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -90,7 +90,7 @@ public class SpiderServiceImpl implements SpiderService {
         });
         spiderInfo.setMatchRex(new MatchRexDTO().init(rex));
 
-        CommonSpider spider = new CommonSpider(spiderInfo);
+        CommonNovelSpider spider = new CommonNovelSpider(spiderInfo);
         spider.run();
 
         Map<String, String> map = new HashMap<>();

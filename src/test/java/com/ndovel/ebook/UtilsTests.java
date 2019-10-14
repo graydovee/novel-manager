@@ -4,10 +4,18 @@ import com.ndovel.ebook.model.dto.AuthorDTO;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.TypeDTO;
 import com.ndovel.ebook.model.entity.Book;
+import com.ndovel.ebook.spider.core.SearchSpider;
+import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import com.ndovel.ebook.spider.util.UrlUtils;
 import org.junit.Test;
 
 public class UtilsTests {
+
+    @Test
+    public void testSpider(){
+        SearchSpider searchSpider = new SearchSpiderImpl();
+        searchSpider.findAll("斗破苍穹");
+    }
 
     public void testUrl(){
         String url = "https://www.bilibili.com/video/av67080456";
