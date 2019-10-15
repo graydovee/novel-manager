@@ -17,8 +17,6 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private SpiderService spiderService;
 
     @GetMapping("/book")
     public Response getAllBook(Integer index, Integer size){
@@ -28,10 +26,6 @@ public class BookController {
             return Response.success(bookService.find(index, size));
     }
 
-    @GetMapping("/spider")
-    public Response spiderOne(String url, Integer matchRexId){
-        return Response.success(spiderService.spiderOne(url, matchRexId));
-    }
 
     @GetMapping("/find")
     public Response exactBook(Integer id){

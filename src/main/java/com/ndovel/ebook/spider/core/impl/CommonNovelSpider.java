@@ -54,6 +54,7 @@ public class CommonNovelSpider extends AbstractNovelSpider {
             tempChapter = new TempChapter();
             tempChapter.setContent(content.getInfo());
             tempChapter.setUrl(url);
+            tempChapter.setTitle(chapter.getTitle());
         }
         return tempChapter;
     }

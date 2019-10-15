@@ -7,6 +7,7 @@ import com.ndovel.ebook.spider.core.SearchSpider;
 import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
 import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import com.ndovel.ebook.spider.util.UrlUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class UtilsTests {
         IndexSpider indexSpider = new IndexSpiderImpl();
         List<SpiderIndex> index = searchSpider.findAllIndex("斗破苍穹");
         if (index.size()>0) {
-            TempChapterIndex TempChapterIndex = indexSpider.getIndex(index.get(0).getUrl());
-            for (var i : index){
-                System.out.println(i);
+            List<TempChapter> chapters = indexSpider.getIndex(index.get(0).getUrl());
+            for (SpiderIndex i : index){
+                Assert.assertNotNull(i.getName());
+                Assert.assertNotNull(i.getUrl());
             }
-            for (var i : TempChapterIndex.getChapters()){
-                System.out.println(i);
+            for (TempChapter i : chapters){
+                Assert.assertNotNull(i.getUrl());
+                Assert.assertNotNull(i.getTitle());
             }
         }
     }
