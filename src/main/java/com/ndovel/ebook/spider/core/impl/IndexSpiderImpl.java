@@ -1,9 +1,6 @@
 package com.ndovel.ebook.spider.core.impl;
 
-import com.ndovel.ebook.model.dto.AuthorDTO;
-import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.dto.SpiderInfoDTO;
-import com.ndovel.ebook.model.entity.SpiderInfo;
+import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.spider.core.IndexSpider;
 import com.ndovel.ebook.spider.util.HttpClientUtils;
 import com.ndovel.ebook.spider.util.UrlUtils;
@@ -13,41 +10,27 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * 爬取章节目录
+ */
 public class IndexSpiderImpl implements IndexSpider {
 
-    private SpiderInfoDTO make(String url){
-        SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
-        BookDTO book = new BookDTO();
-        spiderInfo.setBook(book);
+    private List<TempChapter> make(String url){
+        List<TempChapter> index = new ArrayList<>();
 
         Document document = Jsoup.parse(HttpClientUtils.get(url));
-        Optional.ofNullable(document.getElementById("info"))
-                .ifPresent(ele -> {
-                    Optional.of(ele).map(element -> element.getElementsByTag("h1"))
-                            .map(elements -> elements.get(0))
-                            .ifPresent(element1 -> book.setName(element1.text()));
-
-                    Optional.of(ele).map(element -> element.getElementsByTag("p"))
-                            .map(elements -> elements.get(0))
-                            .ifPresent(element -> {
-                                String content = element.text();
-                                content = content.substring(content.lastIndexOf("：") + 1);
-                                book.setAuthor(new AuthorDTO(content));
-                            });
-                });
 
         Optional.ofNullable(document.getElementById("list"))
                 .map(element -> element.getElementsByTag("dl"))
                 .map(elements -> elements.get(0))
                 .map(Element::getAllElements)
                 .ifPresent(eles -> {
-                    int dt = 0;
                     for (Element ele : eles){
-                        if (ele.tag().getName().equals("dt"))
-                            dt++;
-                        else if (dt==2 && ele.tag().getName().equals("dd")) {
+                        if (ele.tag().getName().equals("dd")) {
                             Optional.of(ele).map(element -> {
                                     Elements a = element.getElementsByTag("a");
                                     return a.size()>0 ? a : null;
@@ -56,20 +39,23 @@ public class IndexSpiderImpl implements IndexSpider {
                                 .ifPresent(element -> {
                                     if (!StringUtils.isEmpty(element.attr("href")))  {
                                         String u = UrlUtils.jump(url, element.attr("href"));
-                                        spiderInfo.setUrl(u);
+
+                                        TempChapter tempChapter = new TempChapter();
+                                        tempChapter.setUrl(u);
+                                        tempChapter.setTitle(element.text());
+                                        index.add(tempChapter);
                                     }
                                 });
-                            if(!StringUtils.isEmpty(spiderInfo.getUrl()))
-                                break;
                         }
                     }
                 });
 
-        return spiderInfo;
+        return index;
     }
 
     @Override
-    public SpiderInfoDTO makeSpiderInfo(String url) {
+    public List<TempChapter> getIndex(String url) {
         return make(url);
     }
+
 }

@@ -3,6 +3,7 @@ package com.ndovel.ebook.spider.core.impl;
 import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import com.ndovel.ebook.model.dto.TempChapter;
 import com.ndovel.ebook.spider.core.AbstractNovelSpider;
 import com.ndovel.ebook.utils.StringUtils;
 
@@ -12,11 +13,6 @@ import java.util.regex.Pattern;
 
 public class CommonNovelSpider extends AbstractNovelSpider {
     private MatchRexDTO matchRex;
-
-    public CommonNovelSpider(Integer bookId, String firstPageUrl, MatchRexDTO matchRex) {
-        super(bookId, firstPageUrl);
-        this.matchRex = matchRex;
-    }
 
     public CommonNovelSpider(SpiderInfoDTO spiderInfoDTO) {
         super(Optional.ofNullable(spiderInfoDTO.getBook()).map(BookDTO::getId).orElse(null), spiderInfoDTO.getUrl());
@@ -49,5 +45,16 @@ public class CommonNovelSpider extends AbstractNovelSpider {
             return nextPageMarcher.group(1);
         }
         return null;
+    }
+
+    @Override
+    public TempChapter getTempChapter() {
+        TempChapter tempChapter = null;
+        if (content != null) {
+            tempChapter = new TempChapter();
+            tempChapter.setContent(content.getInfo());
+            tempChapter.setUrl(url);
+        }
+        return tempChapter;
     }
 }

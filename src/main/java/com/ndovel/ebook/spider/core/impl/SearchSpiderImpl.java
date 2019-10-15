@@ -14,6 +14,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * 按小说名找到小说主页
+ */
 public class SearchSpiderImpl implements SearchSpider {
     private final static String url = "https://www.biquge.tv/modules/article/search.php?searchkey=";
 

@@ -19,11 +19,13 @@ public class UtilsTests {
         IndexSpider indexSpider = new IndexSpiderImpl();
         List<SpiderIndex> index = searchSpider.findAllIndex("斗破苍穹");
         if (index.size()>0) {
-            SpiderInfoDTO spiderInfo = indexSpider.makeSpiderInfo(index.get(0).getUrl());
+            TempChapterIndex TempChapterIndex = indexSpider.getIndex(index.get(0).getUrl());
             for (var i : index){
                 System.out.println(i);
             }
-            System.out.println(spiderInfo);
+            for (var i : TempChapterIndex.getChapters()){
+                System.out.println(i);
+            }
         }
     }
 

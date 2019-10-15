@@ -1,8 +1,10 @@
 package com.ndovel.ebook.spider.core;
 
-import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import com.ndovel.ebook.model.dto.TempChapter;
+
+import java.util.List;
 
 public interface IndexSpider {
 
-    SpiderInfoDTO makeSpiderInfo(String url);
+    List<TempChapter> getIndex(String url);
 }
