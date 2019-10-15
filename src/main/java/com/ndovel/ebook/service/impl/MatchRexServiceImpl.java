@@ -9,6 +9,9 @@ import com.ndovel.ebook.utils.DTOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +27,13 @@ public class MatchRexServiceImpl implements MatchRexService {
     public List<MatchRexDTO> getAllRex() {
         List<MatchRex> l = matchRexRepository.findAllIsExist();
         return DTOUtils.listToDTOs(l, MatchRexDTO.class);
+    }
+
+    @Override
+    public Page<MatchRexDTO> find(Integer index, Integer size) {
+        Pageable pageable = PageRequest.of(index, size);
+        return matchRexRepository.findIsExist(pageable)
+                .map(matchRex -> new MatchRexDTO().init(matchRex));
     }
 
     @CacheEvict(cacheNames = {CacheNameConstants.MATCH_REX}, allEntries = true)

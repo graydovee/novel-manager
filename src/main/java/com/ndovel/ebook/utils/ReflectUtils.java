@@ -145,7 +145,7 @@ public class ReflectUtils {
         T t = null;
         try {
             t = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+        }  catch (IllegalAccessException | InstantiationException e) {
             log.error(e.getMessage(),e);
         }
         return t;

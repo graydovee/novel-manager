@@ -17,18 +17,15 @@ public class BookController {
     @Autowired
     private BookService bookService;
 
-    @Autowired
-    private SpiderService spiderService;
 
     @GetMapping("/book")
-    public Response getAllBook(){
-        return Response.success(bookService.getAllBook());
+    public Response getAllBook(Integer index, Integer size){
+        if(index==null || size==null || size<=0)
+            return Response.success(bookService.getAllBook());
+        else
+            return Response.success(bookService.find(index, size));
     }
 
-    @GetMapping("/spider")
-    public Response spiderOne(String url, Integer matchRexId){
-        return Response.success(spiderService.spiderOne(url, matchRexId));
-    }
 
     @GetMapping("/find")
     public Response exactBook(Integer id){

@@ -18,18 +18,23 @@
 ### 响应体基本格式
 ```json
 {
-    code: 200,
-    message: "success",
-    data: XXX
+    "code": 200,
+    "message": "success",
+    "data": "XXX"
 }
 ```
 
 接口url | 请求方法 | 权限 | 参数 | 说明
 -|-|-|-|-
 /book | get | - | - | 获取所有小说
-/spider | get | - | url, matchRexId | 爬取一章（不保存）
 /find | get | - | id | 获取指定的一本小说
 /find | post | - | name | 获取所有符合“作者名或书名含有参数”的小说
 /chapter| get | - | bookId,pageIndex,pageSize | 获取指定小说的章节目录后面两个参数可不传，不穿即查询全部
 /chapter| post | - | chapterId | 获取指定id的章节
 /content| get | - | id | 根据contentid获取指定章节的内容
+/spider/search | post | - | name | 搜索小说
+/spider/index | post | - | url | 获取小说章节目录
+/spider/content | post | - | url, matchRexId | 获取具体章节内容
+
+## [后台管理系统](https://github.com/graydovee/vue-ebook-admin)
+## [前端展示页面](https://github.com/graydovee/vue-ebook)

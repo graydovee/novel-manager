@@ -2,24 +2,26 @@ package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.DataIsNotExistException;
-import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.dto.ContentDTO;
-import com.ndovel.ebook.model.dto.MatchRexDTO;
-import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.model.entity.*;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.service.SpiderService;
-import com.ndovel.ebook.spider.core.impl.CommonSpider;
+import com.ndovel.ebook.spider.core.IndexSpider;
+import com.ndovel.ebook.spider.core.NovelSpider;
+import com.ndovel.ebook.spider.core.SearchSpider;
+import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
+import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
+import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -77,30 +79,49 @@ public class SpiderServiceImpl implements SpiderService {
     }
 
     @Override
-    public Map<String, String> spiderOne(String url, Integer matchRexId) {
+    public TempChapter spiderOne(String url, Integer matchRexId) {
+        NovelSpider spider = getSpider(url, matchRexId);
+        spider.run();
+        return spider.getTempChapter();
+    }
+
+    @Override
+    public TempChapter spiderOne(TempChapter tempChapter) {
+        return spiderOne(tempChapter.getUrl(), 0);
+    }
+
+    @Override
+    public List<SpiderIndex> spiderByName(String name) {
+        SearchSpider searchSpider = new SearchSpiderImpl();
+        return searchSpider.findAllIndex(name);
+    }
+
+    @Override
+    public List<TempChapter> spiderByIndex(String url) {
+        IndexSpider indexSpider = new IndexSpiderImpl();
+
+        return indexSpider.getIndex(url);
+    }
+
+    private NovelSpider getSpider(String url, Integer matchRexId){
         SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
         spiderInfo.setUrl(url);
-        MatchRex rex = matchRexRepository.findOneIsExist(matchRexId).orElseGet(()->{
-            List<MatchRex> rexList = matchRexRepository.findAllIsExist();
-            if(rexList!=null && rexList.size()>0){
-                return rexList.get(0);
-            }else{
+        MatchRex rex = null;
+        if (matchRexId > 0){
+            rex = matchRexRepository.findOneIsExist(matchRexId).orElse(null);
+        }
+        if (rex == null) {
+            Pageable pageable = PageRequest.of(0,1);
+            Page<MatchRex> page = matchRexRepository.findIsExist(pageable);
+            if (page.getTotalElements() > 0){
+                rex =  page.getContent().get(0);
+            }else {
                 throw new DataIsNotExistException();
             }
-        });
-        spiderInfo.setMatchRex(new MatchRexDTO().init(rex));
+            spiderInfo.setMatchRex(new MatchRexDTO().init(rex));
+        }
 
-        CommonSpider spider = new CommonSpider(spiderInfo);
-        spider.run();
-
-        Map<String, String> map = new HashMap<>();
-        String contentStr = Optional.ofNullable(spider.getContent())
-                .map(ContentDTO::getInfo)
-                .orElse("");
-        map.put("content", contentStr);
-        map.put("next", spider.getUrl());
-
-        return map;
+        return new CommonNovelSpider(spiderInfo);
     }
 
 

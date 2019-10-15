@@ -2,6 +2,7 @@ package com.ndovel.ebook.spider.core;
 
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
+import com.ndovel.ebook.model.dto.TempChapter;
 
 public interface NovelSpider {
 
@@ -17,5 +18,7 @@ public interface NovelSpider {
     ContentDTO getContent();
 
     ChapterDTO getChapter();
+
+    TempChapter getTempChapter();
 
 }
