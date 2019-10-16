@@ -15,7 +15,6 @@ import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
 import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +41,6 @@ public class SpiderServiceImpl implements SpiderService {
     @Autowired
     private VisitRepository visitRepository;
 
-    @CacheEvict(cacheNames = {CacheNameConstants.BOOK}, allEntries = true)
     @Override
     public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
         SpiderInfo spiderInfo = new SpiderInfo();

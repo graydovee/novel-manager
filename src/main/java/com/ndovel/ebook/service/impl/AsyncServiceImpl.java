@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.InvalidArgsException;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
@@ -18,7 +17,6 @@ import com.ndovel.ebook.spider.core.NovelSpider;
 import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +36,6 @@ public class AsyncServiceImpl implements AsyncService {
     @Autowired
     private SpiderInfoRepository spiderInfoRepository;
 
-    @CacheEvict(cacheNames = {CacheNameConstants.CHAPTER}, key = "#spiderInfo.book.id")
     @Async
     @Override
     public void down(SpiderInfo spiderInfo, Boolean isNotFist){

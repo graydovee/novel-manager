@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.entity.Chapter;
@@ -10,8 +9,6 @@ import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +33,6 @@ public class ChapterServiceImpl implements ChapterService {
     @Autowired
     private VisitRepository visitRepository;
 
-    @Cacheable(value = {CacheNameConstants.CHAPTER},key = "#bookId")
     @Override
     public List<ChapterDTO> findAllChapterByBookId(Integer bookId) {
         List<Chapter> list = chapterRepository.findAllByBookId(bookId);
@@ -50,7 +46,6 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Transactional
-    @CacheEvict(value = {CacheNameConstants.CHAPTER}, key = "#bookId")
     @Override
     public void delChapterByBookId(Integer bookId) {
         chapterRepository.deleteAllByBookId(bookId);
