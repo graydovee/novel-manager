@@ -9,7 +9,6 @@ import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,17 +21,20 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
 
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
     private ChapterService chapterService;
-
-    @Autowired
     private VisitRepository visitRepository;
-
-    @Autowired
     private SpiderInfoRepository spiderInfoRepository;
+
+    public BookServiceImpl(BookRepository bookRepository,
+                           ChapterService chapterService,
+                           VisitRepository visitRepository,
+                           SpiderInfoRepository spiderInfoRepository) {
+        this.bookRepository = bookRepository;
+        this.chapterService = chapterService;
+        this.visitRepository = visitRepository;
+        this.spiderInfoRepository = spiderInfoRepository;
+    }
 
     @Override
     public List<BookDTO> getAllBook() {

@@ -4,7 +4,6 @@ import com.ndovel.ebook.model.entity.Authority;
 import com.ndovel.ebook.model.entity.User;
 import com.ndovel.ebook.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,11 +19,13 @@ import java.util.List;
 @Controller
 public class InitController {
 
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    public InitController(UserService userService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @GetMapping("/")
     public String init(){

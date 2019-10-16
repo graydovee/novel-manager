@@ -2,8 +2,6 @@ package com.ndovel.ebook.controller;
 
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.SpiderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,8 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/spider")
 public class SpiderController {
 
-    @Autowired
     private SpiderService spiderService;
+
+    public SpiderController(SpiderService spiderService) {
+        this.spiderService = spiderService;
+    }
 
     @PostMapping("/content")
     public Response spiderOne(String url, Integer matchRexId){

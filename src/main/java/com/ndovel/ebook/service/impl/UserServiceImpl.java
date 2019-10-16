@@ -5,7 +5,6 @@ import com.ndovel.ebook.model.entity.User;
 import com.ndovel.ebook.repository.AuthorityRepository;
 import com.ndovel.ebook.repository.UserRepository;
 import com.ndovel.ebook.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,12 +14,13 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private AuthorityRepository authorityRepository;
-
-
-    @Autowired
     private UserRepository userRepository;
+
+    public UserServiceImpl(AuthorityRepository authorityRepository, UserRepository userRepository) {
+        this.authorityRepository = authorityRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<Authority> getAuthorities() {

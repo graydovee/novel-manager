@@ -2,38 +2,34 @@ package com.ndovel.ebook.controller.admin;
 
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
-import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.stream.Collectors;
 
 @Slf4j
 @RequestMapping("/admin")
 @RestController
 public class AdminSpiderController {
 
-    @Autowired
     private SpiderService spiderService;
-
-    @Autowired
     private MatchRexService matchRexService;
-
-    @Autowired
     private BookService bookService;
-
-    @Autowired
     private ChapterService chapterService;
-
-    @Autowired
     private SpiderInfoService spiderInfoService;
 
-    @Autowired
-    private AsyncService asyncService;
+    public AdminSpiderController(SpiderService spiderService,
+                                 MatchRexService matchRexService,
+                                 BookService bookService,
+                                 ChapterService chapterService,
+                                 SpiderInfoService spiderInfoService) {
+        this.spiderService = spiderService;
+        this.matchRexService = matchRexService;
+        this.bookService = bookService;
+        this.chapterService = chapterService;
+        this.spiderInfoService = spiderInfoService;
+    }
 
     @PostMapping("/book")
     public Response spider(String bookName, String authorName, String url, Integer matchRexId){
@@ -75,11 +71,17 @@ public class AdminSpiderController {
     }
 
     @GetMapping("/spider_info")
-    public Response getSpiderInfo(){
-        return Response.success(spiderInfoService.findAll().stream()
-                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo))
-                .collect(Collectors.toList()));
+    public Response getSpiderInfo(Integer index, Integer size, Integer mod){
+        if (mod==null)
+            return Response.success(spiderInfoService.find(index, size));
+        else if (mod == 0)
+            return Response.success(spiderInfoService.find(false, index, size));
+        else if (mod == 1)
+            return Response.success(spiderInfoService.find(true, index, size));
+        else
+            return Response.error();
     }
+
 
     @DeleteMapping("/spider_info")
     public Response delSpiderInfo(Integer id, Integer refresh){
@@ -98,7 +100,7 @@ public class AdminSpiderController {
 
     @PutMapping("/spider_info")
     public Response refreshSpiderInfo(Integer id, String url, Integer matchRexId){
-        SpiderInfo s = spiderInfoService.save(id, url, matchRexId);
+        SpiderInfoDTO s = spiderInfoService.save(id, url, matchRexId);
         if(s!=null){
             return Response.success(s);
         }
@@ -112,13 +114,7 @@ public class AdminSpiderController {
      */
     @PostMapping("/update")
     public Response update(Integer id){
-        Response response = new Response(HttpStatus.INTERNAL_SERVER_ERROR, "ERROR");
-        spiderInfoService.findIsExist(id).ifPresent(spiderInfo -> {
-            asyncService.down(spiderInfo, true);
-            response.setCode(200);
-            response.setMessage("OK");
-            response.setData("OK");
-        });
-        return response;
+        SpiderInfoDTO update = spiderService.update(id);
+        return Response.success(update);
     }
 }

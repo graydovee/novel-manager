@@ -16,7 +16,6 @@ import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.spider.core.NovelSpider;
 import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +23,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class AsyncServiceImpl implements AsyncService {
 
-    @Autowired
     private ContentRepository contentRepository;
-
-    @Autowired
     private ChapterRepository chapterRepository;
-
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
     private SpiderInfoRepository spiderInfoRepository;
+
+    public AsyncServiceImpl(ContentRepository contentRepository,
+                            ChapterRepository chapterRepository,
+                            BookRepository bookRepository,
+                            SpiderInfoRepository spiderInfoRepository) {
+        this.contentRepository = contentRepository;
+        this.chapterRepository = chapterRepository;
+        this.bookRepository = bookRepository;
+        this.spiderInfoRepository = spiderInfoRepository;
+    }
 
     @Async
     @Override

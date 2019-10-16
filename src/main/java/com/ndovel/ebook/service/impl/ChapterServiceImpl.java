@@ -8,7 +8,6 @@ import com.ndovel.ebook.repository.ContentRepository;
 import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,20 +17,22 @@ import javax.persistence.criteria.Path;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ChapterServiceImpl implements ChapterService {
 
 
-    @Autowired
     private ChapterRepository chapterRepository;
-
-    @Autowired
     private ContentRepository contentRepository;
-
-    @Autowired
     private VisitRepository visitRepository;
+
+    public ChapterServiceImpl(ChapterRepository chapterRepository,
+                              ContentRepository contentRepository,
+                              VisitRepository visitRepository) {
+        this.chapterRepository = chapterRepository;
+        this.contentRepository = contentRepository;
+        this.visitRepository = visitRepository;
+    }
 
     @Override
     public List<ChapterDTO> findAllChapterByBookId(Integer bookId) {

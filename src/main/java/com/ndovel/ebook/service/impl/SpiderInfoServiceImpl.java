@@ -1,14 +1,19 @@
 package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.exception.InvalidArgsException;
+import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.repository.MatchRexRepository;
 import com.ndovel.ebook.repository.SpiderInfoRepository;
 import com.ndovel.ebook.service.SpiderInfoService;
+import com.ndovel.ebook.utils.DTOUtils;
 import com.ndovel.ebook.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -16,27 +21,44 @@ import java.util.Optional;
 @Service
 public class SpiderInfoServiceImpl implements SpiderInfoService {
 
-    @Autowired
     private SpiderInfoRepository spiderInfoRepository;
-
-    @Autowired
     private MatchRexRepository matchRexRepository;
 
-    @Override
-    public List<SpiderInfo> findAll() {
-        return spiderInfoRepository.findAllIsExist();
+    public SpiderInfoServiceImpl(SpiderInfoRepository spiderInfoRepository,
+                                 MatchRexRepository matchRexRepository) {
+        this.spiderInfoRepository = spiderInfoRepository;
+        this.matchRexRepository = matchRexRepository;
     }
 
     @Override
-    public List<SpiderInfo> findAllNotFinished() {
-        return spiderInfoRepository.findAllNotFinish();
+    public List<SpiderInfoDTO> findAll() {
+        return DTOUtils.listToDTOs(spiderInfoRepository.findAllIsExist(), SpiderInfoDTO.class);
     }
 
     @Override
-    public Optional<SpiderInfo> findIsExist(Integer id) {
+    public Page<SpiderInfoDTO> find(Integer index, Integer size) {
+
+        return spiderInfoRepository.findIsExist(PageRequest.of(index, size))
+                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
+    }
+
+    @Override
+    public Page<SpiderInfoDTO> find(Boolean finished, Integer index, Integer size) {
+
+        return spiderInfoRepository.findIsExist((root, query, criteriaBuilder) -> {
+                Path f = root.get("finished");
+                return criteriaBuilder.equal(f, finished);
+            }, PageRequest.of(index, size))
+                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
+    }
+
+
+    @Override
+    public Optional<SpiderInfoDTO> findIsExist(Integer id) {
         if (id == null)
             return Optional.empty();
-        return spiderInfoRepository.findOneIsExist(id);
+        return spiderInfoRepository.findOneIsExist(id)
+                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
     }
 
     @Transactional
@@ -52,7 +74,7 @@ public class SpiderInfoServiceImpl implements SpiderInfoService {
     }
 
     @Override
-    public SpiderInfo save(Integer id, String url, Integer matchRexId){
+    public SpiderInfoDTO save(Integer id, String url, Integer matchRexId){
         SpiderInfo s = spiderInfoRepository.findById(id)
                 .orElseThrow(InvalidArgsException::new);
 
@@ -64,6 +86,7 @@ public class SpiderInfoServiceImpl implements SpiderInfoService {
             matchRexRepository.findOneIsExist(matchRexId).ifPresent(s::setMatchRex);
         }
 
-        return spiderInfoRepository.save(s);
+        SpiderInfo saved = spiderInfoRepository.save(s);
+        return new SpiderInfoDTO().init(saved);
     }
 }

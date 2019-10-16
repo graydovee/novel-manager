@@ -1,21 +1,24 @@
 package com.ndovel.ebook.service;
 
-import com.ndovel.ebook.model.entity.SpiderInfo;
+import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface SpiderInfoService {
 
-    List<SpiderInfo> findAll();
+    List<SpiderInfoDTO> findAll();
 
-    List<SpiderInfo> findAllNotFinished();
+    Page<SpiderInfoDTO> find(Integer index, Integer size);
 
-    Optional<SpiderInfo> findIsExist(Integer id);
+    Page<SpiderInfoDTO> find(Boolean finished, Integer index, Integer size);
+
+    Optional<SpiderInfoDTO> findIsExist(Integer id);
 
     Integer finishSpider(Integer id);
 
     Integer continueSpider(Integer id);
 
-    SpiderInfo save(Integer id, String url, Integer matchRexId);
+    SpiderInfoDTO save(Integer id, String url, Integer matchRexId);
 }

@@ -2,9 +2,7 @@ package com.ndovel.ebook.controller;
 
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.BookService;
-import com.ndovel.ebook.service.SpiderService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BookController {
 
-    @Autowired
     private BookService bookService;
 
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
     @GetMapping("/book")
     public Response getAllBook(Integer index, Integer size){

@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.model.entity.*;
@@ -14,7 +13,6 @@ import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
 import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,20 +24,26 @@ import java.util.List;
 @Service
 public class SpiderServiceImpl implements SpiderService {
 
-    @Autowired
     private AuthorRepository authorRepository;
-
-    @Autowired
     private MatchRexRepository matchRexRepository;
-
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
+    private VisitRepository visitRepository;
+    private SpiderInfoRepository spiderInfoRepository;
     private AsyncService asyncService;
 
-    @Autowired
-    private VisitRepository visitRepository;
+    public SpiderServiceImpl(AuthorRepository authorRepository,
+                             MatchRexRepository matchRexRepository,
+                             BookRepository bookRepository,
+                             VisitRepository visitRepository,
+                             SpiderInfoRepository spiderInfoRepository,
+                             AsyncService asyncService) {
+        this.authorRepository = authorRepository;
+        this.matchRexRepository = matchRexRepository;
+        this.bookRepository = bookRepository;
+        this.visitRepository = visitRepository;
+        this.spiderInfoRepository = spiderInfoRepository;
+        this.asyncService = asyncService;
+    }
 
     @Override
     public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
@@ -84,8 +88,12 @@ public class SpiderServiceImpl implements SpiderService {
     }
 
     @Override
-    public TempChapter spiderOne(TempChapter tempChapter) {
-        return spiderOne(tempChapter.getUrl(), 0);
+    public SpiderInfoDTO update(Integer spiderInfoId) {
+        Object obj = spiderInfoRepository.findOneIsExist(spiderInfoId).map(spiderInfo -> {
+            asyncService.down(spiderInfo, true);
+            return new SpiderInfoDTO().init(spiderInfo);
+        }).orElse(null);
+        return (SpiderInfoDTO)obj;
     }
 
     @Override
