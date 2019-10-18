@@ -43,6 +43,12 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    public Optional<BookDTO> findExact(String bookName, String authorName) {
+        return bookRepository.selBookByNameAndAuthor(bookName, authorName)
+                .map(book -> new BookDTO().init(book));
+    }
+
+    @Override
     public List<BookDTO> findByName(String name) {
         List<Book> books = bookRepository.selBookByName(name);
 

@@ -51,7 +51,13 @@ public class SpiderServiceImpl implements SpiderService {
         spiderInfo.setUrl(url);
 
         spiderInfo.setMatchRex(matchRexRepository.findOneIsExist(matchRexDTOId)
-                .orElseThrow(DataIsNotExistException::new));
+                .orElseGet(()->{
+                    Page<MatchRex> isExist = matchRexRepository.findIsExist(PageRequest.of(0, 1));
+                    if (isExist.getTotalElements() > 0)
+                        return  isExist.getContent().get(0);
+                    else
+                        throw new DataIsNotExistException();
+                }));
 
 
         Book book = new Book();
