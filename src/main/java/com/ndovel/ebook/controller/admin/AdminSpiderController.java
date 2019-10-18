@@ -41,8 +41,11 @@ public class AdminSpiderController {
     }
 
     @GetMapping("/rex")
-    public Response getAllRex(){
-        return Response.success(matchRexService.getAllRex());
+    public Response getAllRex(Integer index, Integer size){
+        if(index == null || size == null)
+            return Response.success(matchRexService.getAllRex());
+        else
+            return Response.success(matchRexService.find(index, size));
     }
 
     @PostMapping("/rex")

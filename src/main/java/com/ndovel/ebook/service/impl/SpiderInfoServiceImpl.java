@@ -37,9 +37,11 @@ public class SpiderInfoServiceImpl implements SpiderInfoService {
 
     @Override
     public Page<SpiderInfoDTO> find(Integer index, Integer size) {
-
-        return spiderInfoRepository.findIsExist(PageRequest.of(index, size))
-                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
+        if(index!=null && size !=null){
+            return spiderInfoRepository.findIsExist(PageRequest.of(index, size))
+                    .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
+        }
+        return null;
     }
 
     @Override
