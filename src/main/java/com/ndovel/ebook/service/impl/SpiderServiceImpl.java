@@ -59,6 +59,7 @@ public class SpiderServiceImpl implements SpiderService {
                         throw new DataIsNotExistException();
                 }));
 
+        log.info("开始爬取：" + bookName);
 
         Book book = new Book();
         book.setName(bookName);
@@ -88,6 +89,7 @@ public class SpiderServiceImpl implements SpiderService {
 
     @Override
     public TempChapter spiderOne(String url, Integer matchRexId) {
+        log.info("爬取内容：" + url);
         NovelSpider spider = getSpider(url, matchRexId);
         spider.run();
         return spider.getTempChapter();
@@ -95,6 +97,7 @@ public class SpiderServiceImpl implements SpiderService {
 
     @Override
     public SpiderInfoDTO update(Integer spiderInfoId) {
+        log.info("手动更新：" + spiderInfoId);
         Object obj = spiderInfoRepository.findOneIsExist(spiderInfoId).map(spiderInfo -> {
             asyncService.down(spiderInfo, true);
             return new SpiderInfoDTO().init(spiderInfo);
@@ -104,12 +107,14 @@ public class SpiderServiceImpl implements SpiderService {
 
     @Override
     public List<SpiderIndex> spiderByName(String name) {
+        log.info("搜索小说：" + name);
         SearchSpider searchSpider = new SearchSpiderImpl();
         return searchSpider.findAllIndex(name);
     }
 
     @Override
     public List<TempChapter> spiderByIndex(String url) {
+        log.info("爬取目录：" + url);
         IndexSpider indexSpider = new IndexSpiderImpl();
 
         return indexSpider.getIndex(url);
