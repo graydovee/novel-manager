@@ -75,11 +75,11 @@ public class AdminSpiderController {
 
     @GetMapping("/spider_info")
     public Response getSpiderInfo(Integer index, Integer size, Integer mod){
-        if (mod==null)
+        if (mod == null || mod == 0)
             return Response.success(spiderInfoService.find(index, size));
-        else if (mod == 0)
-            return Response.success(spiderInfoService.find(false, index, size));
         else if (mod == 1)
+            return Response.success(spiderInfoService.find(false, index, size));
+        else if (mod == 2)
             return Response.success(spiderInfoService.find(true, index, size));
         else
             return Response.error();

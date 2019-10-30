@@ -51,6 +51,7 @@ public class AsyncServiceImpl implements AsyncService {
             spider.run();
 
 
+        int spiderTimes = 0;
         //爬取
         while (spider.hasNext()){
             String preUrl = spider.getUrl();
@@ -79,10 +80,11 @@ public class AsyncServiceImpl implements AsyncService {
                     oldChapter.setNextChapterId(newChapter.getId());
                     chapterRepository.save(oldChapter);
                 }
-
+                spiderTimes++;
                 spiderInfo.setFinalChapter(newChapter);
             }
         }
+        log.info("爬取结束，本次爬取 " + spiderTimes + " 章");
         spiderInfoRepository.save(spiderInfo);
     }
 

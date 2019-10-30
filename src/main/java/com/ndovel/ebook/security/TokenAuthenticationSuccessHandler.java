@@ -1,6 +1,7 @@
 package com.ndovel.ebook.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ndovel.ebook.model.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,23 +27,25 @@ import java.util.HashMap;
 @Component("tokenAuthenticationSuccessHandler")
 public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
     private ClientDetailsService clientDetailsService;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
     private AuthorizationServerTokenServices authorizationServerTokenServices;
 
 
+    public TokenAuthenticationSuccessHandler(ObjectMapper objectMapper, ClientDetailsService clientDetailsService, PasswordEncoder passwordEncoder, AuthorizationServerTokenServices authorizationServerTokenServices) {
+        this.objectMapper = objectMapper;
+        this.clientDetailsService = clientDetailsService;
+        this.passwordEncoder = passwordEncoder;
+        this.authorizationServerTokenServices = authorizationServerTokenServices;
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+            throws IOException {
 
         String header = request.getHeader("Authorization");
 
@@ -77,7 +80,7 @@ public class TokenAuthenticationSuccessHandler implements AuthenticationSuccessH
 
     }
 
-    private String[] extractAndDecodeHeader(String header) throws IOException {
+    private String[] extractAndDecodeHeader(String header) {
         byte[] base64Token = header.substring(6).getBytes(StandardCharsets.UTF_8);
         byte[] decoded;
 

@@ -3,15 +3,16 @@ package com.ndovel.ebook.spider.core;
 
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
-import com.ndovel.ebook.spider.util.HttpClientUtils;
 import com.ndovel.ebook.spider.util.UrlUtils;
 import com.ndovel.ebook.utils.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
-public abstract class AbstractNovelSpider implements NovelSpider {
+@Slf4j
+public abstract class AbstractNovelSpider extends AbstractSpider implements NovelSpider {
     protected String url;
     protected boolean urlUes = false;
 
@@ -29,15 +30,6 @@ public abstract class AbstractNovelSpider implements NovelSpider {
 
         this.url = UrlUtils.urlFormat(firstPageUrl);
     }
-
-    private String getFullPath() {
-        return UrlUtils.urlFormat(url);
-    }
-
-    protected String getHtmlCode() {
-        return HttpClientUtils.get(getFullPath());
-    }
-
 
 
     protected abstract String getContentFormCode(String code);
@@ -67,7 +59,7 @@ public abstract class AbstractNovelSpider implements NovelSpider {
         this.urlUes = true;
 
         //获取页面源代码
-        String code = getHtmlCode();
+        String code = sendHttpGetRequest(url);
 
         if (code == null) {
             return;
