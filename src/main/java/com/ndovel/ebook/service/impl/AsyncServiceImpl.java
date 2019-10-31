@@ -84,7 +84,7 @@ public class AsyncServiceImpl implements AsyncService {
                 spiderInfo.setFinalChapter(newChapter);
             }
         }
-        log.info("爬取结束，本次爬取 " + spiderTimes + " 章");
+        log.info("小说：《" + book.getName() + "》爬取结束，本次爬取 " + spiderTimes + " 章");
         spiderInfoRepository.save(spiderInfo);
     }
 
