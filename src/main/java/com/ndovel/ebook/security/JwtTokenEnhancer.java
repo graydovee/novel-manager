@@ -12,15 +12,13 @@ import java.util.Map;
 
 public class JwtTokenEnhancer implements TokenEnhancer {
 
-    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
 
         Map<String, Object> map = new HashMap<>();
 
         User u = (User) authentication.getPrincipal();
-        map.put("create_time", dateFormat.format(u.getCreateTime()));
+        map.put("create_time", new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(u.getCreateTime()));
         ((DefaultOAuth2AccessToken)accessToken).setAdditionalInformation(map);
 
         return accessToken;

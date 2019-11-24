@@ -12,11 +12,18 @@ public abstract class AbstractSpider {
     }
 
     protected String sendHttpGetRequest(String url) {
-        try {
-            return HttpClientUtils.get(getFullPath(url));
-        } catch (RequestException e) {
-            log.error(e.getMessage(), e);
-            return null;
+        int num = 3;
+        for (int i = 1; i <= num; ++i) {
+            try {
+                return HttpClientUtils.get(getFullPath(url));
+            } catch (RequestException e) {
+                if (i < 3) {
+                    log.warn("ready to the " + (3 - num) + "th retry!");
+                } else {
+                    log.error(e.getMessage(), e);
+                }
+            }
         }
+        return null;
     }
 }
