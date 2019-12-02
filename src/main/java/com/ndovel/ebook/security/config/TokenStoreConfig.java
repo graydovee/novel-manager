@@ -15,20 +15,20 @@ public class TokenStoreConfig {
 
 
     @Bean
-    public TokenStore jwtTokenStore(){
+    public TokenStore jwtTokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
     }
 
 
     @Bean
-    public JwtAccessTokenConverter jwtAccessTokenConverter(){
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter accessTokenConverter = new JwtAccessTokenConverter();
         accessTokenConverter.setSigningKey("123456");
         return accessTokenConverter;
     }
 
     @Bean
-    public TokenEnhancer jwtTokenEnhancer(){
+    public TokenEnhancer jwtTokenEnhancer() {
         return new JwtTokenEnhancer();
     }
 }
