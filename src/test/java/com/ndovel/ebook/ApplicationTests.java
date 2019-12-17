@@ -1,6 +1,8 @@
 package com.ndovel.ebook;
 
 import com.ndovel.ebook.repository.*;
+import com.ndovel.ebook.service.AsyncService;
+import com.ndovel.ebook.service.ScheduledSpiderService;
 import com.ndovel.ebook.service.SpiderService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -15,28 +17,34 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ApplicationTests {
 
 	@Autowired
-	AuthorRepository authorRepository;
+	protected AuthorRepository authorRepository;
 
 	@Autowired
-	MatchRexRepository matchRexRepository;
+	protected MatchRexRepository matchRexRepository;
 
 	@Autowired
-	BookRepository bookRepository;
+	protected BookRepository bookRepository;
 
 	@Autowired
-	ContentRepository contentRepository;
+	protected ContentRepository contentRepository;
 
 	@Autowired
-	ChapterRepository chapterRepository;
+	protected ChapterRepository chapterRepository;
 
 	@Autowired
-	SpiderInfoRepository spiderInfoRepository;
+	protected SpiderInfoRepository spiderInfoRepository;
 
 	@Autowired
-    SpiderService spiderService;
+	protected SpiderService spiderService;
 
 	@Autowired
-	VisitRepository visitRepository;
+	protected VisitRepository visitRepository;
+
+	@Autowired
+	protected AsyncService asyncService;
+
+	@Autowired
+	protected ScheduledSpiderService ScheduledSpiderService;
 
 	@Test
 	public void text(){

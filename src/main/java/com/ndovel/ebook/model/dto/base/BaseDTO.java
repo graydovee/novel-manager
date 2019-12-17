@@ -1,7 +1,5 @@
 package com.ndovel.ebook.model.dto.base;
 
-import com.ndovel.ebook.model.entity.base.BaseEntity;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;

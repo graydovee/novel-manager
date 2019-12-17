@@ -24,14 +24,11 @@ public class ChapterServiceImpl implements ChapterService {
 
     private ChapterRepository chapterRepository;
     private ContentRepository contentRepository;
-    private VisitRepository visitRepository;
 
     public ChapterServiceImpl(ChapterRepository chapterRepository,
-                              ContentRepository contentRepository,
-                              VisitRepository visitRepository) {
+                              ContentRepository contentRepository) {
         this.chapterRepository = chapterRepository;
         this.contentRepository = contentRepository;
-        this.visitRepository = visitRepository;
     }
 
     @Override
@@ -57,7 +54,7 @@ public class ChapterServiceImpl implements ChapterService {
     public Optional<ContentDTO> findContentById(Integer contentId) {
         return contentRepository.findOneIsExist(contentId)
                 .map(content -> {
-                    visitRepository.addVisit(content.getId());
+                    contentRepository.addVisit(content.getId());
                     return new ContentDTO().init(content);
                 });
     }

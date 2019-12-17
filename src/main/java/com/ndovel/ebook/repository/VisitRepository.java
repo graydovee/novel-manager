@@ -17,8 +17,7 @@ public interface VisitRepository extends JpaRepository<Visit, Integer>, CrudRepo
     Optional<Visit> findByBookId(Integer bookId);
 
     @Modifying
-    @Query(value = "UPDATE visit v,content cn,chapter cp SET v.visit=v.visit+1 " +
-            "WHERE cp.content_id=cn.id AND v.book_id=cp.book_id AND cn.id=?1",
+    @Query(value = "update visit a join (select book_id,sum(visit) as vt from content cn join chapter cp on cn.id = cp.content_id group by book_id) b on a.book_id=b.book_id set a.visit=b.vt",
             nativeQuery = true)
-    void addVisit(Integer contentId);
+    void updateVisit();
 }

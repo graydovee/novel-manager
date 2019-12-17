@@ -20,4 +20,7 @@ import javax.persistence.Table;
 public class Content extends BaseEntity {
     @Column(name = "info",columnDefinition = "text")
     private String info;
+
+    @Column(name = "visit", columnDefinition = "bigint(20) default 0")
+    private Long visit;
 }
