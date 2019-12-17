@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
 import com.ndovel.ebook.model.entity.Chapter;
@@ -9,9 +8,6 @@ import com.ndovel.ebook.repository.ContentRepository;
 import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,22 +17,20 @@ import javax.persistence.criteria.Path;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ChapterServiceImpl implements ChapterService {
 
 
-    @Autowired
     private ChapterRepository chapterRepository;
-
-    @Autowired
     private ContentRepository contentRepository;
 
-    @Autowired
-    private VisitRepository visitRepository;
+    public ChapterServiceImpl(ChapterRepository chapterRepository,
+                              ContentRepository contentRepository) {
+        this.chapterRepository = chapterRepository;
+        this.contentRepository = contentRepository;
+    }
 
-    @Cacheable(value = {CacheNameConstants.CHAPTER},key = "#bookId")
     @Override
     public List<ChapterDTO> findAllChapterByBookId(Integer bookId) {
         List<Chapter> list = chapterRepository.findAllByBookId(bookId);
@@ -50,7 +44,6 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Transactional
-    @CacheEvict(value = {CacheNameConstants.CHAPTER}, key = "#bookId")
     @Override
     public void delChapterByBookId(Integer bookId) {
         chapterRepository.deleteAllByBookId(bookId);
@@ -61,7 +54,7 @@ public class ChapterServiceImpl implements ChapterService {
     public Optional<ContentDTO> findContentById(Integer contentId) {
         return contentRepository.findOneIsExist(contentId)
                 .map(content -> {
-                    visitRepository.addVisit(content.getId());
+                    contentRepository.addVisit(content.getId());
                     return new ContentDTO().init(content);
                 });
     }

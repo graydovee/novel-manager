@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.InvalidArgsException;
 import com.ndovel.ebook.model.dto.ChapterDTO;
 import com.ndovel.ebook.model.dto.ContentDTO;
@@ -17,8 +16,6 @@ import com.ndovel.ebook.service.AsyncService;
 import com.ndovel.ebook.spider.core.NovelSpider;
 import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -26,19 +23,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class AsyncServiceImpl implements AsyncService {
 
-    @Autowired
     private ContentRepository contentRepository;
-
-    @Autowired
     private ChapterRepository chapterRepository;
-
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
     private SpiderInfoRepository spiderInfoRepository;
 
-    @CacheEvict(cacheNames = {CacheNameConstants.CHAPTER}, key = "#spiderInfo.book.id")
+    public AsyncServiceImpl(ContentRepository contentRepository,
+                            ChapterRepository chapterRepository,
+                            BookRepository bookRepository,
+                            SpiderInfoRepository spiderInfoRepository) {
+        this.contentRepository = contentRepository;
+        this.chapterRepository = chapterRepository;
+        this.bookRepository = bookRepository;
+        this.spiderInfoRepository = spiderInfoRepository;
+    }
+
     @Async
     @Override
     public void down(SpiderInfo spiderInfo, Boolean isNotFist){
@@ -52,6 +51,7 @@ public class AsyncServiceImpl implements AsyncService {
             spider.run();
 
 
+        int spiderTimes = 0;
         //爬取
         while (spider.hasNext()){
             String preUrl = spider.getUrl();
@@ -80,10 +80,11 @@ public class AsyncServiceImpl implements AsyncService {
                     oldChapter.setNextChapterId(newChapter.getId());
                     chapterRepository.save(oldChapter);
                 }
-
+                spiderTimes++;
                 spiderInfo.setFinalChapter(newChapter);
             }
         }
+        log.info("小说：《" + book.getName() + "》爬取结束，本次爬取 " + spiderTimes + " 章");
         spiderInfoRepository.save(spiderInfo);
     }
 

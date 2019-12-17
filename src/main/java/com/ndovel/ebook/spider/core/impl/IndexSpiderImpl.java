@@ -1,6 +1,7 @@
 package com.ndovel.ebook.spider.core.impl;
 
 import com.ndovel.ebook.model.dto.*;
+import com.ndovel.ebook.spider.core.AbstractSpider;
 import com.ndovel.ebook.spider.core.IndexSpider;
 import com.ndovel.ebook.spider.util.HttpClientUtils;
 import com.ndovel.ebook.spider.util.UrlUtils;
@@ -17,12 +18,12 @@ import java.util.Optional;
 /**
  * 爬取章节目录
  */
-public class IndexSpiderImpl implements IndexSpider {
+public class IndexSpiderImpl extends AbstractSpider implements IndexSpider {
 
     private List<TempChapter> make(String url){
         List<TempChapter> index = new ArrayList<>();
 
-        Document document = Jsoup.parse(HttpClientUtils.get(url));
+        Document document = Jsoup.parse(sendHttpGetRequest(url));
 
         Optional.ofNullable(document.getElementById("list"))
                 .map(element -> element.getElementsByTag("dl"))

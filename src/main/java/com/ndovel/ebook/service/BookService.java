@@ -13,6 +13,8 @@ public interface BookService {
 
     List<BookDTO> findByName(String name);
 
+    Optional<BookDTO> findExact(String bookName, String authorName);
+
     Page<BookDTO> find(Integer index, Integer size);
 
     Optional<BookDTO> findOneById(Integer id);

@@ -14,7 +14,6 @@ import java.util.List;
 
 public class UtilsTests {
 
-    @Test
     public void testSpider(){
         SearchSpider searchSpider = new SearchSpiderImpl();
         IndexSpider indexSpider = new IndexSpiderImpl();

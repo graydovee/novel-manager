@@ -2,7 +2,6 @@ package com.ndovel.ebook.model.dto;
 
 import com.ndovel.ebook.model.dto.base.BaseDTO;
 import com.ndovel.ebook.model.entity.Author;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;

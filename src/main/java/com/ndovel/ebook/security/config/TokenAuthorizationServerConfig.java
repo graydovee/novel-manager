@@ -1,6 +1,5 @@
 package com.ndovel.ebook.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,23 +18,26 @@ import java.util.List;
 @Configuration
 public class TokenAuthorizationServerConfig extends AuthorizationServerConfigurerAdapter {
 
-    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
     private UserDetailsService userDetailsServiceImpl;
 
-    @Autowired
     private JwtAccessTokenConverter jwtAccessTokenConverter;
 
-    @Autowired
     private TokenEnhancer jwtTokenEnhancer;
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public TokenAuthorizationServerConfig(AuthenticationManager authenticationManager, UserDetailsService userDetailsServiceImpl, JwtAccessTokenConverter jwtAccessTokenConverter, TokenEnhancer jwtTokenEnhancer, PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsServiceImpl = userDetailsServiceImpl;
+        this.jwtAccessTokenConverter = jwtAccessTokenConverter;
+        this.jwtTokenEnhancer = jwtTokenEnhancer;
+        this.passwordEncoder = passwordEncoder;
+    }
+
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security) {
         security
                 .tokenKeyAccess("permitAll()")
                 .checkTokenAccess("permitAll()")
@@ -44,7 +46,7 @@ public class TokenAuthorizationServerConfig extends AuthorizationServerConfigure
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
 
 
         TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
@@ -53,7 +55,8 @@ public class TokenAuthorizationServerConfig extends AuthorizationServerConfigure
         enhancers.add(jwtAccessTokenConverter);
         tokenEnhancerChain.setTokenEnhancers(enhancers);
 
-        endpoints.authenticationManager(authenticationManager)
+        endpoints.tokenEnhancer(tokenEnhancerChain)
+                .authenticationManager(authenticationManager)
                 .userDetailsService(userDetailsServiceImpl)
                 .accessTokenConverter(jwtAccessTokenConverter);
     }

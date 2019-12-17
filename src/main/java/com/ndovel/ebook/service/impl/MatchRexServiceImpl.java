@@ -1,14 +1,10 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.entity.MatchRex;
 import com.ndovel.ebook.repository.MatchRexRepository;
 import com.ndovel.ebook.service.MatchRexService;
 import com.ndovel.ebook.utils.DTOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +15,12 @@ import java.util.List;
 @Service
 public class MatchRexServiceImpl implements MatchRexService {
 
-    @Autowired
     private MatchRexRepository matchRexRepository;
 
-    @Cacheable(cacheNames = {CacheNameConstants.MATCH_REX})
+    public MatchRexServiceImpl(MatchRexRepository matchRexRepository) {
+        this.matchRexRepository = matchRexRepository;
+    }
+
     @Override
     public List<MatchRexDTO> getAllRex() {
         List<MatchRex> l = matchRexRepository.findAllIsExist();
@@ -36,7 +34,6 @@ public class MatchRexServiceImpl implements MatchRexService {
                 .map(matchRex -> new MatchRexDTO().init(matchRex));
     }
 
-    @CacheEvict(cacheNames = {CacheNameConstants.MATCH_REX}, allEntries = true)
     @Override
     public MatchRexDTO save(MatchRex matchRex) {
         if(!(matchRex==null ||
@@ -49,7 +46,6 @@ public class MatchRexServiceImpl implements MatchRexService {
         return new MatchRexDTO().init(matchRex);
     }
 
-    @CacheEvict(cacheNames = {CacheNameConstants.MATCH_REX}, allEntries = true)
     @Override
     public void delById(Integer id) {
         matchRexRepository.deleteById(id);

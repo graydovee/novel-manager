@@ -1,6 +1,5 @@
 package com.ndovel.ebook.service.impl;
 
-import com.ndovel.ebook.constant.CacheNameConstants;
 import com.ndovel.ebook.exception.DataIsNotExistException;
 import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.model.entity.*;
@@ -14,8 +13,6 @@ import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
 import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,30 +24,42 @@ import java.util.List;
 @Service
 public class SpiderServiceImpl implements SpiderService {
 
-    @Autowired
     private AuthorRepository authorRepository;
-
-    @Autowired
     private MatchRexRepository matchRexRepository;
-
-    @Autowired
     private BookRepository bookRepository;
-
-    @Autowired
+    private VisitRepository visitRepository;
+    private SpiderInfoRepository spiderInfoRepository;
     private AsyncService asyncService;
 
-    @Autowired
-    private VisitRepository visitRepository;
+    public SpiderServiceImpl(AuthorRepository authorRepository,
+                             MatchRexRepository matchRexRepository,
+                             BookRepository bookRepository,
+                             VisitRepository visitRepository,
+                             SpiderInfoRepository spiderInfoRepository,
+                             AsyncService asyncService) {
+        this.authorRepository = authorRepository;
+        this.matchRexRepository = matchRexRepository;
+        this.bookRepository = bookRepository;
+        this.visitRepository = visitRepository;
+        this.spiderInfoRepository = spiderInfoRepository;
+        this.asyncService = asyncService;
+    }
 
-    @CacheEvict(cacheNames = {CacheNameConstants.BOOK}, allEntries = true)
     @Override
     public BookDTO spider(String bookName, String authorName, String url, Integer matchRexDTOId) {
         SpiderInfo spiderInfo = new SpiderInfo();
         spiderInfo.setUrl(url);
 
         spiderInfo.setMatchRex(matchRexRepository.findOneIsExist(matchRexDTOId)
-                .orElseThrow(DataIsNotExistException::new));
+                .orElseGet(()->{
+                    Page<MatchRex> isExist = matchRexRepository.findIsExist(PageRequest.of(0, 1));
+                    if (isExist.getTotalElements() > 0)
+                        return  isExist.getContent().get(0);
+                    else
+                        throw new DataIsNotExistException();
+                }));
 
+        log.info("开始爬取：" + bookName);
 
         Book book = new Book();
         book.setName(bookName);
@@ -80,24 +89,32 @@ public class SpiderServiceImpl implements SpiderService {
 
     @Override
     public TempChapter spiderOne(String url, Integer matchRexId) {
+        log.info("爬取内容：" + url);
         NovelSpider spider = getSpider(url, matchRexId);
         spider.run();
         return spider.getTempChapter();
     }
 
     @Override
-    public TempChapter spiderOne(TempChapter tempChapter) {
-        return spiderOne(tempChapter.getUrl(), 0);
+    public SpiderInfoDTO update(Integer spiderInfoId) {
+        log.info("手动更新：" + spiderInfoId);
+        Object obj = spiderInfoRepository.findOneIsExist(spiderInfoId).map(spiderInfo -> {
+            asyncService.down(spiderInfo, true);
+            return new SpiderInfoDTO().init(spiderInfo);
+        }).orElse(null);
+        return (SpiderInfoDTO)obj;
     }
 
     @Override
     public List<SpiderIndex> spiderByName(String name) {
+        log.info("搜索小说：" + name);
         SearchSpider searchSpider = new SearchSpiderImpl();
         return searchSpider.findAllIndex(name);
     }
 
     @Override
     public List<TempChapter> spiderByIndex(String url) {
+        log.info("爬取目录：" + url);
         IndexSpider indexSpider = new IndexSpiderImpl();
 
         return indexSpider.getIndex(url);

@@ -6,7 +6,6 @@ import com.ndovel.ebook.model.entity.User;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.UserService;
 import com.ndovel.ebook.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,11 +15,13 @@ import java.util.List;
 @RequestMapping("/root")
 public class AdminUserController {
 
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserService userService;
+
+    public AdminUserController(PasswordEncoder passwordEncoder, UserService userService) {
+        this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
+    }
 
     @PostMapping("/register")
     public Response register(String username, String password){

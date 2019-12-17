@@ -11,7 +11,7 @@ public interface SpiderService {
 
     TempChapter spiderOne(String url, Integer matchRexId);
 
-    TempChapter spiderOne(TempChapter tempChapter);
+    SpiderInfoDTO update(Integer SpiderInfoId);
 
     List<SpiderIndex> spiderByName(String name);
 

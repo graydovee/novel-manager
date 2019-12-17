@@ -8,7 +8,9 @@ import javax.persistence.*;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "chapter")
+@Table(name = "chapter",indexes = {
+        @Index(name = "index_book_id_deleted", columnList = "book_id,deleted")
+})
 @Entity
 public class Chapter extends BaseEntity {
 
