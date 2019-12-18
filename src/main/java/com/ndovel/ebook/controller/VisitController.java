@@ -20,7 +20,7 @@ public class VisitController {
     @GetMapping("/visit")
     public Response visit(Integer bookId) {
         if (bookId != null && bookId > 0) {
-            return Response.success(visitService.getData(null, null).stream()
+            return Response.success(visitService.getData(bookId, null, null).stream()
                     .mapToLong(VisitDTO::getVisit).sum());
         } else {
             return Response.success(visitService.getSum());
