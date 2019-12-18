@@ -2,6 +2,7 @@ package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.exception.InvalidArgsException;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import com.ndovel.ebook.model.entity.MatchRex;
 import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.repository.MatchRexRepository;
 import com.ndovel.ebook.repository.SpiderInfoRepository;
@@ -46,11 +47,32 @@ public class SpiderInfoServiceImpl implements SpiderInfoService {
 
     @Override
     public Page<SpiderInfoDTO> find(Boolean finished, Integer index, Integer size) {
+        if (finished == null) {
+            return find(index, size);
+        }
 
         return spiderInfoRepository.findIsExist((root, query, criteriaBuilder) -> {
                 Path f = root.get("finished");
                 return criteriaBuilder.equal(f, finished);
             }, PageRequest.of(index, size))
+                .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
+    }
+
+    @Override
+    public Page<SpiderInfoDTO> find(String name, Boolean finished, Integer index, Integer size) {
+        if (StringUtils.isEmpty(name)) {
+            return find(finished, index, size);
+        }
+
+        Specification<SpiderInfo> specification = (root, query, cb) -> {
+            Predicate predicate = cb.like(root.get("book").get("name"), "%" + name + "%");
+            if(finished != null) {
+                predicate = cb.and(cb.equal(root.get("finished"), finished), predicate);
+            }
+            return predicate;
+        };
+
+        return spiderInfoRepository.findIsExist(specification, PageRequest.of(index, size))
                 .map(spiderInfo -> new SpiderInfoDTO().init(spiderInfo));
     }
 

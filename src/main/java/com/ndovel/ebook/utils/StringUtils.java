@@ -9,6 +9,10 @@ public class StringUtils {
         return str == null || "".equals(str);
     }
 
+    public static boolean isNotEmpty(String str){
+        return str != null && !"".equals(str);
+    }
+
     public static String formatContent(String content){
         return content.replaceAll("</?br\\s?/?>","\n")
                 .replace("&nbsp;"," ")

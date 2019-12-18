@@ -1,6 +1,7 @@
 package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.model.dto.BookDTO;
+import com.ndovel.ebook.model.entity.Author;
 import com.ndovel.ebook.model.entity.Book;
 import com.ndovel.ebook.model.entity.Visit;
 import com.ndovel.ebook.repository.BookRepository;
@@ -9,11 +10,11 @@ import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.*;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -49,10 +50,16 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookDTO> findByName(String name) {
-        List<Book> books = bookRepository.selBookByName(name);
+    public Page<BookDTO> findByName(String name, Integer index, Integer size) {
 
-        return DTOUtils.listToDTOs(books, BookDTO.class);
+        Specification<Book> specification = (root, query, cb) -> {
+            Predicate nameLike = cb.like(root.get("name"), "%" + name + "%");
+            Predicate authorLike = cb.like(root.get("author").get("name"), "%" + name + "%");
+            return cb.or(nameLike, authorLike);
+        };
+
+        return bookRepository.findIsExist(specification, PageRequest.of(index, size))
+                .map(book -> new BookDTO().init(book));
     }
 
     @Override

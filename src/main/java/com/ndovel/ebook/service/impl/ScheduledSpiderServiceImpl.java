@@ -45,5 +45,6 @@ public class ScheduledSpiderServiceImpl implements ScheduledSpiderService {
     @Override
     public void updateVisit() {
         visitRepository.updateVisit();
+        log.info("更新阅读量!");
     }
 }

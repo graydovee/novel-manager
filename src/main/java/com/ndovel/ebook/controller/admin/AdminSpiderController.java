@@ -4,6 +4,7 @@ import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
+import com.ndovel.ebook.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,13 +75,13 @@ public class AdminSpiderController {
     }
 
     @GetMapping("/spider_info")
-    public Response getSpiderInfo(Integer index, Integer size, Integer mod){
+    public Response getSpiderInfo(String name, Integer index, Integer size, Integer mod){
         if (mod == null || mod == 0)
-            return Response.success(spiderInfoService.find(index, size));
+            return Response.success(spiderInfoService.find(name, null, index, size));
         else if (mod == 1)
-            return Response.success(spiderInfoService.find(false, index, size));
+            return Response.success(spiderInfoService.find(name, false, index, size));
         else if (mod == 2)
-            return Response.success(spiderInfoService.find(true, index, size));
+            return Response.success(spiderInfoService.find(name, true, index, size));
         else
             return Response.error();
     }
