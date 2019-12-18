@@ -1,10 +1,7 @@
 package com.ndovel.ebook;
 
 import com.ndovel.ebook.repository.*;
-import com.ndovel.ebook.service.AsyncService;
-import com.ndovel.ebook.service.BookService;
-import com.ndovel.ebook.service.ScheduledSpiderService;
-import com.ndovel.ebook.service.SpiderService;
+import com.ndovel.ebook.service.*;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,6 +40,9 @@ public class ApplicationTests {
 
 	@Autowired
 	protected VisitRepository visitRepository;
+
+	@Autowired
+	protected VisitService visitService;
 
 	@Autowired
 	protected AsyncService asyncService;

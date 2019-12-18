@@ -75,12 +75,4 @@ public class BookController {
         return Response.success(bookService.findOneById(id)
                 .orElse(null));
     }
-
-    @GetMapping("/visit")
-    public Response visit(Integer bookId) {
-        if (bookId != null && bookId > 0) {
-            return Response.success(bookService.visit(bookId));
-        }
-        return Response.success(bookService.sumVisit());
-    }
 }
