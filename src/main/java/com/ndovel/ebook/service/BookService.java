@@ -11,7 +11,7 @@ public interface BookService {
 
     List<BookDTO> getAllBook();
 
-    List<BookDTO> findByName(String name);
+    Page<BookDTO> findByName(String name, Integer index, Integer size);
 
     Optional<BookDTO> findExact(String bookName, String authorName);
 

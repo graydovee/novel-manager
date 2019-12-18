@@ -2,6 +2,7 @@ package com.ndovel.ebook;
 
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.AsyncService;
+import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ScheduledSpiderService;
 import com.ndovel.ebook.service.SpiderService;
 import org.junit.Assert;
@@ -36,6 +37,9 @@ public class ApplicationTests {
 
 	@Autowired
 	protected SpiderService spiderService;
+
+	@Autowired
+	protected BookService bookService;
 
 	@Autowired
 	protected VisitRepository visitRepository;

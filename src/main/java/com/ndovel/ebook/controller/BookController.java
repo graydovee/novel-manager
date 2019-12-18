@@ -6,6 +6,7 @@ import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.SpiderService;
 import com.ndovel.ebook.service.UserService;
+import com.ndovel.ebook.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,31 +34,36 @@ public class BookController {
     }
 
     @GetMapping("/book")
-    public Response getAllBook(Integer index, Integer size){
-        if(index==null || size==null || size<=0)
+    public Response getAllBook(String name, Integer index, Integer size) {
+        if (index == null || size == null || size <= 0) {
             return Response.success(bookService.getAllBook());
-        else
-            return Response.success(bookService.find(index, size));
+        } else {
+            if (StringUtils.isNotEmpty(name)) {
+                return Response.success(bookService.findByName(name, index, size));
+            } else {
+                return Response.success(bookService.find(index, size));
+            }
+        }
     }
 
     @PostMapping("/book")
-    public Response spider(String bookName, String authorName, String url, String token){
+    public Response spider(String bookName, String authorName, String url, String token) {
 
-        if(bookName == null || authorName == null || url == null || token == null)
+        if (bookName == null || authorName == null || url == null || token == null)
             return Response.error("信息不完整");
 
         BookDTO b = bookService.findExact(bookName, authorName).orElse(null);
-        if (b!=null) {
+        if (b != null) {
             return Response.error("该书已存在");
         }
 
         List<User> users = userService.getUsers().stream()
                 .filter(User::isEnabled)
                 .collect(Collectors.toList());
-        if (users.size()>0){
+        if (users.size() > 0) {
             User u = users.get(0);
             if (passwordEncoder.matches(token, u.getPassword())) {
-                return Response.success(spiderService.spider(bookName, authorName, url , 0));
+                return Response.success(spiderService.spider(bookName, authorName, url, 0));
             }
         }
         return Response.error("身份验证失败");
@@ -65,19 +71,14 @@ public class BookController {
 
 
     @GetMapping("/find")
-    public Response exactBook(Integer id){
+    public Response exactBook(Integer id) {
         return Response.success(bookService.findOneById(id)
                 .orElse(null));
     }
 
-    @PostMapping("/find")
-    public Response likeBook(String name){
-        return Response.success(bookService.findByName(name));
-    }
-
     @GetMapping("/visit")
-    public Response visit(Integer bookId){
-        if(bookId!=null && bookId>0){
+    public Response visit(Integer bookId) {
+        if (bookId != null && bookId > 0) {
             return Response.success(bookService.visit(bookId));
         }
         return Response.success(bookService.sumVisit());
