@@ -1,7 +1,13 @@
 package com.ndovel.ebook;
 
+import com.ndovel.ebook.model.dto.MatchRexDTO;
+import com.ndovel.ebook.model.dto.SpiderInfoDTO;
+import com.ndovel.ebook.model.entity.MatchRex;
+import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.*;
+import com.ndovel.ebook.spider.core.NovelSpider;
+import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,9 +61,10 @@ public class ApplicationTests {
 		Assert.assertEquals(1,1);
 	}
 
+	@Test
 	public void testSpider(){
-//		MatchRex matchRex;
-//		matchRex = new MatchRex();
+//		MatchRexDTO matchRex;
+//		matchRex = new MatchRexDTO();
 //
 //		matchRex.setContentRex("<div[^<]*id=\"content\"[^<]*>([\\s\\S]*?)</div>");
 //		matchRex.setTitleRex("<h1>([^<]*)</h1>");
@@ -78,5 +85,16 @@ public class ApplicationTests {
 //		book.setAuthor(author);
 
 //		spiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", matchRex.getId());
+//		SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
+//		spiderInfo.setMatchRex(matchRex);
+//		//spiderInfo.setUrl("https://www.biqukan.com/51_51530/465314625.html");
+//		spiderInfo.setUrl("https://www.biquge.tw/37_37206/2159914.html");
+//		NovelSpider spider =  new CommonNovelSpider(spiderInfo);
+//		spider.run();
+//		System.out.println(spider.getContent());
+//		if(spider.hasNext()){
+//			spider.run();
+//			System.out.println(spider.getContent());
+//		}
 	}
 }

@@ -15,6 +15,7 @@ import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.HttpClients;
@@ -26,7 +27,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -58,7 +60,7 @@ public class HttpClientUtils {
     static {
 
         try {
-            // 初始化HttpClientTest~~~开始
+            // 初始化HttpClientTest开始
             SSLContextBuilder builder = new SSLContextBuilder();
             builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
@@ -82,7 +84,7 @@ public class HttpClientUtils {
                     connectionRequestTimeout).setSocketTimeout(socketTimeout).setConnectTimeout(
                     connectTimeout).build();
 
-            // "初始化HttpClientTest~~~结束"
+            // "初始化HttpClientTest结束"
         } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             e.printStackTrace();
         }
@@ -122,43 +124,46 @@ public class HttpClientUtils {
     }
 
     private static String sendHttp(HttpRequestBase http) throws RequestException {
-        CloseableHttpClient httpClient;
         // 响应内容
-        String responseContent = null;
+        String responseContent;
 
-        // 创建默认的httpClient实例.
-        httpClient = getHttpClient();
+        CloseableHttpClient httpClient = getHttpClient();
+
         // 配置请求信息
         http.setConfig(requestConfig);
 
         //设置请求头
         http.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36");
+
         // 执行请求
         try (CloseableHttpResponse response = httpClient.execute(http)) {
             // 得到响应实例
             HttpEntity entity = response.getEntity();
 
-            /*// 可以获得响应头
-             Header[] headers = response.getHeaders(HttpHeaders.CONTENT_TYPE)
+            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
+                ContentType type = ContentType.get(entity);
+                Charset charset = null;
+                if (type != null) {
+                    charset = type.getCharset();
+                }
+                byte[] bytes = EntityUtils.toByteArray(entity);
+                if (charset == null){
+                    charset = StandardCharsets.UTF_8;
+                    responseContent = new String(bytes, charset);
 
-             //得到响应类型
-             ContentType.getOrDefault(response.getEntity()).getMimeType()*/
+                    Charset charSetByBody = getCharSetByBody(responseContent);
+                    if (charSetByBody != null && !charSetByBody.equals(charset)){
+                        responseContent = new String(bytes, charSetByBody);
+                    }
+                } else {
+                    responseContent = new String(bytes, charset);
+                }
 
-            // 判断响应状态
-            if (response.getStatusLine().getStatusCode() >= 300) {
+            } else {
                 throw new RequestException(
                         "HTTP Request is not success, Response code is " + response.getStatusLine().getStatusCode());
             }
-
-            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                byte[] bytes = EntityUtils.toByteArray(entity);
-                responseContent = new String(bytes);
-                String charset = getCharSetByBody(responseContent);
-                if(charset!=null && !(charset.equalsIgnoreCase("utf-8") || charset.equalsIgnoreCase("utf8"))){
-                    responseContent = new String(bytes, charset);
-                }
-                EntityUtils.consume(entity);
-            }
+            EntityUtils.consume(entity);
 
         } catch (Exception e) {
             throw new RequestException(e);
@@ -166,27 +171,29 @@ public class HttpClientUtils {
         return responseContent;
     }
 
-    private static String getCharSetByBody(String html){
+    private static Charset getCharSetByBody(String html) {
         String charset = null;
         Document document = Jsoup.parse(html);
         Elements elements = document.select("meta");
-        for(Element metaElement : elements){
-            if(metaElement!=null && !StringUtils.isEmpty(metaElement.attr("http-equiv")) && metaElement.attr("http-equiv").toLowerCase().equals("content-type")){
+        for (Element metaElement : elements) {
+            if (metaElement != null && !StringUtils.isEmpty(metaElement.attr("http-equiv")) && metaElement.attr("http-equiv").toLowerCase().equals("content-type")) {
                 String content = metaElement.attr("content");
                 charset = getCharSet(content);
                 break;
             }
         }
-        return charset;
+        return charset == null ? null : Charset.forName(charset);
     }
 
-    private static String getCharSet(String content){
+    private static String getCharSet(String content) {
         String regex = ".*charset=([^;]*).*";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(content);
-        if(matcher.find())
+        if (matcher.find())
             return matcher.group(1);
         else
             return null;
     }
+
+
 }
