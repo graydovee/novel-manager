@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,12 +32,11 @@ public class VisitServiceImpl implements VisitService {
     @Transactional
     @Override
     public void updateVisit() {
-        log.info("开始更新阅读量：");
         List<Integer> allBookId = bookRepository.findAllBookId();
         for (Integer bookId : allBookId) {
             Long visits = bookRepository.countVisitByBookId(bookId);
 
-            if (visits > 0) {
+            if (visits != null && visits > 0) {
                 Visit visit = new Visit();
                 visit.setBookId(bookId);
                 visit.setVisit(visits);
@@ -55,20 +53,20 @@ public class VisitServiceImpl implements VisitService {
 
     @Override
     public List<VisitDTO> getData(Integer bookId, Date begin, Date end) {
+        List<VisitDTO> visitDTOS;
         if (bookId == null) {
             return getData(begin, end);
         } else if (begin == null) {
-            return visitRepository.selAllByBookId(bookId).stream()
-                    .peek(visitDTO -> visitDTO.setBookId(bookId))
-                    .collect(Collectors.toList());
-
+            visitDTOS = visitRepository.selAllByBookId(bookId);
+            visitDTOS.forEach(visitDTO -> visitDTO.setBookId(bookId));
+            return visitDTOS;
         }
         if (end == null) {
             end = new Date();
         }
-        return visitRepository.selAllByBookIdAndTime(bookId, begin, end).stream()
-                .peek(visitDTO -> visitDTO.setBookId(bookId))
-                .collect(Collectors.toList());
+        visitDTOS = visitRepository.selAllByBookIdAndTime(bookId, begin, end);
+        visitDTOS.forEach(visitDTO -> visitDTO.setBookId(bookId));
+        return visitDTOS;
     }
 
     @Override

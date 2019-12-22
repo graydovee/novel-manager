@@ -42,7 +42,7 @@ public class ScheduledSpiderServiceImpl implements ScheduledSpiderService {
     @Scheduled(cron = "0 0 2 * * ?")
     @Override
     public void updateVisit() {
-        visitService.updateVisit();
         log.info("更新阅读量!");
+        visitService.updateVisit();
     }
 }
