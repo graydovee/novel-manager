@@ -65,6 +65,7 @@ public class AsyncServiceImpl implements AsyncService {
                 log.info(chapter.getTitle());
 
                 Content newContent = content.writeToDomain();
+                newContent.setVisit(0L);
                 contentRepository.save(newContent);
                 Chapter newChapter = chapter.writeToDomain();
                 newChapter.setContentId(newContent.getId());

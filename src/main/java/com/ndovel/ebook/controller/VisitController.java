@@ -30,9 +30,9 @@ public class VisitController {
     @GetMapping("/admin/visit")
     public Response detail(Integer bookId, Date begin, Date end) {
         if (bookId != null && bookId > 0) {
-            return Response.success(visitService.getData(begin, end));
+            return Response.success(visitService.getData(bookId, begin, end));
         }
-        return Response.success(visitService.getData(bookId, begin, end));
+        return Response.success(visitService.getData(begin, end));
     }
 
 
