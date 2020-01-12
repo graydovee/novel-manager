@@ -1,12 +1,16 @@
 package com.ndovel.ebook.controller.admin;
 
+import com.ndovel.ebook.exception.RequestException;
+import com.ndovel.ebook.model.dto.BookDTO;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
+import com.ndovel.ebook.model.dto.SpiderIndex;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.model.vo.Response;
 import com.ndovel.ebook.service.*;
-import com.ndovel.ebook.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 
 @Slf4j
@@ -33,13 +37,33 @@ public class AdminSpiderController {
     }
 
     @PostMapping("/book")
-    public Response spider(String bookName, String authorName, String url, Integer matchRexId){
+    public Response spider(SpiderIndex spiderIndex){
 
-        if(bookName == null || authorName == null || url == null || matchRexId == null)
-            return null;
-
-        return Response.success(spiderService.spider(bookName, authorName, url ,matchRexId));
+        if (spiderIndex == null ||
+                spiderIndex.getBookName() == null ||
+                spiderIndex.getAuthorName() == null ||
+                spiderIndex.getFirstChapterUrl() == null ||
+                spiderIndex.getCoverUrl() == null ||
+                spiderIndex.getIntroduce() == null ||
+                spiderIndex.getMatchRexId() == null)
+            return Response.error("信息不完整");
+        BookDTO b = bookService.findExact(spiderIndex.getBookName(), spiderIndex.getAuthorName()).orElse(null);
+        if (b != null) {
+            return Response.error("该书已存在");
+        }
+        return Response.success(spiderService.spider(spiderIndex));
     }
+
+    @PutMapping("/cover")
+    public Response updateCover(Integer bookId, String url){
+        try {
+            spiderService.saveImg(url, String.valueOf(bookId));
+        } catch (RequestException | IOException e) {
+            return Response.error();
+        }
+        return Response.success();
+    }
+
 
     @GetMapping("/rex")
     public Response getAllRex(Integer index, Integer size){
@@ -120,5 +144,10 @@ public class AdminSpiderController {
     public Response update(Integer id){
         SpiderInfoDTO update = spiderService.update(id);
         return Response.success(update);
+    }
+
+    @PostMapping("/index")
+    public Response spiderMain(String url){
+        return Response.success(spiderService.spiderByIndex(url));
     }
 }

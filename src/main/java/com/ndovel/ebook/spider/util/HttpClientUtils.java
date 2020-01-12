@@ -2,6 +2,8 @@ package com.ndovel.ebook.spider.util;
 
 import com.ndovel.ebook.exception.RequestException;
 import com.ndovel.ebook.utils.StringUtils;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -27,28 +29,22 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 public class HttpClientUtils {
 
     private HttpClientUtils() {
 
     }
-
-    // HTTP内容类型。
-    public static final String CONTENT_TYPE_TEXT_HTML = "text/xml";
-
-    // HTTP内容类型。相当于form表单的形式，提交数据
-    public static final String CONTENT_TYPE_FORM_URL = "application/x-www-form-urlencoded";
-
-    // HTTP内容类型。相当于form表单的形式，提交数据
-    public static final String CONTENT_TYPE_JSON_URL = "application/json;charset=utf-8";
 
 
     // 连接管理器
@@ -119,14 +115,21 @@ public class HttpClientUtils {
         return sendHttp(new HttpGet(url));
     }
 
+    public static byte[] getByteArray(String url) throws RequestException {
+        return requestByteArray(new HttpGet(url));
+    }
+
     public static String post(String url) throws RequestException {
         return sendHttp(new HttpPost(url));
     }
 
-    private static String sendHttp(HttpRequestBase http) throws RequestException {
-        // 响应内容
-        String responseContent;
 
+    /**
+     * 进行请求
+     * @param consumer 对请求到的数据进行操作
+     * @throws RequestException 请求异常
+     */
+    private static void request(HttpRequestBase http, Consumer<HttpEntity> consumer) throws RequestException {
         CloseableHttpClient httpClient = getHttpClient();
 
         // 配置请求信息
@@ -141,24 +144,7 @@ public class HttpClientUtils {
             HttpEntity entity = response.getEntity();
 
             if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
-                ContentType type = ContentType.get(entity);
-                Charset charset = null;
-                if (type != null) {
-                    charset = type.getCharset();
-                }
-                byte[] bytes = EntityUtils.toByteArray(entity);
-                if (charset == null){
-                    charset = StandardCharsets.UTF_8;
-                    responseContent = new String(bytes, charset);
-
-                    Charset charSetByBody = getCharSetByBody(responseContent);
-                    if (charSetByBody != null && !charSetByBody.equals(charset)){
-                        responseContent = new String(bytes, charSetByBody);
-                    }
-                } else {
-                    responseContent = new String(bytes, charset);
-                }
-
+                consumer.accept(entity);
             } else {
                 throw new RequestException(
                         "HTTP Request is not success, Response code is " + response.getStatusLine().getStatusCode());
@@ -168,9 +154,60 @@ public class HttpClientUtils {
         } catch (Exception e) {
             throw new RequestException(e);
         }
-        return responseContent;
     }
 
+    /**
+     * 请求二进制流
+     */
+    private static byte[] requestByteArray(HttpRequestBase http) throws RequestException {
+        Solution solution = new Solution();
+        request(http, (httpEntity -> {
+            try {
+                solution.setByteArray(EntityUtils.toByteArray(httpEntity));
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }));
+        return solution.getByteArray();
+    }
+
+    /**
+     * 请求html字符串
+     */
+    private static String sendHttp(HttpRequestBase http) throws RequestException {
+        Solution solution = new Solution();
+        request(http, httpEntity -> {
+            ContentType type = ContentType.get(httpEntity);
+            Charset charset = null;
+            if (type != null) {
+                charset = type.getCharset();
+            }
+            try {
+                solution.setByteArray(EntityUtils.toByteArray(httpEntity));
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+                return;
+            }
+            if (charset == null){
+                charset = StandardCharsets.UTF_8;
+                solution.setString(new String(solution.getByteArray(), charset));
+
+                Charset charSetByBody = getCharSetByBody(solution.getString());
+                if (charSetByBody != null && !charSetByBody.equals(charset)){
+                    solution.setString(new String(solution.getByteArray(), charSetByBody));
+                }
+            } else {
+                solution.setString(new String(solution.getByteArray(), charset));
+            }
+        });
+        return solution.getString();
+    }
+
+    /**
+     * 获取在html头部<meta/>标签内的编码信息
+     * @param html html字符串
+     * @return 编码信息
+     */
     private static Charset getCharSetByBody(String html) {
         String charset = null;
         Document document = Jsoup.parse(html);
@@ -178,22 +215,25 @@ public class HttpClientUtils {
         for (Element metaElement : elements) {
             if (metaElement != null && !StringUtils.isEmpty(metaElement.attr("http-equiv")) && metaElement.attr("http-equiv").toLowerCase().equals("content-type")) {
                 String content = metaElement.attr("content");
-                charset = getCharSet(content);
+                charset = null;
+
+                String regex = ".*charset=([^;]*).*";
+                Pattern pattern = Pattern.compile(regex);
+                Matcher matcher = pattern.matcher(content);
+                if (matcher.find())
+                    charset = matcher.group(1);
                 break;
             }
         }
         return charset == null ? null : Charset.forName(charset);
     }
 
-    private static String getCharSet(String content) {
-        String regex = ".*charset=([^;]*).*";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(content);
-        if (matcher.find())
-            return matcher.group(1);
-        else
-            return null;
-    }
 
+
+    @Data
+    private static class Solution {
+        private byte[] byteArray;
+        private String string;
+    }
 
 }

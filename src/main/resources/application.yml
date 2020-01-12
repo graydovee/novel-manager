@@ -4,7 +4,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ebook?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
-    username: root
+    username: ebook
     password: 123456
   jpa:
     hibernate:
@@ -22,3 +22,7 @@ spring:
 
 logging:
   path: ./logs
+
+spider:
+  coverPath: "./cover"
+

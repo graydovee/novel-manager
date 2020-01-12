@@ -1,11 +1,11 @@
 package com.ndovel.ebook.spider.core;
 
 
-import com.ndovel.ebook.model.dto.SpiderIndex;
+import com.ndovel.ebook.model.dto.TempBook;
 
 import java.util.List;
 
 public interface SearchSpider {
 
-    List<SpiderIndex> findAllIndex(String key);
+    List<TempBook> findAllIndex(String key);
 }

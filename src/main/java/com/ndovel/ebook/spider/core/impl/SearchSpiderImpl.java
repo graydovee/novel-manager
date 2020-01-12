@@ -1,5 +1,6 @@
 package com.ndovel.ebook.spider.core.impl;
 
+import com.ndovel.ebook.model.dto.TempBook;
 import com.ndovel.ebook.spider.core.AbstractSpider;
 import com.ndovel.ebook.spider.core.SearchSpider;
 import com.ndovel.ebook.model.dto.SpiderIndex;
@@ -32,34 +33,9 @@ public class SearchSpiderImpl extends AbstractSpider implements SearchSpider {
         return sendHttpGetRequest(url + key);
     }
 
-    private List<SpiderIndex> parseIndex(String code){
-        Document document = Jsoup.parse(code);
-        Elements elements = document.select("tr");
-        return elements.stream()
-                .filter((trElement) -> trElement != null && !StringUtils.isEmpty(trElement.attr("id")) && trElement.attr("id").toLowerCase().equals("nr"))
-                .map(element -> {
-                    SpiderIndex spiderIndex = new SpiderIndex();
-
-                    Optional.ofNullable(element.getElementsByClass("odd"))
-                            .map(eles -> eles.get(0))
-                            .map(ele -> ele.getElementsByTag("a"))
-                            .map(eles -> eles.get(0))
-                            .ifPresent((ele -> {
-                                spiderIndex.setUrl(ele.attr("href"));
-                                spiderIndex.setName(ele.text());
-                            }));
-
-                    Optional.ofNullable(element.getElementsByClass("odd"))
-                            .map(eles -> eles.get(1))
-                            .ifPresent(ele -> spiderIndex.setAuthor(ele.text()));
-                    return spiderIndex;
-                })
-                .collect(Collectors.toList());
-    }
 
     @Override
-    public List<SpiderIndex> findAllIndex(String key) {
-        String code = htmlCode(key);
-        return parseIndex(code);
+    public List<TempBook> findAllIndex(String key) {
+        return null;
     }
 }

@@ -23,4 +23,7 @@ public class BookDTO implements BaseDTO<BookDTO, Book> {
     private Integer firstChapter;
 
     private Date createTime;
+
+    private String introduce;
+
 }

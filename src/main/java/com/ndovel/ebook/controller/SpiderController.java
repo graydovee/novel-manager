@@ -30,8 +30,5 @@ public class SpiderController {
         return Response.success(spiderService.spiderByName(name));
     }
 
-    @PostMapping("/index")
-    public Response spiderMain(String url){
-        return Response.success(spiderService.spiderByIndex(url));
-    }
+
 }

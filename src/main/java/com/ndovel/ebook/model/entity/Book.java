@@ -31,4 +31,7 @@ public class Book extends BaseEntity {
 
     @Column(name = "first_chapter_id", columnDefinition = "int default 0")
     private Integer firstChapter;
+
+    @Column(name = "introduce", columnDefinition = "varchar(255) not null")
+    private String introduce;
 }

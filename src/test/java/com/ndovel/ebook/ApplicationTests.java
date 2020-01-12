@@ -1,5 +1,6 @@
 package com.ndovel.ebook;
 
+import com.ndovel.ebook.config.SpiderProperties;
 import com.ndovel.ebook.model.dto.MatchRexDTO;
 import com.ndovel.ebook.model.dto.SpiderInfoDTO;
 import com.ndovel.ebook.model.entity.MatchRex;
@@ -56,9 +57,13 @@ public class ApplicationTests {
 	@Autowired
 	protected ScheduledSpiderService ScheduledSpiderService;
 
+	@Autowired
+	protected SpiderProperties spiderProperties;
+
 	@Test
 	public void text(){
-		Assert.assertEquals(1,1);
+		Assert.assertNotNull(spiderProperties);
+		Assert.assertNotNull(spiderProperties.getCoverPath());
 	}
 
 	@Test

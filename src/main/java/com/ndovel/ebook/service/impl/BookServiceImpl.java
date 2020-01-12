@@ -77,4 +77,5 @@ public class BookServiceImpl implements BookService {
         chapterService.delChapterByBookId(id);
         spiderInfoRepository.deleteByBookId(id);
     }
+
 }
