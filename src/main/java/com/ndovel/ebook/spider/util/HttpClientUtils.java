@@ -4,6 +4,7 @@ import com.ndovel.ebook.exception.RequestException;
 import com.ndovel.ebook.utils.StringUtils;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -169,6 +170,30 @@ public class HttpClientUtils {
             }
         }));
         return solution.getByteArray();
+    }
+
+    public static String getRedirectUrl(String url) throws RequestException {
+        HttpGet http = new HttpGet(url);
+        CloseableHttpClient httpClient = getHttpClient();
+
+        // 配置请求信息
+        http.setConfig(requestConfig);
+
+        //设置请求头
+        http.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.80 Safari/537.36");
+
+        // 执行请求
+        try (CloseableHttpResponse response = httpClient.execute(http)) {
+            Header[] allHeaders = response.getAllHeaders();
+            for (Header allHeader : allHeaders) {
+                if (allHeader.getName().equals("Location")) {
+                    return allHeader.getValue();
+                }
+            }
+        } catch (IOException e) {
+            throw new RequestException(e);
+        }
+        return null;
     }
 
     /**

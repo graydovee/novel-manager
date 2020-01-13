@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface IndexSpider {
 
+    @Deprecated
     List<TempChapter> getIndex(String url);
 
     TempBook getTempBook(String url);

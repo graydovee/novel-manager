@@ -5,7 +5,6 @@ import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -30,12 +29,6 @@ public class BookController {
                 return Response.success(bookService.find(index, size));
             }
         }
-    }
-
-    @PostMapping("/book")
-    public Response spider(String url) {
-
-        return Response.error("身份验证失败");
     }
 
     @GetMapping("/find")

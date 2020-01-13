@@ -46,25 +46,31 @@ public class IndexSpiderImpl extends AbstractSpider implements IndexSpider {
         }
         select = document.select("#info>p");
         if (select.size() > 0) {
-            String text = select.get(0).text();
-            text = text.replace("：", ":");
-            if (text.indexOf(":") > 0){
-                text = text.split(":")[1];
-            }
-            book.setAuthorName(text);
+            select.forEach((each)->{
+                String text = each.text();
+                text = text.replace("：", ":");
+                if (text.indexOf(":") > 0){
+                    String[] split = text.split(":");
+                    if(split[0].contains("作") && split[0].contains("者")){
+                        text = split[1];
+                        book.setAuthorName(text);
+                    }
+                }
+            });
         }
         select = document.select("#fmimg>img");
         if (select.size() > 0) {
             String src = select.get(0).attr("src");
             book.setCoverUrl(UrlUtils.jump(url, src));
         }
-        select = document.select("#intro>p");
+        select = document.select("#intro");
         if (select.size() > 0) {
             book.setIntroduce(select.get(0).text());
         }
         return book;
     }
 
+    @Deprecated
     @Override
     public List<TempChapter> getIndex(String url) {
         return getTempBook(url).getChapters();
@@ -72,6 +78,9 @@ public class IndexSpiderImpl extends AbstractSpider implements IndexSpider {
 
     @Override
     public TempBook getTempBook(String url) {
+        if (StringUtils.isEmpty(url)) {
+            return null;
+        }
         return make(url);
     }
 

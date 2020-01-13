@@ -15,7 +15,7 @@ public interface SpiderService {
 
     SpiderInfoDTO update(Integer SpiderInfoId);
 
-    List<TempBook> spiderByName(String name);
+    List<TempChapter> spiderByName(String name);
 
     TempBook spiderByIndex(String url);
 

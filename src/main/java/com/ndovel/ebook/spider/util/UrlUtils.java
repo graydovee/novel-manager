@@ -5,8 +5,8 @@ import com.ndovel.ebook.utils.StringUtils;
 
 public class UrlUtils {
 
-    private static String httpHeader = "http://";
-    private static String httpsHeader = "https://";
+    private final static String httpHeader = "http://";
+    private final static String httpsHeader = "https://";
 
 
     /**

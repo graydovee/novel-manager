@@ -146,8 +146,4 @@ public class AdminSpiderController {
         return Response.success(update);
     }
 
-    @PostMapping("/index")
-    public Response spiderMain(String url){
-        return Response.success(spiderService.spiderByIndex(url));
-    }
 }
