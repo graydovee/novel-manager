@@ -28,6 +28,6 @@ public class TokenAuthenticationFailureHandler implements AuthenticationFailureH
         HttpStatus status = HttpStatus.FORBIDDEN;
         response.setStatus(status.value());
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(new Response(status, exception.getMessage())));
+        response.getWriter().write(objectMapper.writeValueAsString(Response.pack(status, exception.getMessage())));
     }
 }

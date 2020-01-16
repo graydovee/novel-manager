@@ -24,6 +24,10 @@
 ```
 ## 接口
 
+### 小说封面地址
+
+* /cover/{小说id}
+
 ### 获取小说
 * URL: /book
 * METHOD: GET
@@ -55,31 +59,11 @@
                 "createTime": "2019-10-03 21:08:36"
             }
         ],
-        "pageable": {
-            "sort": {
-                "sorted": false,
-                "unsorted": true,
-                "empty": true
-            },
-            "pageSize": 1,
-            "pageNumber": 0,
-            "offset": 0,
-            "unpaged": false,
-            "paged": true
-        },
         "totalPages": 100,
-        "last": false,
         "totalElements": 100,
-        "first": true,
-        "sort": {
-            "sorted": false,
-            "unsorted": true,
-            "empty": true
-        },
         "numberOfElements": 1,
         "size": 1,
-        "number": 0,
-        "empty": false
+        "number": 0
     }
 }
 ```
@@ -147,31 +131,11 @@
                 "createTime": "2019-10-03 21:08:39"
         	}
         ],
-        "pageable": {
-            "sort": {
-                "sorted": false,
-                "unsorted": true,
-                "empty": true
-            },
-            "pageSize": 1,
-            "pageNumber": 0,
-            "offset": 0,
-            "unpaged": false,
-            "paged": true
-        },
         "totalPages": 100,
-        "last": false,
         "totalElements": 100,
-        "first": true,
-        "sort": {
-            "sorted": false,
-            "unsorted": true,
-            "empty": true
-        },
         "numberOfElements": 1,
         "size": 1,
-        "number": 0,
-        "empty": false
+        "number": 0
     }
 }
 ```
