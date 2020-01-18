@@ -1,15 +1,8 @@
 package com.ndovel.ebook;
 
 import com.ndovel.ebook.config.SpiderProperties;
-import com.ndovel.ebook.model.dto.MatchRexDTO;
-import com.ndovel.ebook.model.dto.SpiderInfoDTO;
-import com.ndovel.ebook.model.entity.MatchRex;
-import com.ndovel.ebook.model.entity.SpiderInfo;
 import com.ndovel.ebook.repository.*;
 import com.ndovel.ebook.service.*;
-import com.ndovel.ebook.spider.core.NovelSpider;
-import com.ndovel.ebook.spider.core.impl.CommonNovelSpider;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +55,6 @@ public class ApplicationTests {
 
 	@Test
 	public void text(){
-		Assert.assertNotNull(spiderProperties);
-		Assert.assertNotNull(spiderProperties.getCoverPath());
 	}
 
 	@Test
