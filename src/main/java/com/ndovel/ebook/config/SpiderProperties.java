@@ -9,5 +9,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "spider")
 public class SpiderProperties {
 
-    private String coverPath;
+    /**
+     * 小说封面保存路径
+     */
+    private String coverPath = "./cover";
 }

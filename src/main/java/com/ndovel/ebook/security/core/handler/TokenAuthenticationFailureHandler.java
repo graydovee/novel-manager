@@ -1,4 +1,4 @@
-package com.ndovel.ebook.security;
+package com.ndovel.ebook.security.core.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ndovel.ebook.model.vo.Response;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@Component("tokenAuthenticationFailureHandler")
+@Component
 public class TokenAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
     private ObjectMapper objectMapper;
@@ -25,9 +25,9 @@ public class TokenAuthenticationFailureHandler implements AuthenticationFailureH
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException {
 
-        HttpStatus status = HttpStatus.FORBIDDEN;
+        HttpStatus status = HttpStatus.OK;
         response.setStatus(status.value());
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(Response.pack(status, exception.getMessage())));
+        response.getWriter().write(objectMapper.writeValueAsString(Response.error(exception.getMessage())));
     }
 }
