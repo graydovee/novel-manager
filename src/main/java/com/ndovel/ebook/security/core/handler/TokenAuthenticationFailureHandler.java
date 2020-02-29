@@ -25,9 +25,9 @@ public class TokenAuthenticationFailureHandler implements AuthenticationFailureH
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
             throws IOException {
 
-        HttpStatus status = HttpStatus.OK;
+        HttpStatus status = HttpStatus.FORBIDDEN;
         response.setStatus(status.value());
         response.setContentType("application/json;charset=UTF-8");
-        response.getWriter().write(objectMapper.writeValueAsString(Response.error(exception.getMessage())));
+        response.getWriter().write(objectMapper.writeValueAsString(Response.pack(status, exception.getMessage())));
     }
 }

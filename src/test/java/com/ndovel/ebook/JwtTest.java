@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ndovel.ebook.model.entity.Authority;
 import com.ndovel.ebook.model.entity.User;
+import com.ndovel.ebook.security.core.JwtManager;
 import io.jsonwebtoken.Claims;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ public class JwtTest extends ApplicationTests {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private JwtCreator jwtCreator;
+    private JwtManager jwtManager;
 
     @Test
     public void testjwt(){
@@ -39,13 +40,13 @@ public class JwtTest extends ApplicationTests {
         }
 
 
-        String jwt = jwtCreator.createJWT(subject);
+        String jwt = jwtManager.createJWT(subject);
         System.out.println("JWT：" + jwt);
         System.out.println(jwt.length());
 
         System.out.println("解密");
 
-        Claims c = jwtCreator.parseJWT(jwt);
+        Claims c = jwtManager.parseJWT(jwt);
         System.out.println(c.getId());
         System.out.println(c.getIssuedAt());
         System.out.println(c.getSubject());
