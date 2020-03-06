@@ -5,6 +5,7 @@ import com.ndovel.ebook.config.JwtProperties;
 import com.ndovel.ebook.exception.UnauthorizedException;
 import com.ndovel.ebook.model.dto.UserDTO;
 import com.ndovel.ebook.security.core.handler.TokenAccessDeniedHandler;
+import com.ndovel.ebook.spider.util.UrlUtils;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +45,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (jwtProperties.getUnauthorizedUrl().contentEquals(request.getRequestURI())) {
+        if (UrlUtils.getURI(jwtProperties.getUnauthorizedUrl()).equals(request.getRequestURI())) {
             tokenAccessDeniedHandler.handle(request, response, new UnauthorizedException("请先登录"));
             return;
         }
@@ -72,4 +73,5 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
+
 }

@@ -9,6 +9,20 @@ public class UrlUtils {
     private final static String httpsHeader = "https://";
 
 
+    public static String getURI(String url) {
+        int pos = url.indexOf("://");
+        if (pos > -1) {
+            String domainAndUrl = url.substring(pos + 3);
+            int domainEnd = domainAndUrl.indexOf('/');
+            if (domainEnd > -1) {
+                return domainAndUrl.substring(domainEnd);
+            } else {
+                return "/";
+            }
+        }
+        return url;
+    }
+
     /**
      * 格式化地址
      */
