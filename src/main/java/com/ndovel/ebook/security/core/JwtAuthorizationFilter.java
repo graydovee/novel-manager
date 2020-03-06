@@ -57,8 +57,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        log.info(tokenHeader);
-
         // 如果请求头中有token，则进行解析，并且设置认证信息
         Authentication authentication;
         try {
@@ -72,6 +70,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        super.doFilterInternal(request, response, chain);
+        chain.doFilter(request, response);
     }
 }

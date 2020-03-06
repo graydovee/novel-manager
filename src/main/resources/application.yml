@@ -24,5 +24,4 @@ logging:
   path: ./logs
 
 spider:
-  coverPath: "./cover"
-
+  coverPath: ./cover
