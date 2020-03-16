@@ -118,7 +118,7 @@ public class SpiderServiceImpl implements SpiderService {
     }
 
     @Override
-    public List<TempChapter> spiderByName(String name) {
+    public List<SearchResult> spiderByName(String name) {
         log.info("搜索小说：" + name);
         SearchSpider searchSpider = new SearchSpiderImpl();
         return searchSpider.search(name);

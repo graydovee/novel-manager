@@ -1,5 +1,7 @@
 package com.ndovel.ebook.spider.core.impl;
 
+import com.ndovel.ebook.model.dto.SearchResult;
+import com.ndovel.ebook.model.dto.TempBook;
 import com.ndovel.ebook.model.dto.TempChapter;
 import com.ndovel.ebook.spider.core.AbstractSpider;
 import com.ndovel.ebook.spider.core.SearchSpider;
@@ -7,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -34,16 +37,21 @@ public class SearchSpiderImpl extends AbstractSpider implements SearchSpider {
 
 
     @Override
-    public List<TempChapter> search(String key) {
+    public List<SearchResult> search(String key) {
         Document document = htmlCode(key);
-        List<TempChapter> ret = new ArrayList<>();
+        List<SearchResult> ret = new ArrayList<>();
         if (document != null) {
-            List<Element> elements = document.select("li>.s2>a");
+            List<Element> elements = document.select("li");
             for(var element : elements){
-                TempChapter chapter = new TempChapter();
-                chapter.setTitle(element.text());
-                chapter.setUrl(element.attr("href"));
-                ret.add(chapter);
+                Elements titleNode = element.select(".s2>a");
+                Elements authorNode = element.select(".s4");
+                if (titleNode.size() > 0 && authorNode.size() > 0) {
+                    SearchResult result = new SearchResult();
+                    result.setTitle(titleNode.text());
+                    result.setUrl(titleNode.attr("href"));
+                    result.setAuthor(authorNode.text());
+                    ret.add(result);
+                }
             }
         }
         return ret;

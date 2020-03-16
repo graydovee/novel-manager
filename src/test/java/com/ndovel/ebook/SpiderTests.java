@@ -1,7 +1,7 @@
 package com.ndovel.ebook;
 
+import com.ndovel.ebook.model.dto.SearchResult;
 import com.ndovel.ebook.model.dto.TempBook;
-import com.ndovel.ebook.model.dto.TempChapter;
 import com.ndovel.ebook.spider.core.IndexSpider;
 import com.ndovel.ebook.spider.core.SearchSpider;
 import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
@@ -23,7 +23,7 @@ public class SpiderTests {
     @Test
     public void searchSpiderTest(){
         SearchSpider spider = new SearchSpiderImpl();
-        List<TempChapter> books = spider.search("斗破苍穹");
+        List<SearchResult> books = spider.search("斗破苍穹");
         System.out.println(books);
     }
 }
