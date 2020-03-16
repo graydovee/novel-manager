@@ -1,65 +1,60 @@
 package com.ndovel.ebook.spider.core.impl;
 
+import com.ndovel.ebook.model.dto.SearchResult;
+import com.ndovel.ebook.model.dto.TempBook;
+import com.ndovel.ebook.model.dto.TempChapter;
 import com.ndovel.ebook.spider.core.AbstractSpider;
 import com.ndovel.ebook.spider.core.SearchSpider;
-import com.ndovel.ebook.model.dto.SpiderIndex;
-import com.ndovel.ebook.spider.util.HttpClientUtils;
-import com.ndovel.ebook.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * 按小说名找到小说主页
  */
 @Slf4j
 public class SearchSpiderImpl extends AbstractSpider implements SearchSpider {
-    private final static String url = "https://www.biquge.tv/modules/article/search.php?searchkey=";
+    private final static String url = "https://sou.xanbhx.com/search?siteid=xsla&q=";
 
-    private String htmlCode(String key){
-        try {
-            key = URLEncoder.encode(key, "GBK");
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage(), e);
+    //https://sou.xanbhx.com/search?siteid=xsla&q=%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9
+
+    private Document htmlCode(String key){
+        String[] split = key.split("[\\s]+");
+        for(int i = 0 ; i < split.length; ++i){
+            split[i] = URLEncoder.encode(split[i], StandardCharsets.UTF_8);
         }
-        return sendHttpGetRequest(url + key);
-    }
+        key = String.join("+", split);
+        String sendUrl = url + key;
+        String s = sendHttpGetRequest(sendUrl);
+        return Jsoup.parse(s);
+}
 
-    private List<SpiderIndex> parseIndex(String code){
-        Document document = Jsoup.parse(code);
-        Elements elements = document.select("tr");
-        return elements.stream()
-                .filter((trElement) -> trElement != null && !StringUtils.isEmpty(trElement.attr("id")) && trElement.attr("id").toLowerCase().equals("nr"))
-                .map(element -> {
-                    SpiderIndex spiderIndex = new SpiderIndex();
-
-                    Optional.ofNullable(element.getElementsByClass("odd"))
-                            .map(eles -> eles.get(0))
-                            .map(ele -> ele.getElementsByTag("a"))
-                            .map(eles -> eles.get(0))
-                            .ifPresent((ele -> {
-                                spiderIndex.setUrl(ele.attr("href"));
-                                spiderIndex.setName(ele.text());
-                            }));
-
-                    Optional.ofNullable(element.getElementsByClass("odd"))
-                            .map(eles -> eles.get(1))
-                            .ifPresent(ele -> spiderIndex.setAuthor(ele.text()));
-                    return spiderIndex;
-                })
-                .collect(Collectors.toList());
-    }
 
     @Override
-    public List<SpiderIndex> findAllIndex(String key) {
-        String code = htmlCode(key);
-        return parseIndex(code);
+    public List<SearchResult> search(String key) {
+        Document document = htmlCode(key);
+        List<SearchResult> ret = new ArrayList<>();
+        if (document != null) {
+            List<Element> elements = document.select("li");
+            for(var element : elements){
+                Elements titleNode = element.select(".s2>a");
+                Elements authorNode = element.select(".s4");
+                if (titleNode.size() > 0 && authorNode.size() > 0) {
+                    SearchResult result = new SearchResult();
+                    result.setTitle(titleNode.text());
+                    result.setUrl(titleNode.attr("href"));
+                    result.setAuthor(authorNode.text());
+                    ret.add(result);
+                }
+            }
+        }
+        return ret;
     }
+
 }

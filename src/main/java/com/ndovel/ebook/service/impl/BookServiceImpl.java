@@ -1,12 +1,9 @@
 package com.ndovel.ebook.service.impl;
 
 import com.ndovel.ebook.model.dto.BookDTO;
-import com.ndovel.ebook.model.entity.Author;
 import com.ndovel.ebook.model.entity.Book;
-import com.ndovel.ebook.model.entity.Visit;
 import com.ndovel.ebook.repository.BookRepository;
 import com.ndovel.ebook.repository.SpiderInfoRepository;
-import com.ndovel.ebook.repository.VisitRepository;
 import com.ndovel.ebook.service.BookService;
 import com.ndovel.ebook.service.ChapterService;
 import com.ndovel.ebook.utils.DTOUtils;
@@ -24,16 +21,13 @@ public class BookServiceImpl implements BookService {
 
     private BookRepository bookRepository;
     private ChapterService chapterService;
-    private VisitRepository visitRepository;
     private SpiderInfoRepository spiderInfoRepository;
 
     public BookServiceImpl(BookRepository bookRepository,
                            ChapterService chapterService,
-                           VisitRepository visitRepository,
                            SpiderInfoRepository spiderInfoRepository) {
         this.bookRepository = bookRepository;
         this.chapterService = chapterService;
-        this.visitRepository = visitRepository;
         this.spiderInfoRepository = spiderInfoRepository;
     }
 
@@ -42,6 +36,7 @@ public class BookServiceImpl implements BookService {
         List<Book> bookList = bookRepository.findAllIsExist();
         return DTOUtils.listToDTOs(bookList, BookDTO.class);
     }
+
 
     @Override
     public Optional<BookDTO> findExact(String bookName, String authorName) {
@@ -83,15 +78,4 @@ public class BookServiceImpl implements BookService {
         spiderInfoRepository.deleteByBookId(id);
     }
 
-    @Override
-    public Long visit(Integer bookId){
-        return visitRepository.findByBookId(bookId)
-                .map(Visit::getVisit)
-                .orElse(0L);
-    }
-
-    @Override
-    public Long sumVisit() {
-        return visitRepository.sum();
-    }
 }

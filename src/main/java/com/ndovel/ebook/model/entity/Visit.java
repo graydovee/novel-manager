@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @EqualsAndHashCode
@@ -20,4 +21,8 @@ public class Visit {
 
     @Column(name = "visit", columnDefinition = "bigint(20) default 0")
     private Long visit;
+
+    @Column(name = "date")
+    @Temporal(TemporalType.DATE)
+    private Date date;
 }

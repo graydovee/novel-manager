@@ -4,7 +4,16 @@ import lombok.Data;
 
 @Data
 public class SpiderIndex {
-    private String name;
-    private String author;
-    private String url;
+    private String bookName;
+
+    private String authorName;
+
+    private String firstChapterUrl;
+
+    private String coverUrl;
+
+    private String introduce;
+
+    private Integer matchRexId;
+
 }

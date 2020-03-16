@@ -1,11 +1,8 @@
 package com.ndovel.ebook;
 
+import com.ndovel.ebook.config.SpiderProperties;
 import com.ndovel.ebook.repository.*;
-import com.ndovel.ebook.service.AsyncService;
-import com.ndovel.ebook.service.BookService;
-import com.ndovel.ebook.service.ScheduledSpiderService;
-import com.ndovel.ebook.service.SpiderService;
-import org.junit.Assert;
+import com.ndovel.ebook.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,19 +42,25 @@ public class ApplicationTests {
 	protected VisitRepository visitRepository;
 
 	@Autowired
+	protected VisitService visitService;
+
+	@Autowired
 	protected AsyncService asyncService;
 
 	@Autowired
 	protected ScheduledSpiderService ScheduledSpiderService;
 
+	@Autowired
+	protected SpiderProperties spiderProperties;
+
 	@Test
 	public void text(){
-		Assert.assertEquals(1,1);
 	}
 
+	@Test
 	public void testSpider(){
-//		MatchRex matchRex;
-//		matchRex = new MatchRex();
+//		MatchRexDTO matchRex;
+//		matchRex = new MatchRexDTO();
 //
 //		matchRex.setContentRex("<div[^<]*id=\"content\"[^<]*>([\\s\\S]*?)</div>");
 //		matchRex.setTitleRex("<h1>([^<]*)</h1>");
@@ -78,5 +81,16 @@ public class ApplicationTests {
 //		book.setAuthor(author);
 
 //		spiderService.spider(book, "http://www.biquge001.com/Book/16/16935/12799783.html", matchRex.getId());
+//		SpiderInfoDTO spiderInfo = new SpiderInfoDTO();
+//		spiderInfo.setMatchRex(matchRex);
+//		//spiderInfo.setUrl("https://www.biqukan.com/51_51530/465314625.html");
+//		spiderInfo.setUrl("https://www.biquge.tw/37_37206/2159914.html");
+//		NovelSpider spider =  new CommonNovelSpider(spiderInfo);
+//		spider.run();
+//		System.out.println(spider.getContent());
+//		if(spider.hasNext()){
+//			spider.run();
+//			System.out.println(spider.getContent());
+//		}
 	}
 }

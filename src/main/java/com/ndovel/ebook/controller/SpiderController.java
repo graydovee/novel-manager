@@ -25,13 +25,15 @@ public class SpiderController {
         }
     }
 
+    @PostMapping("/index")
+    public Response spiderMain(String url){
+        return Response.success(spiderService.spiderByIndex(url));
+    }
+
     @PostMapping("/search")
     public Response spiderIndex(String name){
         return Response.success(spiderService.spiderByName(name));
     }
 
-    @PostMapping("/index")
-    public Response spiderMain(String url){
-        return Response.success(spiderService.spiderByIndex(url));
-    }
+
 }

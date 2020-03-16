@@ -2,33 +2,17 @@ package com.ndovel.ebook;
 
 import com.ndovel.ebook.model.dto.*;
 import com.ndovel.ebook.model.entity.Book;
-import com.ndovel.ebook.spider.core.IndexSpider;
-import com.ndovel.ebook.spider.core.SearchSpider;
-import com.ndovel.ebook.spider.core.impl.IndexSpiderImpl;
-import com.ndovel.ebook.spider.core.impl.SearchSpiderImpl;
 import com.ndovel.ebook.spider.util.UrlUtils;
-import org.junit.Assert;
 import org.junit.Test;
-
-import java.util.List;
 
 public class UtilsTests {
 
+    @Test
+    public void getImageTest() {
+
+    }
+
     public void testSpider(){
-        SearchSpider searchSpider = new SearchSpiderImpl();
-        IndexSpider indexSpider = new IndexSpiderImpl();
-        List<SpiderIndex> index = searchSpider.findAllIndex("斗破苍穹");
-        if (index.size()>0) {
-            List<TempChapter> chapters = indexSpider.getIndex(index.get(0).getUrl());
-            for (SpiderIndex i : index){
-                Assert.assertNotNull(i.getName());
-                Assert.assertNotNull(i.getUrl());
-            }
-            for (TempChapter i : chapters){
-                Assert.assertNotNull(i.getUrl());
-                Assert.assertNotNull(i.getTitle());
-            }
-        }
     }
 
     public void testUrl(){

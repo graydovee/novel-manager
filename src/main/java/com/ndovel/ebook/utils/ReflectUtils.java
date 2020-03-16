@@ -144,8 +144,8 @@ public class ReflectUtils {
     public static <T> T newBean(Class<T> clazz){
         T t = null;
         try {
-            t = clazz.newInstance();
-        }  catch (IllegalAccessException | InstantiationException e) {
+            t = clazz.getDeclaredConstructor().newInstance();
+        }  catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             log.error(e.getMessage(),e);
         }
         return t;

@@ -1,39 +1,32 @@
 package com.ndovel.ebook.model.vo;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
-@Data
-@EqualsAndHashCode
-public class Response {
+public interface Response {
 
-    private Integer code;
-
-    private String message;
-
-    private Object data;
-
-    public Response(HttpStatus status, Object data){
-        this.code = status.value();
-        this.message = status.getReasonPhrase();
-        this.data = data;
-    }
-
-    public static Response success(){
+    static Response success(){
         return success("OK");
     }
 
-    public static Response success(Object entity){
-        return new Response(HttpStatus.OK, entity);
+    static Response success(Object entity){
+        return pack(HttpStatus.OK, entity);
     }
 
-    public static Response error(){
+    static Response error(){
         return error("ERROR");
     }
 
-    public static Response error(Object entity){
-        return new Response(HttpStatus.INTERNAL_SERVER_ERROR, entity);
+    static Response error(Object entity){
+        return pack(HttpStatus.INTERNAL_SERVER_ERROR, entity);
+    }
+
+    @SuppressWarnings("unchecked")
+    static Response pack(HttpStatus status, Object data){
+        if (data instanceof Page) {
+            return new PageVO(status, (Page) data);
+        }
+        return new DefaultVO(status, data);
     }
 
 }
