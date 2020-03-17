@@ -194,7 +194,7 @@
 
 ## 全网搜索小说章节
 
-* URL: /spider/search
+* URL: /spider/index
 * METHOD: POST
 * 参数：
 
