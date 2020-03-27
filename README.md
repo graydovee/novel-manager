@@ -1,5 +1,9 @@
 # 小说爬虫及后台
 
+# 新特性：
+
+1.新小说倒序
+
 # api文档
 
 ## 响应体基本格式
@@ -26,7 +30,6 @@
 | name | String | 搜索参数，可省略，省略为查询全部 |
 | index | Number | 页数（从0开始） |
 | size | Number | 每页显示数据数 |
->>>>>>> dev
 
 * example
 
@@ -190,7 +193,7 @@
 
 ## 全网搜索小说章节
 
-* URL: /spider/search
+* URL: /spider/index
 * METHOD: POST
 * 参数：
 
