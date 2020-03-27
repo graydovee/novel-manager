@@ -50,6 +50,7 @@ public class BookServiceImpl implements BookService {
         Specification<Book> specification = (root, query, cb) -> {
             Predicate nameLike = cb.like(root.get("name"), "%" + name + "%");
             Predicate authorLike = cb.like(root.get("author").get("name"), "%" + name + "%");
+            query.orderBy(cb.desc(root.get("id")));
             return cb.or(nameLike, authorLike);
         };
 
@@ -60,7 +61,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Page<BookDTO> find(Integer index, Integer size) {
         Pageable pageable = PageRequest.of(index, size);
-        return bookRepository.findIsExist(pageable)
+        return bookRepository.findIsExist(pageable, true)
                 .map(book -> new BookDTO().init(book));
     }
 

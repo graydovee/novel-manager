@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.criteria.*;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
         extends SimpleJpaRepository<DOMAIN, Integer>
@@ -38,8 +39,8 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
 
 
     @Override
-    public List<DOMAIN> findAllIsExist() {
-        return findAll(new IsExist<>());
+    public List<DOMAIN> findAllIsExist(boolean isDesc) {
+        return findAll(new IsExist<>(isDesc));
     }
 
     @Override
@@ -48,14 +49,14 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
     }
 
     @Override
-    public Page<DOMAIN> findIsExist(Pageable pageable) {
-        return findAll(new IsExist<>(), pageable);
+    public Page<DOMAIN> findIsExist(Pageable pageable, boolean isDesc) {
+        return findAll(new IsExist<>(isDesc), pageable);
     }
 
     @Override
-    public Page<DOMAIN> findIsExist(Specification<DOMAIN> spec, Pageable pageable) {
+    public Page<DOMAIN> findIsExist(Specification<DOMAIN> spec, Pageable pageable, boolean isDesc) {
 
-        return findAll(and(new IsExist<>(),spec),pageable);
+        return findAll(and(new IsExist<>(isDesc),spec),pageable);
 
     }
 
@@ -79,10 +80,22 @@ public class BaseRepositoryImpl<DOMAIN extends BaseEntity>
     }
 
     private class IsExist<T extends BaseEntity> implements Specification<T>{
+        private boolean desc;
+
+        public IsExist(boolean desc) {
+            this.desc = desc;
+        }
+
+        public IsExist() {
+            this(false);
+        }
 
         @Override
         public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
             Path<Object> deleted = root.get("deleted");
+
+            if (desc)
+                query.orderBy(criteriaBuilder.desc(root.get("id")));
 
             return criteriaBuilder.equal(deleted, 0);
         }
