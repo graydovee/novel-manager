@@ -45,9 +45,34 @@ public class ResourceController {
 
     @RequestMapping("/download")
     public String download(){
-        String URL = "https://gzlj.u0z1.com/download/" + appProperties.getAppVersion() + ".apk";
+        if (appProperties.getDownLoadUrl() != null) {
+            String URL = appProperties.getDownLoadUrl();
+            if (!URL.endsWith("/")) {
+                URL += "/";
+            }
+            URL += appProperties.getAppVersion() + ".apk";
+            return "redirect:" + URL;
+        } else {
+            return "redirect:download_native";
+        }
+    }
 
-        return "redirect:" + URL;
+    @RequestMapping("/download_native")
+    public void downloadNative(HttpServletResponse response){
+        File appFile = new File(appProperties.getPath(), appProperties.getAppVersion() + ".apk");
+        if (appFile.exists()){
+            try {
+                InputStream inputStream = new BufferedInputStream(new FileInputStream(appFile));
+                response.setContentType("bin");
+                response.addHeader("Content-Disposition", "attachment; filename=ndovel.apk");
+                OutputStream out = response.getOutputStream();
+                out.write(inputStream.readAllBytes());
+                out.flush();
+            } catch (IOException e) {
+                log.error("IO异常");
+            }
+        }
+
     }
 
     @ResponseBody
