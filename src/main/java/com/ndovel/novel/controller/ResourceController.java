@@ -44,21 +44,10 @@ public class ResourceController {
     }
 
     @RequestMapping("/download")
-    public void download(HttpServletResponse response){
-        File appFile = new File(appProperties.getPath(), appProperties.getAppVersion() + ".apk");
-        if (appFile.exists()){
-            try {
-                InputStream inputStream = new BufferedInputStream(new FileInputStream(appFile));
-                response.setContentType("bin");
-                response.addHeader("Content-Disposition", "attachment; filename=ndovel.apk");
-                OutputStream out = response.getOutputStream();
-                out.write(inputStream.readAllBytes());
-                out.flush();
-            } catch (IOException e) {
-                log.error("IO异常");
-            }
-        }
+    public String download(){
+        String URL = "https://gzlj.u0z1.com/download/" + appProperties.getAppVersion() + ".apk";
 
+        return "redirect:" + URL;
     }
 
     @ResponseBody

@@ -120,7 +120,7 @@
                 "bookId": 6,
                 "nextChapterId": 11,
                 "contentId": 7,
-                "title": "第1章 这个世界，有点不一样",
+                "title": "第1章 XXX",
                 "createTime": "2019-10-03 21:08:39"
         	}
         ],
@@ -178,14 +178,20 @@
     "message": "OK",
     "data": [
         {
-            "title": "书名1",
-            "author":"小说作者1",
-            "url": "小说在目标网站的URL1"
+            "coverUrl": "https://xxx.xxx.xx/xxx/xxx.jpg",
+            "authorName": "小说作者1",
+            "bookName": "小说名1",
+            "url": "https://xxx.xxx.xxx",
+            "title": "小说名1（兼容性变量，值与bookName相同）",
+            "author": "小说作者1（兼容性变量，authorName）"
         },
         {
-            "title": "书名2",
-            "author":"小说作者1",
-            "url": "小说在目标网站的URL2"
+            "coverUrl": "https://xxx.xxx.xx/xxx/xxx.jpg",
+            "authorName": "小说作者2",
+            "bookName": "小说名2",
+            "url": "https://xxx.xxx.xxx",
+            "title": "小说名2（兼容性变量，值与bookName相同）",
+            "author": "小说作者2（兼容性变量，authorName）"
         }
     ]
 }
@@ -207,16 +213,23 @@
 {
     "code":200,
     "message":"OK",
-    "data":[
-        {
-            "title":"小说标题1",
-            "url":"小说内容在目标网站的URL1"
-        },
-        {
-            "title":"小说标题2",
-            "url":"小说内容在目标网站的URL2"
-        }
-    ]
+    "data": {
+        "coverUrl": "https://xxx.xxx.xx/xxx/xxx.jpg",
+        "authorName": "小说作者1",
+        "bookName": "小说名1",
+        "url": "https://xxx.xxx.xxx",
+        "chapters" : [
+             {
+                 "title":"小说标题1",
+                 "url":"小说内容在目标网站的URL1"
+             },
+             {
+                 "title":"小说标题2",
+                 "url":"小说内容在目标网站的URL2"
+             }
+         ]
+    }
+
 }
 ```
 

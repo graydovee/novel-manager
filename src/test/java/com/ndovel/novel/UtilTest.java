@@ -17,16 +17,15 @@ import java.util.List;
 
 class UtilTest {
 
-    @Test
-    void JsoupTest() {
-        try {
-//            Document document = Jsoup.connect("https://www.xinxs.la/ar.php?keyWord=%E4%BB%99%E5%B8%9D%E5%BD%92%E6%9D%A5").get();
-            Document document = Jsoup.connect("https://www.xsbiquge.com/26_26046/").get();
-            System.out.println(document.text());;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Test
+//    void JsoupTest() {
+//        try {
+////            Document document = Jsoup.connect("https://www.xinxs.la/ar.php?keyWord=%E4%BB%99%E5%B8%9D%E5%BD%92%E6%9D%A5").get();
+//            Document document = Jsoup.connect("https://www.xsbiquge.com/26_26046/").get();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Test
     void spiderTest() {
