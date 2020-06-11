@@ -1,6 +1,7 @@
 package com.ndovel.novel.spider.core.impl;
 
 import com.ndovel.novel.model.dto.SearchResult;
+import com.ndovel.novel.model.dto.TempBook;
 import com.ndovel.novel.spider.core.AbstractSpider;
 import com.ndovel.novel.spider.core.SearchSpider;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,15 @@ import java.util.*;
  */
 @Slf4j
 public class SearchSpiderImpl extends AbstractSpider implements SearchSpider {
-    private final static String url = "https://sou.xanbhx.com/search?siteid=xsla&q=";
 
-    //https://sou.xanbhx.com/search?siteid=xsla&q=%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9
+    /**
+     * 已经不能用的URL:
+     * https://sou.xanbhx.com/search?siteid=xsla&q=
+     * https://sou.xanbhx.com/search?siteid=xsla&q=%E6%96%97%E7%A0%B4%E8%8B%8D%E7%A9%B9
+     */
+    private final static String url = "https://www.xsbiquge.com/search.php?keyword=";
+
+
 
     private Document htmlCode(String key){
         String[] split = key.split("[\\s]+");
@@ -39,17 +46,28 @@ public class SearchSpiderImpl extends AbstractSpider implements SearchSpider {
         Document document = htmlCode(key);
         List<SearchResult> ret = new ArrayList<>();
         if (document != null) {
-            List<Element> elements = document.select("li");
+            List<Element> elements = document.select(".result-item");
             for(var element : elements){
-                Elements titleNode = element.select(".s2>a");
-                Elements authorNode = element.select(".s4");
-                if (titleNode.size() > 0 && authorNode.size() > 0) {
-                    SearchResult result = new SearchResult();
-                    result.setTitle(titleNode.text());
-                    result.setUrl(titleNode.attr("href"));
-                    result.setAuthor(authorNode.text());
-                    ret.add(result);
+                SearchResult result = new SearchResult();
+
+                Element pic = element.select(".result-game-item-pic>a").get(0);
+                result.setUrl(pic.attr("href"));
+
+                Element img = pic.select("img").get(0);
+                result.setCoverUrl(img.attr("src"));
+
+                Element detail = element.select(".result-game-item-detail").get(0);
+                Element title = detail.select(".result-item-title>a>span").get(0);
+                result.setBookName(title.text());
+
+                for (var e: detail.select(".result-game-item-info>p")) {
+                    Elements span = e.select("span");
+                    if (span.get(0).text().startsWith("作者")) {
+                        result.setAuthorName(span.get(1).text());
+                        break;
+                    }
                 }
+                ret.add(result);
             }
         }
         return ret;
