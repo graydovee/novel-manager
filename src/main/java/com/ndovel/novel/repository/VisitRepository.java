@@ -22,6 +22,10 @@ public interface VisitRepository extends JpaRepository<Visit, Integer>, CrudRepo
             "FROM Visit v GROUP BY v.date")
     List<VisitDTO> selAll();
 
+    @Query("SELECT new com.ndovel.novel.model.dto.VisitDTO(v.bookId,SUM(v.visit)) " +
+            "FROM Visit v GROUP BY v.bookId order by SUM(v.visit) desc ")
+    List<VisitDTO> selBooksBVisit();
+
 
     @Query("SELECT new com.ndovel.novel.model.dto.VisitDTO(SUM(v.visit),v.date) " +
             "FROM Visit v WHERE v.bookId=?1 and v.date>=?2 and v.date<=?3 GROUP BY v.date")

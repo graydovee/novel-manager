@@ -20,4 +20,9 @@ public class VisitDTO implements BaseDTO<VisitDTO, Visit> {
         this.visit = visit;
         this.date = date;
     }
+
+    public VisitDTO(Integer bookId, Long visit) {
+        this.bookId = bookId;
+        this.visit = visit;
+    }
 }

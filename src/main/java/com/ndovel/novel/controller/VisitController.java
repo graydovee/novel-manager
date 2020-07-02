@@ -36,4 +36,8 @@ public class VisitController {
     }
 
 
+    @GetMapping("/topBook")
+    public Response getBookTopTen() {
+        return Response.success(visitService.getBookTopN());
+    }
 }

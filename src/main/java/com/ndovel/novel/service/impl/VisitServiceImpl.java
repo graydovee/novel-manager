@@ -1,5 +1,6 @@
 package com.ndovel.novel.service.impl;
 
+import com.ndovel.novel.model.dto.BookDTO;
 import com.ndovel.novel.model.dto.VisitDTO;
 import com.ndovel.novel.model.entity.Visit;
 import com.ndovel.novel.repository.BookRepository;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,5 +80,11 @@ public class VisitServiceImpl implements VisitService {
             end = new Date();
         }
         return visitRepository.selAllByTime(begin, end);
+    }
+
+    @Override
+    @Transactional
+    public List<VisitDTO> getBookTopN() {
+        return visitRepository.selBooksBVisit();
     }
 }
