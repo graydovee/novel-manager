@@ -19,8 +19,7 @@ public class StringUtils {
 
     public static String formatContent(String content) {
         content = content
-                .replaceAll("<[^>]*>", "  \n  ")
-                .replaceAll("[(/>)<]", "  \n  ");
+                .replaceAll("<[^>]*>", "  \n  ");
         content = StringEscapeUtils.unescapeHtml4(content);
         content = content
                 .replace("　", " ")
