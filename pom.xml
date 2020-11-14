@@ -8,6 +8,8 @@
         <module>ndovel-api</module>
         <module>ndovel-framework</module>
         <module>ndovel-gateway</module>
+        <module>ndovel-server</module>
+        <module>ndovel-spider</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
