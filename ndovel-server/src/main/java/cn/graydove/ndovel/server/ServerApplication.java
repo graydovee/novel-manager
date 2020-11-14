@@ -1,13 +1,11 @@
-package cn.graydove.ndovel.gateway;
+package cn.graydove.ndovel.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 @SpringBootApplication
-@CrossOrigin
-public class Application {
+public class ServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(Application.class);
+        SpringApplication.run(ServerApplication.class);
     }
 }

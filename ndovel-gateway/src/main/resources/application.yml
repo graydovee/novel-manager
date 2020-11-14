@@ -1,2 +1,22 @@
 server:
-  port: 8081
+  port: 80
+
+spring:
+  application:
+    name: ndovel-gateway
+  cloud:
+    nacos:
+      discovery:
+        ip: 127.0.0.1
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: spider
+          uri: lb://ndovel-spider/
+          filters:
+            - StripPrefix=1
+          predicates:
+            - Path=/spider/**

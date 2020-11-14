@@ -1,0 +1,11 @@
+server:
+  port: 8853
+
+spring:
+  application:
+    name: ndovel-server
+  cloud:
+    nacos:
+      discovery:
+        ip: 127.0.0.1
+        server-addr: 127.0.0.1:8848

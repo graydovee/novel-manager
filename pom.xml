@@ -27,6 +27,7 @@
         <httpclient.version>4.5.13</httpclient.version>
         <swagger.varsion>2.1.5</swagger.varsion>
         <jetbrains.annotations.varsion>20.1.0</jetbrains.annotations.varsion>
+        <cloud.varsion>2.2.3.RELEASE</cloud.varsion>
     </properties>
 
     <dependencies>
@@ -83,6 +84,21 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpclient</artifactId>
                 <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${cloud.varsion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-openfeign</artifactId>
+                <version>${cloud.varsion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
+                <version>${cloud.varsion}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

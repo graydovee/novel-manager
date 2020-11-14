@@ -11,5 +11,16 @@
 
     <artifactId>ndovel-server</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>cn.graydove.ndovel</groupId>
+            <artifactId>ndovel-framework</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

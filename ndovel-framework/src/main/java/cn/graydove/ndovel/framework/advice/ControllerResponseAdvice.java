@@ -28,20 +28,21 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> aClass) {
+    public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
+        log.info(converterType.getSimpleName());
         return Optional.ofNullable(methodParameter.getMethod()).map(Method::getReturnType).map(clazz->!clazz.equals(void.class) && !clazz.equals(Void.class)).orElse(false);
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+    public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> convertType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (body instanceof Response) {
             return body;
         }
         Response<Object> success = Response.success(body);
-        if (aClass.isAssignableFrom(MappingJackson2HttpMessageConverter.class)) {
+        if (convertType.isAssignableFrom(MappingJackson2HttpMessageConverter.class)) {
             return success;
         }
-        if (aClass.isAssignableFrom(StringHttpMessageConverter.class)) {
+        if (convertType.isAssignableFrom(StringHttpMessageConverter.class)) {
             try {
                 return objectMapper.writeValueAsString(success);
             } catch (JsonProcessingException e) {
