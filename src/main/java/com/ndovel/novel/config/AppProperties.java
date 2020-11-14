@@ -14,6 +14,7 @@ public class AppProperties {
      */
     private String appVersion = "0.0.1";
 
+    private String downLoadUrl = null;
 
     private String path = "./app";
 }

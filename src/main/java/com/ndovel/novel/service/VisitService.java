@@ -15,5 +15,6 @@ public interface VisitService {
 
     List<VisitDTO> getData(Date begin, Date end);
 
+    List<VisitDTO> getBookTopN();
 
 }

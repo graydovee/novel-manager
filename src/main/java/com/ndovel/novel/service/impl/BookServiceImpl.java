@@ -4,6 +4,7 @@ import com.ndovel.novel.model.dto.BookDTO;
 import com.ndovel.novel.model.entity.Book;
 import com.ndovel.novel.repository.BookRepository;
 import com.ndovel.novel.repository.SpiderInfoRepository;
+import com.ndovel.novel.repository.VisitRepository;
 import com.ndovel.novel.service.BookService;
 import com.ndovel.novel.service.ChapterService;
 import com.ndovel.novel.utils.DTOUtils;
@@ -23,9 +24,7 @@ public class BookServiceImpl implements BookService {
     private ChapterService chapterService;
     private SpiderInfoRepository spiderInfoRepository;
 
-    public BookServiceImpl(BookRepository bookRepository,
-                           ChapterService chapterService,
-                           SpiderInfoRepository spiderInfoRepository) {
+    public BookServiceImpl(BookRepository bookRepository, ChapterService chapterService, SpiderInfoRepository spiderInfoRepository) {
         this.bookRepository = bookRepository;
         this.chapterService = chapterService;
         this.spiderInfoRepository = spiderInfoRepository;
@@ -36,7 +35,6 @@ public class BookServiceImpl implements BookService {
         List<Book> bookList = bookRepository.findAllIsExist();
         return DTOUtils.listToDTOs(bookList, BookDTO.class);
     }
-
 
     @Override
     public Optional<BookDTO> findExact(String bookName, String authorName) {

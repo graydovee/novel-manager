@@ -44,7 +44,21 @@ public class ResourceController {
     }
 
     @RequestMapping("/download")
-    public void download(HttpServletResponse response){
+    public String download(){
+        if (appProperties.getDownLoadUrl() != null) {
+            String URL = appProperties.getDownLoadUrl();
+            if (!URL.endsWith("/")) {
+                URL += "/";
+            }
+            URL += appProperties.getAppVersion() + ".apk";
+            return "redirect:" + URL;
+        } else {
+            return "redirect:download_native";
+        }
+    }
+
+    @RequestMapping("/download_native")
+    public void downloadNative(HttpServletResponse response){
         File appFile = new File(appProperties.getPath(), appProperties.getAppVersion() + ".apk");
         if (appFile.exists()){
             try {
