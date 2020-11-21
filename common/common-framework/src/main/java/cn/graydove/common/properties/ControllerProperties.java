@@ -1,0 +1,22 @@
+package cn.graydove.common.properties;
+
+import lombok.Data;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Data
+public class ControllerProperties {
+
+    private List<String> ignoredControllerPackage = Arrays.asList(
+            "springfox.documentation.swagger.web",
+            "springfox.documentation.swagger2.web",
+            "org.springframework.boot.autoconfigure.web"
+    );
+
+    private List<String> ignoredResponseBodyClass = Arrays.asList(
+            "cn.graydove.common.response.Response",
+            "org.springframework.http.ResponseEntity"
+    );
+
+}

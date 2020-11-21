@@ -5,11 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>ndovel-api</module>
-        <module>ndovel-framework</module>
         <module>ndovel-gateway</module>
         <module>ndovel-server</module>
         <module>ndovel-spider</module>
+        <module>common</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -25,16 +24,17 @@
         <hutool.version>5.4.7</hutool.version>
         <jsoup.version>1.13.1</jsoup.version>
         <httpclient.version>4.5.13</httpclient.version>
-        <swagger.varsion>2.1.5</swagger.varsion>
-        <jetbrains.annotations.varsion>20.1.0</jetbrains.annotations.varsion>
-        <cloud.varsion>2.2.3.RELEASE</cloud.varsion>
+        <swagger.version>2.9.2</swagger.version>
+        <jetbrains.annotations.version>20.1.0</jetbrains.annotations.version>
+        <cloud.version>2.2.3.RELEASE</cloud.version>
+        <dubbo.version>2.7.8</dubbo.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>${jetbrains.annotations.varsion}</version>
+            <version>${jetbrains.annotations.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -47,7 +47,12 @@
         <dependencies>
             <dependency>
                 <groupId>cn.graydove.ndovel</groupId>
-                <artifactId>ndovel-api</artifactId>
+                <artifactId>common-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.graydove.ndovel</groupId>
+                <artifactId>common-framework</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -56,9 +61,19 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>io.swagger.core.v3</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger.varsion}</version>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-common</artifactId>
+                <version>${swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
@@ -88,17 +103,27 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-                <version>${cloud.varsion}</version>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-openfeign</artifactId>
-                <version>${cloud.varsion}</version>
+                <version>${cloud.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-gateway</artifactId>
-                <version>${cloud.varsion}</version>
+                <version>${cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-spring-boot-starter</artifactId>
+                <version>${dubbo.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

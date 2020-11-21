@@ -13,4 +13,4 @@
 - ndovel-frame：框架模块，进行一些全局配置
 - ndovel-gateway：网关模块，唯一对外提供服务接口
 - ndovel-spider：爬虫模块
-- ndovel-server：服务器模块，执行业务逻辑
+- ndovel-cn.graydove.server：服务器模块，执行业务逻辑
