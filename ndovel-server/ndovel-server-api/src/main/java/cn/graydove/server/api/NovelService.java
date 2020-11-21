@@ -1,10 +1,12 @@
 package cn.graydove.server.api;
 
-import cn.graydove.common.response.Response;
-import cn.graydove.server.model.ChapterVO;
+import cn.graydove.server.model.request.NovelRequest;
+import cn.graydove.server.model.vo.ChapterVO;
+import cn.graydove.server.model.vo.NovelVO;
 
 import java.util.List;
 
 public interface NovelService {
-    Response<List<ChapterVO>> findChapterList();
+
+    NovelVO createNovel(NovelRequest novelRequest);
 }

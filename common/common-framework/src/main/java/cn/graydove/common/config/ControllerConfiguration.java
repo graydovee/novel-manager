@@ -24,7 +24,7 @@ public class ControllerConfiguration extends WebMvcConfigurationSupport {
 
     @Bean
     public ControllerExceptionAdvice controllerExceptionAdvice() {
-        return new ControllerExceptionAdvice();
+        return new ControllerExceptionAdvice(objectMapper);
     }
 
     @Bean

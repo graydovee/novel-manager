@@ -38,15 +38,20 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
-        return Optional.ofNullable(methodParameter.getMethod()).map(Method::getReturnType).map(clazz->!clazz.equals(void.class) && !clazz.equals(Void.class)).orElse(false);
+        String controllerClassName = Optional.ofNullable(methodParameter)
+                .map(MethodParameter::getMethod)
+                .map(Method::getDeclaringClass)
+                .map(Class::getName)
+                .orElse(null);
+        return checkControllerPackage(controllerClassName);
     }
 
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> convertType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (novelProperties.isDebug()) {
-            log.info("[ {} ] return: {}", methodParameter.getMethod(), body);
+            log.info("[{}] return: {}", methodParameter.getMethod(), body);
         }
-        if (isNeedIgnored(body, methodParameter)) {
+        if (checkResponseBodyType(body)) {
             return body;
         }
         Response<Object> success = Response.success(body);
@@ -63,20 +68,11 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
         return body;
     }
 
-    private boolean isNeedIgnored(Object o, MethodParameter methodParameter) {
-        String controllerClassName = Optional.ofNullable(methodParameter)
-                .map(MethodParameter::getMethod)
-                .map(Method::getDeclaringClass)
-                .map(Class::getName)
-                .orElse(null);
-        String responseBodyClassName = Optional.ofNullable(o)
+    private boolean checkResponseBodyType(Object o) {
+        String className = Optional.ofNullable(o)
                 .map(Object::getClass)
                 .map(Class::getName)
                 .orElse(null);
-        return checkControllerPackage(controllerClassName) || checkResponseBodyType(responseBodyClassName);
-    }
-
-    private boolean checkResponseBodyType(String className) {
         if (StrUtil.isBlank(className)) {
             return false;
         }
@@ -90,13 +86,13 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
 
     private boolean checkControllerPackage(String packageName) {
         if (StrUtil.isBlank(packageName)) {
-            return false;
+            return true;
         }
         for (String ignoredPackage: controllerProperties.getIgnoredControllerPackage()) {
             if (packageName.startsWith(ignoredPackage)) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     }
 }

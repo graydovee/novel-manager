@@ -33,12 +33,20 @@ public class Response<T> implements Serializable {
         return new Response<>(ResponseStatus.OK.getCode(), data, true, ResponseStatus.OK.getMessage(), null);
     }
 
+    public static Response ok() {
+        return success(null);
+    }
+
     public static<R> Response<R> fail() {
         return fail(ResponseStatus.FAIL, null);
     }
 
     public static<R> Response<R> fail(String message) {
         return fail(ResponseStatus.FAIL, message);
+    }
+
+    public static<R> Response<R> notValid(String message) {
+        return fail(ResponseStatus.NOT_VALID, message);
     }
 
     public static<R> Response<R> fail(@NotNull ResponseStatus status, String error) {

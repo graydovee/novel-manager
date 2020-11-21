@@ -2,7 +2,9 @@ package cn.graydove.common.response;
 
 public enum ResponseStatus {
     OK(0, "success"),
-    FAIL(1, "fail");
+    TASK_ERROR(1, "task error"),
+    NOT_VALID(2, "parameter not valid"),
+    FAIL(10, "fail");
 
     private Integer code;
 
