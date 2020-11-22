@@ -15,4 +15,4 @@ spring:
         file-extension: yml
         prefix: ndovel
   profiles:
-    active: public, server
+    active: public, server, mysql, mongo

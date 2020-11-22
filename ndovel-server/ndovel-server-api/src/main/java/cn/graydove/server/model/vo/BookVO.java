@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class NovelVO extends BaseApi {
+public class BookVO extends BaseApi {
 
     private static final long serialVersionUID = 6919515597453088200L;
 
@@ -18,7 +18,7 @@ public class NovelVO extends BaseApi {
 
     private AuthorVO author;
 
-    private List<TypeVO> type;
+    private List<CategoryVO> type;
 
     private String cover;
 

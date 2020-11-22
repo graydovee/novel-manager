@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class TypeVO extends BaseApi {
+public class CategoryVO extends BaseApi {
 
     private static final long serialVersionUID = -2702974365853687620L;
 

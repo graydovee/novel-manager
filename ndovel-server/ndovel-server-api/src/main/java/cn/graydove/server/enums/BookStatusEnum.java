@@ -1,6 +1,6 @@
 package cn.graydove.server.enums;
 
-public enum  NovelStatusEnum {
+public enum BookStatusEnum {
     SAVE("save"),
     REVIEW("review"),
     RELEASE("release");
@@ -11,7 +11,7 @@ public enum  NovelStatusEnum {
         return status;
     }
 
-    NovelStatusEnum(String status) {
+    BookStatusEnum(String status) {
         this.status = status;
     }
 }

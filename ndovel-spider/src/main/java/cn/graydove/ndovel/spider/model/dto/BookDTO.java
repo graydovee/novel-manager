@@ -3,10 +3,10 @@ package cn.graydove.ndovel.spider.model.dto;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import java.util.List;
+import java.util.Set;
 
 @Data
-public class NovelDTO {
+public class BookDTO {
 
     @NotBlank
     private String name;
@@ -22,5 +22,5 @@ public class NovelDTO {
     @NotBlank
     private String firstChapterUrl;
 
-    private List<String> type;
+    private Set<String> category;
 }

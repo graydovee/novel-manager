@@ -1,15 +1,15 @@
 package cn.graydove.server.model.request;
 
 import cn.graydove.common.model.BaseApi;
-import cn.graydove.server.enums.NovelStatusEnum;
+import cn.graydove.server.enums.BookStatusEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
+import java.io.Serializable;
+import java.util.Set;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-public class NovelRequest extends BaseApi {
+public class BookRequest implements Serializable {
 
     private static final long serialVersionUID = 8212675880709769415L;
 
@@ -21,7 +21,7 @@ public class NovelRequest extends BaseApi {
 
     private String cover;
 
-    private List<String> type;
+    private Set<String> category;
 
-    private NovelStatusEnum status;
+    private BookStatusEnum status;
 }

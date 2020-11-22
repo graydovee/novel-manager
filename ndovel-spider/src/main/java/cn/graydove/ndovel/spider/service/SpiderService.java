@@ -1,13 +1,11 @@
 package cn.graydove.ndovel.spider.service;
 
-import cn.graydove.ndovel.spider.model.dto.NovelDTO;
-import cn.graydove.server.model.vo.NovelVO;
-
-import java.util.List;
+import cn.graydove.ndovel.spider.model.dto.BookDTO;
+import cn.graydove.server.model.vo.ChapterVO;
 
 public interface SpiderService {
 
-    void spider(NovelDTO novelDTO);
+    void spider(BookDTO bookDTO);
 
-    List<NovelVO> searchNovel(String key);
+    ChapterVO findChapter(Long chapterId);
 }
