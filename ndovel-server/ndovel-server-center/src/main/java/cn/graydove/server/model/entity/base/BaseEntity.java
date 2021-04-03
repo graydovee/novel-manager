@@ -11,6 +11,9 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
+/**
+ * @author graydove
+ */
 @Data
 @EqualsAndHashCode
 @MappedSuperclass

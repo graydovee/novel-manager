@@ -1,5 +1,8 @@
 package cn.graydove.common.exception;
 
+/**
+ * @author graydove
+ */
 public class TaskException extends RuntimeException {
 
     private static final long serialVersionUID = 4506559153241080085L;

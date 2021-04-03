@@ -5,6 +5,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 
+/**
+ * @author graydove
+ */
 @Data
 public class Response<T> implements Serializable {
 

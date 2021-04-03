@@ -1,13 +1,14 @@
 package cn.graydove.server.model.request;
 
-import cn.graydove.common.model.BaseApi;
 import cn.graydove.server.enums.BookStatusEnum;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * @author graydove
+ */
 @Data
 public class BookRequest implements Serializable {
 

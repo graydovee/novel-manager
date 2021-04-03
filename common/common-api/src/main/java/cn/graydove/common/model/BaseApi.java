@@ -5,6 +5,9 @@ import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * @author graydove
+ */
 @Data
 public abstract class BaseApi implements Serializable {
 

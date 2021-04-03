@@ -10,6 +10,9 @@ import lombok.AllArgsConstructor;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * @author graydove
+ */
 @DubboService
 @AllArgsConstructor
 public class BookFacadeImpl implements BookFacade {
@@ -24,6 +27,7 @@ public class BookFacadeImpl implements BookFacade {
         return bookService.createBook(bookRequest);
     }
 
+    @Override
     public Long appendChapter(ChapterRequest chapterRequest) {
         return chapterService.appendChapter(chapterRequest);
     }

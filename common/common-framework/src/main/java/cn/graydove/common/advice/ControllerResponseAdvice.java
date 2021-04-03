@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -20,6 +21,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
+/**
+ * 包裝
+ */
 @Slf4j
 @RestControllerAdvice
 public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
@@ -37,8 +41,8 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
-        String controllerClassName = Optional.ofNullable(methodParameter)
+    public boolean supports(@NotNull MethodParameter methodParameter, @NotNull Class<? extends HttpMessageConverter<?>> converterType) {
+        String controllerClassName = Optional.of(methodParameter)
                 .map(MethodParameter::getMethod)
                 .map(Method::getDeclaringClass)
                 .map(Class::getName)
@@ -47,7 +51,7 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public Object beforeBodyWrite(Object body, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> convertType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
+    public Object beforeBodyWrite(Object body, @NotNull MethodParameter methodParameter, @NotNull MediaType mediaType, Class<? extends HttpMessageConverter<?>> convertType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (novelProperties.isDebug()) {
             log.info("[{}] return: {}", methodParameter.getMethod(), body);
         }

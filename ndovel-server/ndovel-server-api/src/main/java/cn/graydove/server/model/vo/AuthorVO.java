@@ -4,6 +4,9 @@ import cn.graydove.common.model.BaseApi;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * @author graydove
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AuthorVO extends BaseApi {

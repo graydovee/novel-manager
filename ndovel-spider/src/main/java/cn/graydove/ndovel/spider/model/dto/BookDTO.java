@@ -5,6 +5,9 @@ import lombok.Data;
 import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
+/**
+ * @author graydove
+ */
 @Data
 public class BookDTO {
 

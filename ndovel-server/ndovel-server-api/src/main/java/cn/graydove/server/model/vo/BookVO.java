@@ -6,6 +6,9 @@ import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
+/**
+ * @author graydove
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BookVO extends BaseApi {
@@ -24,5 +27,5 @@ public class BookVO extends BaseApi {
 
     private Long firstChapterId;
 
-    private Long LastChapterId;
+    private Long lastChapterId;
 }

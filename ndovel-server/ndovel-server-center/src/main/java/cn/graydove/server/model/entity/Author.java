@@ -7,6 +7,9 @@ import lombok.EqualsAndHashCode;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
+/**
+ * @author graydove
+ */
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)

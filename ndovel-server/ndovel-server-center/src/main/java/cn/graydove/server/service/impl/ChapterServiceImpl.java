@@ -17,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+/**
+ * @author graydove
+ */
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -29,33 +32,38 @@ public class ChapterServiceImpl implements ChapterService {
     private BookRepository bookRepository;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long appendChapter(ChapterRequest chapterRequest) {
         Book book = bookRepository.findById(chapterRequest.getBookId()).orElseThrow(() -> new TaskException("bookId无效"));
         log.info("[ append chapter ] {}: {}", book.getName(), chapterRequest.getTitle());
-        Optional<Chapter> lastChapter = Optional.ofNullable(book.getLastChapterId()).flatMap(chapterRepository::findById);
+        Optional<Chapter> oldLastChapter = Optional.ofNullable(book.getLastChapterId()).flatMap(chapterRepository::findById);
 
-        Chapter chapter = new Chapter();
-        chapter.setTitle(chapterRequest.getTitle());
-        chapter.setPreChapterId(lastChapter.map(Chapter::getId).orElse(null));
-        Chapter savedChapter = chapterRepository.save(chapter);
+        Chapter newLastChapter = new Chapter();
+        newLastChapter.setTitle(chapterRequest.getTitle());
+        newLastChapter.setPreChapterId(oldLastChapter.map(Chapter::getId).orElse(null));
+        Chapter savedChapter = chapterRepository.save(newLastChapter);
 
+        //旧终章的下一章更新为此章
+        oldLastChapter.ifPresent(chp -> {
+            chp.setNextChapterId(savedChapter.getId());
+            chapterRepository.save(chp);
+        });
+
+        //更新小说信息的首章和终章索引
+        if (book.getFirstChapterId() == null) {
+            book.setFirstChapterId(newLastChapter.getId());
+        }
+        book.setLastChapterId(newLastChapter.getId());
+        bookRepository.save(book);
+
+        //保存章节内容
         ChapterDetail chapterDetail = new ChapterDetail();
         chapterDetail.setChapterId(savedChapter.getId());
         chapterDetail.setBookId(book.getId());
         chapterDetail.setTitle(chapterRequest.getTitle());
         chapterDetail.setContent(chapterRequest.getContent());
         chapterDetailRepository.save(chapterDetail);
-
-        lastChapter.ifPresent(chp -> {
-            chp.setNextChapterId(savedChapter.getId());
-            chapterRepository.save(chp);
-        });
-        if (book.getFirstChapterId() == null) {
-            book.setFirstChapterId(chapter.getId());
-        }
-        book.setLastChapterId(chapter.getId());
-        return chapter.getId();
+        return newLastChapter.getId();
     }
 
     @Override

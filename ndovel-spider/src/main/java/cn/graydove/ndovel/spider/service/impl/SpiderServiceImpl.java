@@ -11,6 +11,9 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author graydove
+ */
 @Service
 public class SpiderServiceImpl implements SpiderService {
 

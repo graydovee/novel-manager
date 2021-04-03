@@ -16,6 +16,9 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * @author graydove
+ */
 @Service
 @AllArgsConstructor
 public class BookServiceImpl implements BookService {

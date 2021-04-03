@@ -12,6 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.Date;
 
+/**
+ * @author graydove
+ */
 @Data
 @Document
 public class ChapterDetail {
