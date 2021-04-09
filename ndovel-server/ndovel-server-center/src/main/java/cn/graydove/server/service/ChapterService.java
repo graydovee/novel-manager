@@ -1,7 +1,11 @@
 package cn.graydove.server.service;
 
+import cn.graydove.common.response.Paging;
+import cn.graydove.server.model.dto.ChapterPageDTO;
 import cn.graydove.server.model.request.ChapterRequest;
 import cn.graydove.server.model.vo.ChapterVO;
+
+import java.util.List;
 
 /**
  * @author graydove
@@ -15,5 +19,7 @@ public interface ChapterService {
      */
     Long appendChapter(ChapterRequest chapterRequest);
 
-    ChapterVO find(Long chapterId);
+    ChapterVO findDetail(Long chapterId);
+
+    Paging<ChapterVO> pageByBookId(ChapterPageDTO chapterPageDTO);
 }

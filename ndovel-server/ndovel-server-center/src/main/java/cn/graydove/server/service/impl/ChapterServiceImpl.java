@@ -1,7 +1,9 @@
 package cn.graydove.server.service.impl;
 
 import cn.graydove.common.exception.TaskException;
+import cn.graydove.common.response.Paging;
 import cn.graydove.server.model.document.ChapterDetail;
+import cn.graydove.server.model.dto.ChapterPageDTO;
 import cn.graydove.server.model.entity.Book;
 import cn.graydove.server.model.entity.Chapter;
 import cn.graydove.server.model.request.ChapterRequest;
@@ -10,12 +12,16 @@ import cn.graydove.server.repository.BookRepository;
 import cn.graydove.server.repository.ChapterDetailRepository;
 import cn.graydove.server.repository.ChapterRepository;
 import cn.graydove.server.service.ChapterService;
+import cn.hutool.core.bean.BeanUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author graydove
@@ -39,6 +45,7 @@ public class ChapterServiceImpl implements ChapterService {
         Optional<Chapter> oldLastChapter = Optional.ofNullable(book.getLastChapterId()).flatMap(chapterRepository::findById);
 
         Chapter newLastChapter = new Chapter();
+        newLastChapter.setBookId(chapterRequest.getBookId());
         newLastChapter.setTitle(chapterRequest.getTitle());
         newLastChapter.setPreChapterId(oldLastChapter.map(Chapter::getId).orElse(null));
         Chapter savedChapter = chapterRepository.save(newLastChapter);
@@ -59,7 +66,7 @@ public class ChapterServiceImpl implements ChapterService {
         //保存章节内容
         ChapterDetail chapterDetail = new ChapterDetail();
         chapterDetail.setChapterId(savedChapter.getId());
-        chapterDetail.setBookId(book.getId());
+        chapterDetail.setBookId(chapterRequest.getBookId());
         chapterDetail.setTitle(chapterRequest.getTitle());
         chapterDetail.setContent(chapterRequest.getContent());
         chapterDetailRepository.save(chapterDetail);
@@ -67,18 +74,24 @@ public class ChapterServiceImpl implements ChapterService {
     }
 
     @Override
-    public ChapterVO find(Long chapterId) {
+    public ChapterVO findDetail(Long chapterId) {
         ChapterVO chapterVO = new ChapterVO();
-        chapterRepository.findById(chapterId).ifPresent(chapter -> {
-            chapterVO.setTitle(chapter.getTitle());
-            chapterVO.setNextChapterId(chapter.getNextChapterId());
-            chapterVO.setPreChapterId(chapter.getPreChapterId());
-            chapterVO.setId(chapter.getId());
-            chapterVO.setUpdateTime(chapter.getUpdateTime());
-            chapterVO.setCreateTime(chapter.getCreateTime());
-        });
+        chapterRepository.findById(chapterId).ifPresent(chapter -> BeanUtil.copyProperties(chapter, chapterVO));
         chapterDetailRepository.findByChapterId(chapterId)
                 .ifPresent(chapterDetail -> chapterVO.setContent(chapterDetail.getContent()));
         return chapterVO;
+    }
+
+    @Override
+    public Paging<ChapterVO> pageByBookId(ChapterPageDTO chapterPageDTO) {
+        Page<Chapter> chapterPage = chapterRepository.findByBookId(chapterPageDTO.getBookId(), chapterPageDTO.toPageable());
+        Map<Long, ChapterDetail> contentMap = chapterDetailRepository.findByBookId(chapterPageDTO.getBookId()).stream()
+                .collect(Collectors.toMap(ChapterDetail::getChapterId, v -> v));
+        return Paging.of(chapterPage,
+                chapterStream -> chapterStream
+                        .map(chapter -> BeanUtil.toBean(chapter, ChapterVO.class))
+                        .peek(chapterVO -> chapterVO.setContent(contentMap.get(chapterVO.getId()).getContent()))
+                        .collect(Collectors.toList())
+        );
     }
 }

@@ -27,11 +27,18 @@ public class SpiderServiceImpl implements SpiderService {
         bookRequest.setStatus(BookStatusEnum.RELEASE);
         Long bookId = bookWriteFacade.createBook(bookRequest);
 
-        ChapterRequest chapterRequest = new ChapterRequest();
-        chapterRequest.setBookId(bookId);
-        chapterRequest.setTitle("测试标题");
-        chapterRequest.setContent("11111111111111111111111112222222222222222222222222222222222222223333333333333333333");
-        bookWriteFacade.appendChapter(chapterRequest);
+        for (int i=0; i < 25; ++i) {
+            ChapterRequest chapterRequest = new ChapterRequest();
+            chapterRequest.setBookId(bookId);
+            chapterRequest.setTitle("测试标题" + i);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(i);
+            for (int j=0;j<10;++j) {
+                stringBuilder.append(stringBuilder);
+            }
+            chapterRequest.setContent(stringBuilder.toString());
+            bookWriteFacade.appendChapter(chapterRequest);
+        }
     }
 
 }

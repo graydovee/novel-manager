@@ -14,6 +14,8 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class Chapter extends BaseEntity {
 
+    private Long bookId;
+
     private String title;
 
     private Long nextChapterId;

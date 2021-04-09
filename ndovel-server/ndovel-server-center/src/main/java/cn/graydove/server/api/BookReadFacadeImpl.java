@@ -1,6 +1,5 @@
 package cn.graydove.server.api;
 
-import cn.graydove.server.model.request.ChapterRequest;
 import cn.graydove.server.model.vo.ChapterVO;
 import cn.graydove.server.service.ChapterService;
 import lombok.AllArgsConstructor;
@@ -18,6 +17,6 @@ public class BookReadFacadeImpl implements BookReadFacade {
 
     @Override
     public ChapterVO findChapter(Long chapterId) {
-        return chapterService.find(chapterId);
+        return chapterService.findDetail(chapterId);
     }
 }

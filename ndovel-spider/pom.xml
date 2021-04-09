@@ -12,6 +12,20 @@
     <artifactId>ndovel-spider</artifactId>
 
     <dependencies>
+
+        <!--二方模块-->
+        <dependency>
+            <groupId>cn.graydove.ndovel</groupId>
+            <artifactId>common-framework</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.graydove.ndovel</groupId>
+            <artifactId>ndovel-server-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+
+        <!--spring boot依赖-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -25,18 +39,11 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
         <dependency>
-            <groupId>cn.graydove.ndovel</groupId>
-            <artifactId>common-framework</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.apache.dubbo</groupId>
             <artifactId>dubbo-spring-boot-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>cn.graydove.ndovel</groupId>
-            <artifactId>ndovel-server-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
+        <!--swagger-->
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger2</artifactId>
