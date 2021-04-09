@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
+/**
+ * @author graydove
+ */
 @Configuration
 @EnableConfigurationProperties(NovelProperties.class)
 public class ControllerConfiguration extends WebMvcConfigurationSupport {

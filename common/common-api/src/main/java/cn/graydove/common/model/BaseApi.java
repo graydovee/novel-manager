@@ -3,6 +3,7 @@ package cn.graydove.common.model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ public abstract class BaseApi implements Serializable {
 
     private Long id;
 
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
-    private Date createTime;
+    private LocalDateTime createTime;
 }

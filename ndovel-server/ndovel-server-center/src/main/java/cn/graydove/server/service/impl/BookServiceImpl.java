@@ -10,6 +10,7 @@ import cn.graydove.server.repository.CategoryRepository;
 import cn.graydove.server.service.BookService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -29,6 +30,7 @@ public class BookServiceImpl implements BookService {
 
     private AuthorRepository authorRepository;
 
+    @Transactional(rollbackFor = {Throwable.class})
     @Override
     public Long createBook(BookRequest bookRequest) {
         Book book = new Book();

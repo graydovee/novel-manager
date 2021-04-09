@@ -5,6 +5,9 @@ import lombok.Data;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author graydove
+ */
 @Data
 public class ControllerProperties {
 

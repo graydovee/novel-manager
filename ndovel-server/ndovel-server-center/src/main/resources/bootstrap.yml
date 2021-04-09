@@ -1,3 +1,5 @@
+novel:
+  version: 2.0.0
 spring:
   application:
     name: ndovel-server
@@ -13,6 +15,5 @@ spring:
         username: nacos
         password: nacos
         file-extension: yml
-        prefix: ndovel
-  profiles:
-    active: public, server, mysql, mongo
+#  profiles:
+#    active:

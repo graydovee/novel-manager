@@ -9,6 +9,4 @@ import cn.graydove.server.model.vo.ChapterVO;
 public interface SpiderService {
 
     void spider(BookDTO bookDTO);
-
-    ChapterVO findChapter(Long chapterId);
 }
