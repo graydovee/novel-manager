@@ -1,5 +1,9 @@
 novel:
   version: 2.0.0
+  swagger:
+    enable: false
+server:
+  port: 8853
 spring:
   application:
     name: ndovel-server

@@ -1,0 +1,23 @@
+novel:
+  version: 2.0.0
+  swagger:
+    base-package: cn.graydove.ndovel.reader.controller
+    title: 读者模块
+    description: 读者模块API文档
+server:
+  port: 8855
+spring:
+  application:
+    name: ndovel-reader
+  cloud:
+    nacos:
+      discovery:
+        ip: 127.0.0.1
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        file-extension: yml

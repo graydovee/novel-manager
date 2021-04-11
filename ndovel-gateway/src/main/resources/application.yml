@@ -20,9 +20,9 @@ spring:
             - StripPrefix=1
           predicates:
             - Path=/spider/**
-        - id: server
-          uri: lb://ndovel-server/
+        - id: reader
+          uri: lb://ndovel-reader/
           filters:
             - StripPrefix=1
           predicates:
-            - Path=/server/**
+            - Path=/reader/**

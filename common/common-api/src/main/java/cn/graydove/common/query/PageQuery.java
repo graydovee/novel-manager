@@ -13,17 +13,23 @@ import java.io.Serializable;
 @Data
 public class PageQuery implements Serializable {
 
+    private static final int DEFAULT_PAGE_NO = 0;
+
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private static final long serialVersionUID = -8096688588898561475L;
 
-    private Integer pageNo = 1;
+    private Integer pageNo;
 
-    private Integer pageSize = 10;
+    private Integer pageSize;
 
     public Pageable toPageable() {
-        return PageRequest.of(pageNo, pageSize);
+        return toPageable(Sort.unsorted());
     }
 
     public Pageable toPageable(Sort sort) {
+        int pageNo = this.pageNo == null || this.pageNo < 1 ? DEFAULT_PAGE_NO : this.pageNo - 1;
+        int pageSize = this.pageSize == null ? DEFAULT_PAGE_SIZE : this.pageSize;
         return PageRequest.of(pageNo, pageSize, sort);
     }
 }

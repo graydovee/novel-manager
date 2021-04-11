@@ -1,5 +1,11 @@
 novel:
   version: 2.0.0
+  swagger:
+    base-package: cn.graydove.ndovel.spider.controller
+    title: 爬虫模块
+    description: 爬虫模块API文档
+server:
+  port: 8854
 spring:
   application:
     name: ndovel-spider

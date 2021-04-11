@@ -2,13 +2,12 @@ package cn.graydove.ndovel.spider.service.impl;
 
 import cn.graydove.ndovel.spider.model.dto.BookDTO;
 import cn.graydove.ndovel.spider.service.SpiderService;
-import cn.graydove.server.api.BookWriteFacade;
-import cn.graydove.server.enums.BookStatusEnum;
-import cn.graydove.server.model.request.BookRequest;
-import cn.graydove.server.model.request.ChapterRequest;
-import cn.graydove.server.model.vo.ChapterVO;
+import cn.graydove.ndovel.server.api.BookWriteFacade;
+import cn.graydove.ndovel.server.enums.BookStatusEnum;
+import cn.graydove.ndovel.server.model.request.BookRequest;
+import cn.graydove.ndovel.server.model.request.ChapterRequest;
+import cn.hutool.core.bean.BeanUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,13 +16,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class SpiderServiceImpl implements SpiderService {
 
-    @DubboReference(lazy = true)
+    @DubboReference
     private BookWriteFacade bookWriteFacade;
 
     @Override
     public void spider(BookDTO bookDTO) {
-        BookRequest bookRequest = new BookRequest();
-        BeanUtils.copyProperties(bookDTO, bookRequest);
+        BookRequest bookRequest = BeanUtil.toBean(bookDTO, BookRequest.class);
         bookRequest.setStatus(BookStatusEnum.RELEASE);
         Long bookId = bookWriteFacade.createBook(bookRequest);
 

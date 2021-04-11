@@ -19,4 +19,7 @@ public class NovelProperties {
 
     @NestedConfigurationProperty
     private ControllerProperties controller = new ControllerProperties();
+
+    @NestedConfigurationProperty
+    private SwaggerProperties swagger;
 }
