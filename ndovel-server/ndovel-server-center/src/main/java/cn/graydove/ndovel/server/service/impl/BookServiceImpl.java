@@ -1,6 +1,6 @@
 package cn.graydove.ndovel.server.service.impl;
 
-import cn.graydove.common.response.Paging;
+import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.server.model.dto.BookPageDTO;
 import cn.graydove.ndovel.server.model.entity.Author;
 import cn.graydove.ndovel.server.model.entity.Book;

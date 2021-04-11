@@ -5,12 +5,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 /**
  * @author graydove
  */
 @Data
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_book_id", columnList = "book_id")
+})
 @EqualsAndHashCode(callSuper = true)
 public class Chapter extends BaseEntity {
 

@@ -12,6 +12,7 @@
         <module>ndovel-reader</module>
         <module>ndovel-author</module>
         <module>ndovel-editor</module>
+        <module>ndovel-user</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

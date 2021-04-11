@@ -1,6 +1,6 @@
 package cn.graydove.ndovel.reader.service.impl;
 
-import cn.graydove.common.response.Paging;
+import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.reader.service.BookService;
 import cn.graydove.ndovel.server.api.BookReadFacade;
 import cn.graydove.ndovel.server.model.dto.BookPageDTO;

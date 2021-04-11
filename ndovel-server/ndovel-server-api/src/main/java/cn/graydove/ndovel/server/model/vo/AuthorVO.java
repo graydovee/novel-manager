@@ -1,6 +1,6 @@
 package cn.graydove.ndovel.server.model.vo;
 
-import cn.graydove.common.model.BaseApi;
+import cn.graydove.ndovel.common.model.BaseApi;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

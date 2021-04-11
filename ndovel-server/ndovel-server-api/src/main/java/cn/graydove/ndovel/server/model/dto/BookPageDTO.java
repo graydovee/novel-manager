@@ -1,6 +1,6 @@
 package cn.graydove.ndovel.server.model.dto;
 
-import cn.graydove.common.query.PageQuery;
+import cn.graydove.ndovel.common.query.PageQuery;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

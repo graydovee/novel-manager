@@ -1,6 +1,6 @@
 package cn.graydove.ndovel.spider.exception;
 
-import cn.graydove.common.exception.TaskException;
+import cn.graydove.ndovel.common.exception.TaskException;
 
 /**
  * @author graydove
