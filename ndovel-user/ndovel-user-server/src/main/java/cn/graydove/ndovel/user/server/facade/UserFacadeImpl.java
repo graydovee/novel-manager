@@ -1,9 +1,9 @@
 package cn.graydove.ndovel.user.server.facade;
 
-import cn.graydove.ndovel.user.api.domain.request.AddRoleRequest;
-import cn.graydove.ndovel.user.api.domain.request.UpdateUserRequest;
-import cn.graydove.ndovel.user.api.domain.request.UserRequest;
-import cn.graydove.ndovel.user.api.domain.vo.UserVO;
+import cn.graydove.ndovel.user.api.model.dto.UserDTO;
+import cn.graydove.ndovel.user.api.model.request.AddRoleRequest;
+import cn.graydove.ndovel.user.api.model.request.UpdateUserRequest;
+import cn.graydove.ndovel.user.api.model.vo.UserVO;
 import cn.graydove.ndovel.user.api.facade.UserFacade;
 import cn.graydove.ndovel.user.server.service.UserService;
 import lombok.AllArgsConstructor;
@@ -24,8 +24,8 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public UserVO register(UserRequest userRequest) {
-        return userService.createUser(userRequest);
+    public UserVO register(UserDTO userDTO) {
+        return userService.createUser(userDTO);
     }
 
     @Override

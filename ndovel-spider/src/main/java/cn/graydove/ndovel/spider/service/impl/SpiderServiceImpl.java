@@ -2,10 +2,10 @@ package cn.graydove.ndovel.spider.service.impl;
 
 import cn.graydove.ndovel.spider.model.dto.BookDTO;
 import cn.graydove.ndovel.spider.service.SpiderService;
-import cn.graydove.ndovel.server.api.BookWriteFacade;
-import cn.graydove.ndovel.server.enums.BookStatusEnum;
-import cn.graydove.ndovel.server.model.request.BookRequest;
-import cn.graydove.ndovel.server.model.request.ChapterRequest;
+import cn.graydove.ndovel.server.api.facade.BookWriteFacade;
+import cn.graydove.ndovel.server.api.enums.BookStatusEnum;
+import cn.graydove.ndovel.server.api.model.request.BookRequest;
+import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
 import cn.hutool.core.bean.BeanUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;

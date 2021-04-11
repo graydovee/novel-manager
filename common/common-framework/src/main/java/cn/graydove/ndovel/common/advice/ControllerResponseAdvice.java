@@ -3,6 +3,7 @@ package cn.graydove.ndovel.common.advice;
 import cn.graydove.ndovel.common.properties.ControllerProperties;
 import cn.graydove.ndovel.common.properties.NovelProperties;
 import cn.graydove.ndovel.common.response.Response;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -81,12 +83,9 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
         if (StrUtil.isBlank(className)) {
             return false;
         }
-        for (String ignoredClassName: controllerProperties.getIgnoredResponseBodyClass()) {
-            if (ignoredClassName.equals(className)) {
-                return true;
-            }
-        }
-        return false;
+        List<String> ignoredResponseBodyClass = controllerProperties.getIgnoredResponseBodyClass();
+        return CollectionUtil.isNotEmpty(ignoredResponseBodyClass) &&
+                ignoredResponseBodyClass.contains(className);
     }
 
     private boolean checkControllerPackage(String packageName) {

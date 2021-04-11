@@ -11,27 +11,37 @@ public enum ResponseStatus {
     OK(0, "success"),
 
     /**
+     * 无权限
+     */
+    FORBIDDEN(21, "forbidden"),
+
+    /**
+     * 未登录
+     */
+    UNAUTHORIZED(22, "UNAUTHORIZED"),
+
+    /**
      * 业务异常
      */
-    TASK_ERROR(1, "task error"),
+    TASK_ERROR(11, "task error"),
 
     /**
      * 参数校验失败
      */
-    NOT_VALID(2, "parameter not valid"),
+    NOT_VALID(12, "parameter not valid"),
 
     /**
      * 请求失败
      */
-    FAIL(10, "fail");
+    FAIL(13, "fail");
 
     private Integer code;
 
-    private String message;
+    private String desc;
 
-    ResponseStatus(Integer code, String message) {
+    ResponseStatus(Integer code, String desc) {
         this.code = code;
-        this.message = message;
+        this.desc = desc;
     }
 
     public Integer getCode() {
@@ -42,11 +52,11 @@ public enum ResponseStatus {
         this.code = code;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDesc() {
+        return desc;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 }

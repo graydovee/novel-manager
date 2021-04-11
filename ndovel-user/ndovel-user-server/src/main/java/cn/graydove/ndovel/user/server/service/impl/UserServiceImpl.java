@@ -1,15 +1,16 @@
 package cn.graydove.ndovel.user.server.service.impl;
 
-import cn.graydove.ndovel.user.api.domain.request.AddRoleRequest;
-import cn.graydove.ndovel.user.api.domain.request.UpdateUserRequest;
-import cn.graydove.ndovel.user.api.domain.request.UserRequest;
-import cn.graydove.ndovel.user.api.domain.vo.UserVO;
+import cn.graydove.ndovel.user.api.model.dto.UserDTO;
+import cn.graydove.ndovel.user.api.model.request.AddRoleRequest;
+import cn.graydove.ndovel.user.api.model.request.UpdateUserRequest;
+import cn.graydove.ndovel.user.api.model.vo.UserVO;
 import cn.graydove.ndovel.user.server.domain.entity.RoleDO;
 import cn.graydove.ndovel.user.server.domain.entity.UserDO;
 import cn.graydove.ndovel.user.server.repostitory.RoleRepository;
 import cn.graydove.ndovel.user.server.repostitory.UserRepository;
 import cn.graydove.ndovel.user.server.service.UserService;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final static CopyOptions COPY_OPTIONS = new CopyOptions(null, true, "roles");
+
     private UserRepository userRepository;
 
     private RoleRepository roleRepository;
@@ -36,9 +39,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserVO createUser(UserRequest userRequest) {
-        UserDO userDO = BeanUtil.toBean(userRequest, UserDO.class);
-        userDO.setRoles(roleRepository.findAllByNameIn(userRequest.getRoles()));
+    public UserVO findUserByUserName(String username) {
+        return userRepository.findByUsername(username).map(this::toUserVO).orElse(null);
+    }
+
+    @Override
+    public UserVO createUser(UserDTO userDTO) {
+        UserDO userDO = BeanUtil.toBean(userDTO, UserDO.class);
+        userDO.setRoles(roleRepository.findAllByNameIn(userDTO.getRoles()));
         userRepository.save(userDO);
         return toUserVO(userDO);
     }
@@ -76,7 +84,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserVO toUserVO(@NotNull UserDO userDO) {
-        UserVO userVO = BeanUtil.toBean(userDO, UserVO.class);
+        UserVO userVO = BeanUtil.toBean(userDO, UserVO.class, COPY_OPTIONS);
         userVO.setRoles(userDO.getRoles().stream().map(RoleDO::getName).collect(Collectors.toSet()));
         return userVO;
     }

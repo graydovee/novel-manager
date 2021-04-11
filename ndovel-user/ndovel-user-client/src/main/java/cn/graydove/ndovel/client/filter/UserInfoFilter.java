@@ -1,8 +1,8 @@
 package cn.graydove.ndovel.client.filter;
 
 import cn.graydove.ndovel.client.UserContext;
-import cn.graydove.ndovel.common.constant.AuthConstant;
-import cn.graydove.ndovel.user.api.domain.vo.UserVO;
+import cn.graydove.ndovel.user.api.constant.AuthConstant;
+import cn.graydove.ndovel.user.api.model.vo.UserVO;
 import cn.graydove.ndovel.user.api.util.TokenUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -42,7 +42,7 @@ public class UserInfoFilter implements Filter {
                     return null;
                 }
                 try {
-                    return  objectMapper.readValue(userStr, UserVO.class);
+                    return objectMapper.readValue(userStr, UserVO.class);
                 } catch (JsonProcessingException e) {
                     log.error(e.getMessage(), e);
                 }

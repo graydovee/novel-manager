@@ -14,7 +14,7 @@ import java.util.Set;
  * @author graydove
  */
 @Data
-@Entity
+@Entity(name = "user")
 @EntityListeners(AuditingEntityListener.class)
 public class UserDO {
     @Id
@@ -34,7 +34,7 @@ public class UserDO {
 
     private String password;
 
-    @ManyToMany(cascade = CascadeType.REFRESH)
+    @ManyToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})

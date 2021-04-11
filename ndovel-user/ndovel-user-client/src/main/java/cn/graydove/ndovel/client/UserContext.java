@@ -1,10 +1,8 @@
 package cn.graydove.ndovel.client;
 
 import cn.graydove.ndovel.common.Singleton;
-import cn.graydove.ndovel.user.api.domain.vo.UserVO;
-import cn.hutool.system.UserInfo;
+import cn.graydove.ndovel.user.api.model.vo.UserVO;
 
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**

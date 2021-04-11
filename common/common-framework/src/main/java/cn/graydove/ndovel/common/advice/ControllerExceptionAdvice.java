@@ -33,7 +33,8 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler({Throwable.class})
     public Response<Object> handleException(Throwable e){
         if (e instanceof TaskException) {
-            return Response.fail(ResponseStatus.TASK_ERROR, e.getMessage());
+            TaskException taskException = (TaskException) e;
+            return Response.fail(taskException.getResponseStatus(), e.getMessage());
         } else if (e instanceof MethodArgumentNotValidException) {
             MethodArgumentNotValidException exception = (MethodArgumentNotValidException) e;
             List<ErrorMessage> errorMessageList = new ArrayList<>();
@@ -44,7 +45,7 @@ public class ControllerExceptionAdvice {
             try {
                 message = objectMapper.writeValueAsString(errorMessageList);
             } catch (JsonProcessingException ignored) { }
-            return Response.notValid(message);
+            return Response.fail(ResponseStatus.NOT_VALID, message);
         }
         return Response.fail(e.getMessage());
     }

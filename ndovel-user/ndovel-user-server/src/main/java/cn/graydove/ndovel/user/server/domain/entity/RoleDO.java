@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +13,8 @@ import java.time.LocalDateTime;
  * @author graydove
  */
 @Data
-@Entity
+@Entity(name = "role")
+@EntityListeners(AuditingEntityListener.class)
 public class RoleDO {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,9 @@
 novel:
   version: 2.0.0
   swagger:
-    enable: false
+    base-package: cn.graydove.ndovel.user.server.controller
+    title: 用户权限模块
+    description: 用户权限API文档
 server:
   port: 8858
 spring:

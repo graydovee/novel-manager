@@ -15,25 +15,32 @@ public class Response<T> implements Serializable {
 
     private Integer code;
 
-    private T result;
+    private String codeDesc;
 
     private Boolean success;
 
-    private String message;
+    private T result;
 
-    private String error;
+    private String errorMsg;
 
-    private Response(Integer code, T result, Boolean success, String message, String error) {
+    public Response(Integer code, String codeDesc, Boolean success, T result, String errorMsg) {
         this.code = code;
-        this.result = result;
+        this.codeDesc = codeDesc;
         this.success = success;
-        this.message = message;
-        this.error = error;
+        this.result = result;
+        this.errorMsg = errorMsg;
     }
 
+    public Response(ResponseStatus status, T result, String errorMsg) {
+        this.success = status == ResponseStatus.OK;
+        this.code = status.getCode();
+        this.codeDesc = status.getDesc();
+        this.result = result;
+        this.errorMsg = errorMsg;
+    }
 
     public static<R> Response<R> success(R data) {
-        return new Response<>(ResponseStatus.OK.getCode(), data, true, ResponseStatus.OK.getMessage(), null);
+        return new Response<>(ResponseStatus.OK, data, null);
     }
 
     public static Response ok() {
@@ -48,11 +55,11 @@ public class Response<T> implements Serializable {
         return fail(ResponseStatus.FAIL, message);
     }
 
-    public static<R> Response<R> notValid(String message) {
-        return fail(ResponseStatus.NOT_VALID, message);
+    public static<R> Response<R> fail(@NotNull ResponseStatus status, String errorMsg) {
+        return new Response<>(status, null, errorMsg);
     }
 
-    public static<R> Response<R> fail(@NotNull ResponseStatus status, String error) {
-        return new Response<>(status.getCode(), null, false, status.getMessage(), error);
+    public static<R> Response<R> fail(@NotNull ResponseStatus status) {
+        return new Response<>(status, null, null);
     }
 }

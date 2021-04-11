@@ -32,6 +32,7 @@
         <jetbrains.annotations.version>20.1.0</jetbrains.annotations.version>
         <cloud.version>2.2.3.RELEASE</cloud.version>
         <dubbo.version>2.7.8</dubbo.version>
+        <redisson.version>3.13.6</redisson.version>
     </properties>
 
     <dependencies>
@@ -128,6 +129,11 @@
                 <groupId>org.apache.dubbo</groupId>
                 <artifactId>dubbo-spring-boot-starter</artifactId>
                 <version>${dubbo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

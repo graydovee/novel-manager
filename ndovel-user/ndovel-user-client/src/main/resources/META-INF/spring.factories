@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.graydove.ndovel.client.config.FilterConfiguration,\
+cn.graydove.ndovel.client.config.FilterConfiguration

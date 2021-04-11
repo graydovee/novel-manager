@@ -1,13 +1,16 @@
 package cn.graydove.ndovel.reader.controller;
 
+import cn.graydove.ndovel.client.UserContext;
 import cn.graydove.ndovel.common.response.Paging;
-import cn.graydove.ndovel.server.model.dto.BookPageDTO;
-import cn.graydove.ndovel.server.model.dto.ChapterIdDTO;
+import cn.graydove.ndovel.server.api.model.dto.BookPageDTO;
+import cn.graydove.ndovel.server.api.model.dto.ChapterIdDTO;
 import cn.graydove.ndovel.reader.service.BookService;
-import cn.graydove.ndovel.server.model.dto.ChapterPageDTO;
-import cn.graydove.ndovel.server.model.vo.BookVO;
-import cn.graydove.ndovel.server.model.vo.ChapterVO;
+import cn.graydove.ndovel.server.api.model.dto.ChapterPageDTO;
+import cn.graydove.ndovel.server.api.model.vo.BookVO;
+import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
+import cn.graydove.ndovel.user.api.model.vo.UserVO;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +19,7 @@ import javax.validation.Valid;
 /**
  * @author graydove
  */
+@Slf4j
 @RestController
 @AllArgsConstructor
 public class BookController {
@@ -24,6 +28,8 @@ public class BookController {
 
     @GetMapping("/chapter")
     public ChapterVO chapter(@Valid ChapterIdDTO chapterIdDTO) {
+        UserVO user = UserContext.getUser();
+        log.info("{}", user);
         return bookService.findChapter(chapterIdDTO);
     }
 

@@ -18,7 +18,7 @@ public class ControllerProperties {
     );
 
     private List<String> ignoredResponseBodyClass = Arrays.asList(
-            "cn.graydove.common.response.Response",
+            "cn.graydove.ndovel.common.response.Response",
             "org.springframework.http.ResponseEntity"
     );
 
