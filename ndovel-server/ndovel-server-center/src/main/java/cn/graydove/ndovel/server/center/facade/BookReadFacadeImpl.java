@@ -2,9 +2,9 @@ package cn.graydove.ndovel.server.center.facade;
 
 import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.server.api.facade.BookReadFacade;
-import cn.graydove.ndovel.server.api.model.dto.BookPageDTO;
-import cn.graydove.ndovel.server.api.model.dto.ChapterIdDTO;
-import cn.graydove.ndovel.server.api.model.dto.ChapterPageDTO;
+import cn.graydove.ndovel.server.api.model.request.BookPageRequest;
+import cn.graydove.ndovel.server.api.model.request.ChapterIdRequest;
+import cn.graydove.ndovel.server.api.model.request.ChapterPageRequest;
 import cn.graydove.ndovel.server.api.model.vo.BookVO;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 import cn.graydove.ndovel.server.center.service.BookService;
@@ -24,17 +24,17 @@ public class BookReadFacadeImpl implements BookReadFacade {
     private BookService bookService;
 
     @Override
-    public ChapterVO findChapter(ChapterIdDTO chapterIdDTO) {
-        return chapterService.findDetail(chapterIdDTO.getChapterId());
+    public ChapterVO findChapter(ChapterIdRequest chapterIdRequest) {
+        return chapterService.findDetail(chapterIdRequest);
     }
 
     @Override
-    public Paging<ChapterVO> pageChapter(ChapterPageDTO chapterPageDTO) {
-        return chapterService.pageByBookId(chapterPageDTO);
+    public Paging<ChapterVO> pageChapter(ChapterPageRequest chapterPageRequest) {
+        return chapterService.pageByBookId(chapterPageRequest);
     }
 
     @Override
-    public Paging<BookVO> pageBook(BookPageDTO bookPageDTO) {
-        return bookService.pageBook(bookPageDTO);
+    public Paging<BookVO> pageBook(BookPageRequest bookPageRequest) {
+        return bookService.pageBook(bookPageRequest);
     }
 }

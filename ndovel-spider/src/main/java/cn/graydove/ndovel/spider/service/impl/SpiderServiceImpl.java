@@ -3,7 +3,7 @@ package cn.graydove.ndovel.spider.service.impl;
 import cn.graydove.ndovel.spider.model.dto.BookDTO;
 import cn.graydove.ndovel.spider.service.SpiderService;
 import cn.graydove.ndovel.server.api.facade.BookWriteFacade;
-import cn.graydove.ndovel.server.api.enums.BookStatusEnum;
+import cn.graydove.ndovel.server.api.enums.PublishStatus;
 import cn.graydove.ndovel.server.api.model.request.BookRequest;
 import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
 import cn.hutool.core.bean.BeanUtil;
@@ -22,7 +22,7 @@ public class SpiderServiceImpl implements SpiderService {
     @Override
     public void spider(BookDTO bookDTO) {
         BookRequest bookRequest = BeanUtil.toBean(bookDTO, BookRequest.class);
-        bookRequest.setStatus(BookStatusEnum.RELEASE);
+        bookRequest.setStatus(PublishStatus.RELEASE);
         Long bookId = bookWriteFacade.createBook(bookRequest);
 
         for (int i=0; i < 25; ++i) {
@@ -35,6 +35,7 @@ public class SpiderServiceImpl implements SpiderService {
                 stringBuilder.append(stringBuilder);
             }
             chapterRequest.setContent(stringBuilder.toString());
+            chapterRequest.setStatus(PublishStatus.RELEASE);
             bookWriteFacade.appendChapter(chapterRequest);
         }
     }

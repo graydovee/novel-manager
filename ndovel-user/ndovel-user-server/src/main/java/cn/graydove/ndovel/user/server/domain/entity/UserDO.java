@@ -29,6 +29,8 @@ public class UserDO {
     @LastModifiedDate
     private LocalDateTime updateTime;
 
+    private String nickname;
+
     @Column(unique = true)
     private String username;
 

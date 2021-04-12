@@ -9,15 +9,12 @@ import java.io.Serializable;
  * @author graydove
  */
 @Data
-public class ChapterRequest implements Serializable {
+public class UpdateStatusRequest implements Serializable {
 
-    private static final long serialVersionUID = -8162793803437973471L;
+    private static final long serialVersionUID = 973562116252614554L;
 
-    private Long bookId;
-
-    private String title;
-
-    private String content;
+    private Long id;
 
     private PublishStatus status;
+
 }

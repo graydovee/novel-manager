@@ -1,5 +1,6 @@
 package cn.graydove.ndovel.server.center.model.entity;
 
+import cn.graydove.ndovel.server.api.enums.PublishStatus;
 import cn.graydove.ndovel.server.center.model.entity.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,9 @@ import java.util.Set;
  */
 @Data
 @Entity
+@Table(indexes = {
+        @Index(name = "idx_status", columnList = "status")
+})
 @EqualsAndHashCode(callSuper = true)
 public class Book extends BaseEntity {
 
@@ -32,6 +36,8 @@ public class Book extends BaseEntity {
      * 封面
      */
     private String cover;
+
+    private PublishStatus status;
 
     private Long firstChapterId;
 

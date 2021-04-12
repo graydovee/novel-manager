@@ -2,23 +2,31 @@ package cn.graydove.ndovel.server.center.service.impl;
 
 import cn.graydove.ndovel.common.exception.TaskException;
 import cn.graydove.ndovel.common.response.Paging;
+import cn.graydove.ndovel.server.api.enums.PublishStatus;
+import cn.graydove.ndovel.server.api.model.request.ChapterIdRequest;
+import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
+import cn.graydove.ndovel.server.api.model.request.UpdateChapterRequest;
 import cn.graydove.ndovel.server.center.model.document.ChapterDetail;
-import cn.graydove.ndovel.server.api.model.dto.ChapterPageDTO;
+import cn.graydove.ndovel.server.api.model.request.ChapterPageRequest;
 import cn.graydove.ndovel.server.center.model.entity.Book;
 import cn.graydove.ndovel.server.center.model.entity.Chapter;
-import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 import cn.graydove.ndovel.server.center.repository.BookRepository;
 import cn.graydove.ndovel.server.center.repository.ChapterDetailRepository;
 import cn.graydove.ndovel.server.center.repository.ChapterRepository;
 import cn.graydove.ndovel.server.center.service.ChapterService;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,6 +55,7 @@ public class ChapterServiceImpl implements ChapterService {
         Chapter newLastChapter = new Chapter();
         newLastChapter.setBookId(chapterRequest.getBookId());
         newLastChapter.setTitle(chapterRequest.getTitle());
+        newLastChapter.setStatus(chapterRequest.getStatus());
         newLastChapter.setPreChapterId(oldLastChapter.map(Chapter::getId).orElse(null));
         Chapter savedChapter = chapterRepository.save(newLastChapter);
 
@@ -67,26 +76,37 @@ public class ChapterServiceImpl implements ChapterService {
         ChapterDetail chapterDetail = new ChapterDetail();
         chapterDetail.setChapterId(savedChapter.getId());
         chapterDetail.setBookId(chapterRequest.getBookId());
-        chapterDetail.setTitle(chapterRequest.getTitle());
         chapterDetail.setContent(chapterRequest.getContent());
         chapterDetailRepository.save(chapterDetail);
         return newLastChapter.getId();
     }
 
     @Override
-    public ChapterVO findDetail(Long chapterId) {
-        ChapterVO chapterVO = new ChapterVO();
-        chapterRepository.findById(chapterId).ifPresent(chapter -> BeanUtil.copyProperties(chapter, chapterVO));
-        chapterDetailRepository.findByChapterId(chapterId)
-                .ifPresent(chapterDetail -> chapterVO.setContent(chapterDetail.getContent()));
-        return chapterVO;
+    public ChapterVO findDetail(ChapterIdRequest chapterIdRequest) {
+        Long chapterId = chapterIdRequest.getChapterId();
+        PublishStatus publishStatus = Optional.ofNullable(chapterIdRequest.getPublishStatus()).orElse(PublishStatus.RELEASE);
+        return chapterRepository.findByIdAndStatus(chapterId, publishStatus)
+                .map(chapter -> {
+                    ChapterVO chapterVO = BeanUtil.toBean(chapter, ChapterVO.class);
+                    chapterDetailRepository.findByChapterId(chapterId)
+                            .ifPresent(chapterDetail -> chapterVO.setContent(chapterDetail.getContent()));
+                    return chapterVO;
+                }).orElse(null);
     }
 
     @Override
-    public Paging<ChapterVO> pageByBookId(ChapterPageDTO chapterPageDTO) {
-        Page<Chapter> chapterPage = chapterRepository.findByBookId(chapterPageDTO.getBookId(), chapterPageDTO.toPageable());
-        if (Boolean.TRUE.equals(chapterPageDTO.getQueryContent())) {
-            Map<Long, ChapterDetail> contentMap = chapterDetailRepository.findByBookId(chapterPageDTO.getBookId()).stream()
+    public Paging<ChapterVO> pageByBookId(ChapterPageRequest chapterPageRequest) {
+        //查询章节信息
+        Collection<PublishStatus> statuses = chapterPageRequest.getStatuses();
+        Page<Chapter> chapterPage;
+        if (CollectionUtil.isEmpty(statuses)) {
+            chapterPage = chapterRepository.findByBookId(chapterPageRequest.getBookId(), chapterPageRequest.toPageable());
+        } else {
+            chapterPage = chapterRepository.findByBookIdAndStatusIn(chapterPageRequest.getBookId(), statuses, chapterPageRequest.toPageable());
+        }
+        //查询章节正文内容
+        if (Boolean.TRUE.equals(chapterPageRequest.getQueryContent())) {
+            Map<Long, ChapterDetail> contentMap = chapterDetailRepository.findByBookId(chapterPageRequest.getBookId()).stream()
                     .collect(Collectors.toMap(ChapterDetail::getChapterId, v -> v));
             return Paging.ofWithStream(chapterPage,
                     chapterStream -> chapterStream
@@ -96,5 +116,27 @@ public class ChapterServiceImpl implements ChapterService {
             );
         }
         return Paging.ofWithMap(chapterPage, chapter -> BeanUtil.toBean(chapter, ChapterVO.class));
+    }
+
+    @Override
+    public Boolean updateChapter(UpdateChapterRequest updateChapterRequest) {
+        boolean chp = false;
+        boolean cnt = false;
+        if (StrUtil.isNotBlank(updateChapterRequest.getTitle()) || null != updateChapterRequest.getStatus()) {
+             chapterRepository.findById(updateChapterRequest.getId()).ifPresent(chapter -> {
+                Optional.of(updateChapterRequest.getTitle()).filter(StrUtil::isNotBlank).ifPresent(chapter::setTitle);
+                Optional.of(updateChapterRequest.getStatus()).ifPresent(chapter::setStatus);
+                chapterRepository.save(chapter);
+            });
+            chp =  true;
+        }
+        if (StrUtil.isNotBlank(updateChapterRequest.getContent())) {
+            chapterDetailRepository.findByChapterId(updateChapterRequest.getId()).ifPresent(chapterDetail -> {
+                chapterDetail.setContent(updateChapterRequest.getContent());
+                chapterDetailRepository.save(chapterDetail);
+            });
+            cnt = true;
+        }
+        return chp || cnt;
     }
 }

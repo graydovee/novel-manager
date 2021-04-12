@@ -1,4 +1,4 @@
-package cn.graydove.ndovel.server.api.model.dto;
+package cn.graydove.ndovel.reader.model.dto;
 
 import lombok.Data;
 

@@ -44,8 +44,8 @@ public class InitRunner implements ApplicationRunner {
         if (lock.tryLock()) {
             try {
                 Set<String> roleNames = Arrays.stream(RoleEnum.values()).map(RoleEnum::name).collect(Collectors.toSet());
-                Set<RoleDO> roleDOSet = roleRepository.findAllByNameIn(roleNames);
-                Set<String> names = roleDOSet.stream().map(RoleDO::getName).collect(Collectors.toSet());
+                Set<RoleDO> roleSet = roleRepository.findAllByNameIn(roleNames);
+                Set<String> names = roleSet.stream().map(RoleDO::getName).collect(Collectors.toSet());
                 for (String roleName : roleNames) {
                     if (names.contains(roleName)) {
                         continue;
@@ -53,15 +53,16 @@ public class InitRunner implements ApplicationRunner {
                     RoleDO roleDO = new RoleDO();
                     roleDO.setName(roleName);
                     RoleDO role = roleRepository.save(roleDO);
-                    roleDOSet.add(role);
+                    roleSet.add(role);
                 }
 
                 Optional<UserDO> user = userRepository.findByUsername(userProperties.getAdminUsername());
                 if (!user.isPresent()) {
                     UserDO userDO = new UserDO();
+                    userDO.setNickname(userProperties.getAdminNickname());
                     userDO.setUsername(userProperties.getAdminUsername());
                     userDO.setPassword(passwordEncoder.encode(userProperties.getAdminPassword()));
-                    userDO.setRoles(roleDOSet);
+                    userDO.setRoles(roleSet);
                     userRepository.save(userDO);
                 }
             } finally {

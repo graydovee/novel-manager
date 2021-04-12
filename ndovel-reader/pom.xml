@@ -21,12 +21,6 @@
             <groupId>cn.graydove.ndovel</groupId>
             <artifactId>common-framework</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>cn.graydove.ndovel</groupId>
-            <artifactId>ndovel-user-client</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
 </project>

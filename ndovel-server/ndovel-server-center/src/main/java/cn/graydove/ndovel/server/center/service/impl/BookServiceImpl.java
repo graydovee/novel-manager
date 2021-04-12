@@ -1,7 +1,9 @@
 package cn.graydove.ndovel.server.center.service.impl;
 
 import cn.graydove.ndovel.common.response.Paging;
-import cn.graydove.ndovel.server.api.model.dto.BookPageDTO;
+import cn.graydove.ndovel.server.api.enums.PublishStatus;
+import cn.graydove.ndovel.server.api.model.request.BookPageRequest;
+import cn.graydove.ndovel.server.api.model.request.UpdateBookRequest;
 import cn.graydove.ndovel.server.center.model.entity.Author;
 import cn.graydove.ndovel.server.center.model.entity.Book;
 import cn.graydove.ndovel.server.center.model.entity.Category;
@@ -12,7 +14,10 @@ import cn.graydove.ndovel.server.center.repository.BookRepository;
 import cn.graydove.ndovel.server.center.repository.CategoryRepository;
 import cn.graydove.ndovel.server.center.service.BookService;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.collection.CollectionUtil;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,12 +55,28 @@ public class BookServiceImpl implements BookService {
                 .orElse(Collections.emptySet());
         book.setCategory(categorySet);
         book.setCover(bookRequest.getCover());
+        book.setStatus(bookRequest.getStatus());
         book = bookRepository.save(book);
         return book.getId();
     }
 
     @Override
-    public Paging<BookVO> pageBook(BookPageDTO bookPageDTO) {
-        return Paging.ofWithMap(bookRepository.findAll(bookPageDTO.toPageable()), book->BeanUtil.toBean(book, BookVO.class));
+    public Paging<BookVO> pageBook(BookPageRequest bookPageRequest) {
+        Page<Book> bookPage;
+        if (CollectionUtil.isEmpty(bookPageRequest.getStatuses())) {
+            bookPage = bookRepository.findAll(bookPageRequest.toPageable());
+        } else {
+            bookPage = bookRepository.findAllByStatusIn(bookPageRequest.getStatuses(), bookPageRequest.toPageable());
+        }
+        return Paging.ofWithMap(bookPage, book->BeanUtil.toBean(book, BookVO.class));
+    }
+
+    @Override
+    public Boolean updateBook(UpdateBookRequest updateBookRequest) {
+        return bookRepository.findById(updateBookRequest.getId()).map(book -> {
+            BeanUtil.copyProperties(updateBookRequest, book, CopyOptions.create(null, true));
+            bookRepository.save(book);
+            return true;
+        }).orElse(false);
     }
 }

@@ -1,4 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 cn.graydove.ndovel.common.config.ControllerConfiguration,\
-cn.graydove.ndovel.common.config.SwaggerConfiguration,\
-cn.graydove.ndovel.common.config.ObjectMapperConfiguration
+cn.graydove.ndovel.common.config.SwaggerConfiguration

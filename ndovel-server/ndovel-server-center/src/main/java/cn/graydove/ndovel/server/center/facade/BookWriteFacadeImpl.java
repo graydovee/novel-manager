@@ -3,6 +3,8 @@ package cn.graydove.ndovel.server.center.facade;
 import cn.graydove.ndovel.server.api.facade.BookWriteFacade;
 import cn.graydove.ndovel.server.api.model.request.BookRequest;
 import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
+import cn.graydove.ndovel.server.api.model.request.UpdateBookRequest;
+import cn.graydove.ndovel.server.api.model.request.UpdateChapterRequest;
 import cn.graydove.ndovel.server.center.service.BookService;
 import cn.graydove.ndovel.server.center.service.ChapterService;
 import lombok.AllArgsConstructor;
@@ -28,5 +30,16 @@ public class BookWriteFacadeImpl implements BookWriteFacade {
     public Long appendChapter(ChapterRequest chapterRequest) {
         return chapterService.appendChapter(chapterRequest);
     }
+
+    @Override
+    public Boolean updateBook(UpdateBookRequest updateBookRequest) {
+        return bookService.updateBook(updateBookRequest);
+    }
+
+    @Override
+    public Boolean updateChapter(UpdateChapterRequest updateChapterRequest) {
+        return chapterService.updateChapter(updateChapterRequest);
+    }
+
 
 }

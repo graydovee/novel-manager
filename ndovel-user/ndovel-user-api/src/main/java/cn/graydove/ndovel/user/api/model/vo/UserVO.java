@@ -15,6 +15,8 @@ public class UserVO extends BaseApi {
 
     private static final long serialVersionUID = 4917279786045235921L;
 
+    private String nickname;
+
     private String username;
 
     private String password;

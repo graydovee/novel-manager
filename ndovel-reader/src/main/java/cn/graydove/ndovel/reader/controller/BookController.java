@@ -2,10 +2,10 @@ package cn.graydove.ndovel.reader.controller;
 
 import cn.graydove.ndovel.client.UserContext;
 import cn.graydove.ndovel.common.response.Paging;
-import cn.graydove.ndovel.server.api.model.dto.BookPageDTO;
-import cn.graydove.ndovel.server.api.model.dto.ChapterIdDTO;
+import cn.graydove.ndovel.reader.model.dto.BookPageDTO;
+import cn.graydove.ndovel.reader.model.dto.ChapterIdDTO;
+import cn.graydove.ndovel.reader.model.dto.ChapterPageDTO;
 import cn.graydove.ndovel.reader.service.BookService;
-import cn.graydove.ndovel.server.api.model.dto.ChapterPageDTO;
 import cn.graydove.ndovel.server.api.model.vo.BookVO;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 import cn.graydove.ndovel.user.api.model.vo.UserVO;
@@ -28,8 +28,6 @@ public class BookController {
 
     @GetMapping("/chapter")
     public ChapterVO chapter(@Valid ChapterIdDTO chapterIdDTO) {
-        UserVO user = UserContext.getUser();
-        log.info("{}", user);
         return bookService.findChapter(chapterIdDTO);
     }
 

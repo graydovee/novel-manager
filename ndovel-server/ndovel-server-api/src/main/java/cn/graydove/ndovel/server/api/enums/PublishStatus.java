@@ -4,7 +4,7 @@ package cn.graydove.ndovel.server.api.enums;
  * 书籍状态
  * @author graydove
  */
-public enum BookStatusEnum {
+public enum PublishStatus {
 
     /**
      * 保存
@@ -27,7 +27,7 @@ public enum BookStatusEnum {
         return status;
     }
 
-    BookStatusEnum(String status) {
+    PublishStatus(String status) {
         this.status = status;
     }
 }

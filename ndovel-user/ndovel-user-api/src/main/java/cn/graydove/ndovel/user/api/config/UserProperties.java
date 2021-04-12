@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "ndovel.user")
 public class UserProperties {
 
+    private String adminNickname = "管理员";
+
     private String adminUsername = "ndovel";
 
     private String adminPassword = "ndovel";

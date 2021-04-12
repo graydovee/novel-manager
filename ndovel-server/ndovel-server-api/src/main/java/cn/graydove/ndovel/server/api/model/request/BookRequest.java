@@ -1,6 +1,6 @@
 package cn.graydove.ndovel.server.api.model.request;
 
-import cn.graydove.ndovel.server.api.enums.BookStatusEnum;
+import cn.graydove.ndovel.server.api.enums.PublishStatus;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -24,5 +24,5 @@ public class BookRequest implements Serializable {
 
     private Set<String> category;
 
-    private BookStatusEnum status;
+    private PublishStatus status;
 }

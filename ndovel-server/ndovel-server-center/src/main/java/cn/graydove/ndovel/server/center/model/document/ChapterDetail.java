@@ -22,7 +22,5 @@ public class ChapterDetail {
     @Indexed
     private Long bookId;
 
-    private String title;
-
     private String content;
 }

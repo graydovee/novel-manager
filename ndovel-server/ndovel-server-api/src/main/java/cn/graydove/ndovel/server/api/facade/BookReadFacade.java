@@ -1,9 +1,9 @@
 package cn.graydove.ndovel.server.api.facade;
 
 import cn.graydove.ndovel.common.response.Paging;
-import cn.graydove.ndovel.server.api.model.dto.BookPageDTO;
-import cn.graydove.ndovel.server.api.model.dto.ChapterIdDTO;
-import cn.graydove.ndovel.server.api.model.dto.ChapterPageDTO;
+import cn.graydove.ndovel.server.api.model.request.BookPageRequest;
+import cn.graydove.ndovel.server.api.model.request.ChapterIdRequest;
+import cn.graydove.ndovel.server.api.model.request.ChapterPageRequest;
 import cn.graydove.ndovel.server.api.model.vo.BookVO;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 
@@ -12,9 +12,9 @@ import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
  */
 public interface BookReadFacade {
 
-    ChapterVO findChapter(ChapterIdDTO chapterIdDTO);
+    ChapterVO findChapter(ChapterIdRequest chapterIdRequest);
 
-    Paging<ChapterVO> pageChapter(ChapterPageDTO chapterPageDTO);
+    Paging<ChapterVO> pageChapter(ChapterPageRequest chapterPageRequest);
 
-    Paging<BookVO> pageBook(BookPageDTO bookPageDTO);
+    Paging<BookVO> pageBook(BookPageRequest bookPageRequest);
 }
