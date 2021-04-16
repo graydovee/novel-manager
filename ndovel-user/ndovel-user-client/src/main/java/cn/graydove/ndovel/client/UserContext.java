@@ -32,11 +32,20 @@ public class UserContext {
                 .orElseThrow(UserException::new);
     }
 
+    @Nullable
+    public static Long getUserId() {
+        UserVO user = getUser();
+        if (null != user) {
+            return user.getId();
+        }
+        return null;
+    }
+
     public static void remove() {
         userVOThreadLocal.remove();
     }
 
-    public static void set(Supplier<UserVO> supplier) {
+    public static void setUserGetter(Supplier<UserVO> supplier) {
         userVOThreadLocal.set(new Singleton<>(supplier));
     }
 

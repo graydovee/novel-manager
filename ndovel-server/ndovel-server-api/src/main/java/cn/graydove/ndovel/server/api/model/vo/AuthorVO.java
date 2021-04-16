@@ -13,5 +13,9 @@ public class AuthorVO extends BaseApi {
 
     private static final long serialVersionUID = 4303685617484700470L;
 
+    private Long id;
+
     private String name;
+
+    private Long userId;
 }

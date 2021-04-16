@@ -1,0 +1,24 @@
+novel:
+  version: 2.0.0
+  swagger:
+    enable: false
+server:
+  port: 8859
+spring:
+  application:
+    name: ndovel-logger
+  cloud:
+    nacos:
+      discovery:
+        ip: 127.0.0.1
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+      config:
+        server-addr: 127.0.0.1:8848
+        username: nacos
+        password: nacos
+        file-extension: yml
+        extension-configs:
+          - data-id: rocketmq.yml
+            refresh: true

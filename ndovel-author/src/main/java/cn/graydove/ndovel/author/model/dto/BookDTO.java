@@ -21,8 +21,6 @@ public class BookDTO implements Serializable {
     @NotBlank
     private String introduce;
 
-    private String cover;
-
     @NotNull
     private Set<String> category;
 }

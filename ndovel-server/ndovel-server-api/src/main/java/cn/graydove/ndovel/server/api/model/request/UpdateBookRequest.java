@@ -15,4 +15,6 @@ public class UpdateBookRequest extends UpdateStatusRequest {
     private String name;
 
     private String introduce;
+
+    private String cover;
 }

@@ -35,7 +35,7 @@ public class UserInfoFilter implements Filter {
         String header = request.getHeader(AuthConstant.AUTHORIZATION);
         if (StrUtil.isNotBlank(header)) {
             //设置UserContext
-            UserContext.set(() -> {
+            UserContext.setUserGetter(() -> {
                 String key = TokenUtil.toRedisKey(header);
                 String userStr = stringRedisTemplate.opsForValue().get(key);
                 if (null == userStr) {

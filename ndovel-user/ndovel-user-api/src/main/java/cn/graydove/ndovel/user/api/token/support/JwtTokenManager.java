@@ -75,6 +75,11 @@ public class JwtTokenManager implements TokenManager {
         return builder.compact();
     }
 
+    @Override
+    public long getTtl() {
+        return tokenProperties.getTtl();
+    }
+
     /**
      * 创建jwt
      */

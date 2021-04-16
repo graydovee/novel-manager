@@ -5,7 +5,6 @@ import cn.graydove.ndovel.common.response.ResponseStatus;
 import cn.graydove.ndovel.gateway.auth.AuthorizationManager;
 import cn.graydove.ndovel.user.api.constant.AuthConstant;
 import cn.graydove.ndovel.user.api.enums.RoleEnum;
-import cn.graydove.ndovel.user.api.facade.UserFacade;
 import cn.graydove.ndovel.user.api.model.vo.UserVO;
 import cn.graydove.ndovel.user.api.token.TokenManager;
 import cn.graydove.ndovel.user.api.token.TokenSubject;
@@ -13,13 +12,12 @@ import cn.graydove.ndovel.user.api.util.TokenUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -30,37 +28,20 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author graydove
  */
 @Slf4j
 @Component
+@AllArgsConstructor
 public class TokenFilter implements GlobalFilter, Ordered {
-
-    /**
-     * 用户信息在redis缓存里的保存
-     */
-    private final static long TTL = 60 * 60;
 
     private ObjectMapper objectMapper;
 
     private AuthorizationManager authorizationManager;
 
     private TokenManager tokenManager;
-
-    private StringRedisTemplate stringRedisTemplate;
-
-    @DubboReference(check = false)
-    private UserFacade userFacade;
-
-    public TokenFilter(ObjectMapper objectMapper, AuthorizationManager authorizationManager, TokenManager tokenManager, StringRedisTemplate stringRedisTemplate) {
-        this.objectMapper = objectMapper;
-        this.authorizationManager = authorizationManager;
-        this.tokenManager = tokenManager;
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -78,24 +59,9 @@ public class TokenFilter implements GlobalFilter, Ordered {
             if (null == tokenSubject) {
                 return write(exchange, HttpStatus.FORBIDDEN, ResponseStatus.FORBIDDEN, "无效令牌");
             }
-            UserVO userVO = null;
-            try {
-                userVO = userFacade.loadUser(tokenSubject.getUserId());
-            } catch (Throwable e) {
-                log.error(e.getMessage(), e);
-            }
-            if (null == userVO) {
-                return write(exchange, HttpStatus.FORBIDDEN, ResponseStatus.FORBIDDEN, "无效用户");
-            }
-            if (!userVO.getRoles().contains(needRole.name())) {
+
+            if (!tokenSubject.getRoles().contains(needRole.name())) {
                 return write(exchange, HttpStatus.FORBIDDEN, ResponseStatus.FORBIDDEN, "无权限");
-            }
-            //用户信息写入redis缓存
-            try {
-                String userInfo = objectMapper.writeValueAsString(userVO);
-                stringRedisTemplate.opsForValue().set(TokenUtil.toRedisKey(bearerToken), userInfo, TTL, TimeUnit.SECONDS);
-            } catch (JsonProcessingException e) {
-                log.error(e.getMessage(), e);
             }
         }
         return chain.filter(exchange);

@@ -11,5 +11,5 @@ public interface TokenManager {
 
     String createToken(TokenSubject subject, long ttl);
 
-
+    long getTtl();
 }

@@ -1,6 +1,7 @@
 package cn.graydove.ndovel.server.api.model.vo;
 
 import cn.graydove.ndovel.common.model.BaseApi;
+import cn.graydove.ndovel.server.api.enums.PublishStatus;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -28,4 +29,6 @@ public class BookVO extends BaseApi {
     private Long firstChapterId;
 
     private Long lastChapterId;
+
+    private PublishStatus status;
 }

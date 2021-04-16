@@ -21,3 +21,10 @@ spring:
         username: nacos
         password: nacos
         file-extension: yml
+        extension-configs:
+          - data-id: rocketmq.yml
+            refresh: true
+          - data-id: dubbo-consumer.yml
+            refresh: true
+          - data-id: redis.yml
+            refresh: true

@@ -23,4 +23,8 @@ public interface BookService {
     Boolean updateBook(UpdateBookDTO updateBookDTO);
 
     Boolean updateChapter(UpdateChapterDTO updateChapterDTO);
+
+    Boolean submitBook(SubmitDTO submitDTO);
+
+    Boolean submitChapter(SubmitDTO submitDTO);
 }

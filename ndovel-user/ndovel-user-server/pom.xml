@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.graydove.ndovel</groupId>
-            <artifactId>ndovel-user-api</artifactId>
+            <artifactId>ndovel-user-client</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.graydove.ndovel</groupId>

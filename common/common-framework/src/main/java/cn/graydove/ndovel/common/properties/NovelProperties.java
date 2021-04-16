@@ -21,5 +21,8 @@ public class NovelProperties {
     private ControllerProperties controller = new ControllerProperties();
 
     @NestedConfigurationProperty
-    private SwaggerProperties swagger;
+    private SwaggerProperties swagger = new SwaggerProperties();
+
+    @NestedConfigurationProperty
+    private OssProperties oss = new OssProperties();
 }

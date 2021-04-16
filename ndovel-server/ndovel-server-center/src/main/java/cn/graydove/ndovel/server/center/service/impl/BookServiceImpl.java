@@ -2,6 +2,7 @@ package cn.graydove.ndovel.server.center.service.impl;
 
 import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.server.api.enums.PublishStatus;
+import cn.graydove.ndovel.server.api.model.request.BookIdRequest;
 import cn.graydove.ndovel.server.api.model.request.BookPageRequest;
 import cn.graydove.ndovel.server.api.model.request.UpdateBookRequest;
 import cn.graydove.ndovel.server.center.model.entity.Author;
@@ -78,5 +79,15 @@ public class BookServiceImpl implements BookService {
             bookRepository.save(book);
             return true;
         }).orElse(false);
+    }
+
+    @Override
+    public BookVO findBook(BookIdRequest bookIdRequest) {
+        Optional<Book> book = null == bookIdRequest.getPublishStatus() ?
+                bookRepository.findById(bookIdRequest.getBookId()) :
+                bookRepository.findByIdAndStatus(bookIdRequest.getBookId(), bookIdRequest.getPublishStatus());
+
+        return book.map(b -> BeanUtil.toBean(b, BookVO.class))
+                .orElse(null);
     }
 }

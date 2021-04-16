@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * @author graydove
@@ -14,7 +15,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TokenSubject implements Serializable {
 
+    private static final long serialVersionUID = -511139324706734291L;
+
     private Long userId;
+
+    private Set<String> roles;
 
     private TokenType tokenType;
 
