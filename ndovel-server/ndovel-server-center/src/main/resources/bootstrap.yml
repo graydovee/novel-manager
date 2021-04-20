@@ -19,5 +19,10 @@ spring:
         username: nacos
         password: nacos
         file-extension: yml
+        extension-configs:
+          - data-id: elasticsearch.yml
+            refresh: true
+          - data-id: rocketmq.yml
+            refresh: true
 #  profiles:
 #    active:

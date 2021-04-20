@@ -17,6 +17,8 @@ public class NovelProperties {
 
     private String version = "2.0.0";
 
+    private String address = "http://localhost";
+
     @NestedConfigurationProperty
     private ControllerProperties controller = new ControllerProperties();
 

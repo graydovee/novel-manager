@@ -22,3 +22,5 @@ spring:
         extension-configs:
           - data-id: rocketmq.yml
             refresh: true
+          - data-id: xxljob.properties
+            refresh: true

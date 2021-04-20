@@ -1,12 +1,12 @@
 package cn.graydove.ndovel.common;
 
-import cn.graydove.ndovel.common.config.ObjectMapperConfiguration;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,6 +28,7 @@ public class ObjectMapperFactoryImpl implements ObjectMapperFactory {
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
         javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
         objectMapper.registerModule(javaTimeModule);
+        objectMapper.setDateFormat(new SimpleDateFormat(pattern));
         return objectMapper;
     }
 

@@ -2,6 +2,7 @@ package cn.graydove.ndovel.logger.rocketmq;
 
 import cn.graydove.ndovel.client.UserContext;
 import cn.graydove.ndovel.logger.model.dto.VisitDTO;
+import cn.graydove.ndovel.logger.model.dto.VisitStatisticDTO;
 import lombok.AllArgsConstructor;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 
@@ -24,5 +25,9 @@ public class NovelProducer {
         visitDTO.setChapterId(chapterId);
         visitDTO.setCreateTime(new Date());
         this.rocketMqTemplate.convertAndSend(NovelTopic.VISIT_TOPIC, visitDTO);
+    }
+
+    public void statisticVisit(VisitStatisticDTO visitStatisticDTO){
+        this.rocketMqTemplate.convertAndSend(NovelTopic.VISIT_STATISTIC_TOPIC, visitStatisticDTO);
     }
 }

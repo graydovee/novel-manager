@@ -6,9 +6,12 @@ import cn.graydove.ndovel.logger.rocketmq.NovelProducer;
 import cn.graydove.ndovel.reader.model.dto.BookPageDTO;
 import cn.graydove.ndovel.reader.model.dto.ChapterIdDTO;
 import cn.graydove.ndovel.reader.model.dto.ChapterPageDTO;
+import cn.graydove.ndovel.reader.model.dto.NovelSearchDTO;
 import cn.graydove.ndovel.reader.service.BookService;
 import cn.graydove.ndovel.server.api.model.vo.BookVO;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
+import cn.graydove.ndovel.server.api.model.vo.NovelVO;
+import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,5 +49,16 @@ public class BookController {
     @GetMapping("/page_book")
     public Paging<BookVO> book(@Valid BookPageDTO bookPageDTO) {
         return bookService.pageBook(bookPageDTO);
+    }
+
+    @GetMapping("/search_novel")
+    public Paging<NovelVO> search(@Valid NovelSearchDTO novelSearchDTO) {
+        if (StrUtil.isBlank(novelSearchDTO.getSortField())) {
+            novelSearchDTO.setSortField("visit");
+            if (null != novelSearchDTO.getDesc()) {
+                novelSearchDTO.setDesc(true);
+            }
+        }
+        return bookService.searchNovel(novelSearchDTO);
     }
 }
