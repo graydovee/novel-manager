@@ -3,14 +3,12 @@ package cn.graydove.ndovel.server.center.service.impl;
 import cn.graydove.ndovel.common.exception.TaskException;
 import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.server.api.enums.PublishStatus;
-import cn.graydove.ndovel.server.api.model.request.ChapterIdRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
-import cn.graydove.ndovel.server.api.model.request.UpdateChapterRequest;
+import cn.graydove.ndovel.server.api.model.request.*;
 import cn.graydove.ndovel.server.center.model.document.ChapterDetail;
-import cn.graydove.ndovel.server.api.model.request.ChapterPageRequest;
 import cn.graydove.ndovel.server.center.model.entity.Book;
 import cn.graydove.ndovel.server.center.model.entity.Chapter;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
+import cn.graydove.ndovel.server.center.model.entity.base.BaseEntity;
 import cn.graydove.ndovel.server.center.repository.BookRepository;
 import cn.graydove.ndovel.server.center.repository.ChapterDetailRepository;
 import cn.graydove.ndovel.server.center.repository.ChapterRepository;
@@ -25,10 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -104,18 +99,18 @@ public class ChapterServiceImpl implements ChapterService {
         } else {
             chapterPage = chapterRepository.findByBookIdAndStatusIn(chapterPageRequest.getBookId(), statuses, chapterPageRequest.toPageable());
         }
-        //查询章节正文内容
-        if (Boolean.TRUE.equals(chapterPageRequest.getQueryContent())) {
-            Map<Long, ChapterDetail> contentMap = chapterDetailRepository.findByBookId(chapterPageRequest.getBookId()).stream()
-                    .collect(Collectors.toMap(ChapterDetail::getChapterId, v -> v));
-            return Paging.ofWithStream(chapterPage,
-                    chapterStream -> chapterStream
-                            .map(chapter -> BeanUtil.toBean(chapter, ChapterVO.class))
-                            .peek(chapterVO -> chapterVO.setContent(contentMap.get(chapterVO.getId()).getContent()))
-                            .collect(Collectors.toList())
-            );
+        return toChapterVO(chapterPage, chapterPageRequest.getQueryContent());
+    }
+
+    @Override
+    public Paging<ChapterVO> pageAll(ChapterPageAllRequest chapterPageAllRequest) {
+        Page<Chapter> chapterPage;
+        if (CollectionUtil.isEmpty(chapterPageAllRequest.getStatuses())) {
+            chapterPage = chapterRepository.findAll(chapterPageAllRequest.toPageable());
+        } else {
+            chapterPage = chapterRepository.findByStatusIn(chapterPageAllRequest.getStatuses(), chapterPageAllRequest.toPageable());
         }
-        return Paging.ofWithMap(chapterPage, chapter -> BeanUtil.toBean(chapter, ChapterVO.class));
+        return toChapterVO(chapterPage, chapterPageAllRequest.getQueryContent());
     }
 
     @Override
@@ -124,8 +119,8 @@ public class ChapterServiceImpl implements ChapterService {
         boolean cnt = false;
         if (StrUtil.isNotBlank(updateChapterRequest.getTitle()) || null != updateChapterRequest.getStatus()) {
              chapterRepository.findById(updateChapterRequest.getId()).ifPresent(chapter -> {
-                Optional.of(updateChapterRequest.getTitle()).filter(StrUtil::isNotBlank).ifPresent(chapter::setTitle);
-                Optional.of(updateChapterRequest.getStatus()).ifPresent(chapter::setStatus);
+                Optional.ofNullable(updateChapterRequest.getTitle()).filter(StrUtil::isNotBlank).ifPresent(chapter::setTitle);
+                Optional.ofNullable(updateChapterRequest.getStatus()).ifPresent(chapter::setStatus);
                 chapterRepository.save(chapter);
             });
             chp =  true;
@@ -138,5 +133,21 @@ public class ChapterServiceImpl implements ChapterService {
             cnt = true;
         }
         return chp || cnt;
+    }
+
+    private Paging<ChapterVO> toChapterVO(Page<Chapter> chapterPage, Boolean withContent) {
+        //查询章节正文内容
+        if (Boolean.TRUE.equals(withContent)) {
+            Set<Long> ids = chapterPage.stream().map(BaseEntity::getId).collect(Collectors.toSet());
+            Map<Long, ChapterDetail> contentMap = chapterDetailRepository.findByChapterIdIn(ids).stream()
+                    .collect(Collectors.toMap(ChapterDetail::getChapterId, v -> v));
+            return Paging.ofWithStream(chapterPage,
+                    chapterStream -> chapterStream
+                            .map(chapter -> BeanUtil.toBean(chapter, ChapterVO.class))
+                            .peek(chapterVO -> chapterVO.setContent(contentMap.get(chapterVO.getId()).getContent()))
+                            .collect(Collectors.toList())
+            );
+        }
+        return Paging.ofWithMap(chapterPage, chapter -> BeanUtil.toBean(chapter, ChapterVO.class));
     }
 }

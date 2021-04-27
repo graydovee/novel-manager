@@ -56,7 +56,7 @@ public class ControllerResponseAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public Object beforeBodyWrite(Object body, @NotNull MethodParameter methodParameter, @NotNull MediaType mediaType, Class<? extends HttpMessageConverter<?>> convertType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         if (novelProperties.isDebug()) {
-            log.info("[{}] return: {}", methodParameter.getMethod(), body);
+            log.debug("[{}] return: {}", methodParameter.getMethod(), body);
         }
         if (checkResponseBodyType(body)) {
             return body;

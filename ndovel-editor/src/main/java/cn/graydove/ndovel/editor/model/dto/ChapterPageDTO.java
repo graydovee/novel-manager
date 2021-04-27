@@ -15,6 +15,5 @@ public class ChapterPageDTO extends PageQuery {
 
     private static final long serialVersionUID = -896595825623251503L;
 
-    @NotNull
     private Long bookId;
 }

@@ -11,6 +11,7 @@ import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
@@ -30,7 +31,7 @@ public class EditorController {
     }
 
     @GetMapping("/page_chapter")
-    public Paging<ChapterVO> pageReviewChapter(@Valid ChapterPageDTO chapterPageDTO) {
+    public Paging<ChapterVO> pageReviewChapter(ChapterPageDTO chapterPageDTO) {
         return bookService.pageReviewChapter(chapterPageDTO);
     }
 
@@ -40,12 +41,12 @@ public class EditorController {
     }
 
     @PostMapping("/audit_book")
-    public Boolean auditBook(@Valid AuditDTO auditDTO) {
+    public Boolean auditBook(@RequestBody @Valid AuditDTO auditDTO) {
         return bookService.auditBook(auditDTO);
     }
 
     @PostMapping("/audit_chapter")
-    public Boolean auditChapter(@Valid AuditDTO auditDTO) {
+    public Boolean auditChapter(@RequestBody @Valid AuditDTO auditDTO) {
         return bookService.auditChapter(auditDTO);
     }
 }

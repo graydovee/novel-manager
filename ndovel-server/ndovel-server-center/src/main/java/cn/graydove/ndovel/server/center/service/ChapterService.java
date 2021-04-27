@@ -1,10 +1,7 @@
 package cn.graydove.ndovel.server.center.service;
 
 import cn.graydove.ndovel.common.response.Paging;
-import cn.graydove.ndovel.server.api.model.request.ChapterIdRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterPageRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
-import cn.graydove.ndovel.server.api.model.request.UpdateChapterRequest;
+import cn.graydove.ndovel.server.api.model.request.*;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 
 /**
@@ -22,6 +19,8 @@ public interface ChapterService {
     ChapterVO findDetail(ChapterIdRequest chapterIdRequest);
 
     Paging<ChapterVO> pageByBookId(ChapterPageRequest chapterPageRequest);
+
+    Paging<ChapterVO> pageAll(ChapterPageAllRequest chapterPageAllRequest);
 
     Boolean updateChapter(UpdateChapterRequest updateChapterRequest);
 }

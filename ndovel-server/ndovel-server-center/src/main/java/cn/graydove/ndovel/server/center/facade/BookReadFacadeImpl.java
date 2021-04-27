@@ -2,10 +2,7 @@ package cn.graydove.ndovel.server.center.facade;
 
 import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.server.api.facade.BookReadFacade;
-import cn.graydove.ndovel.server.api.model.request.BookIdRequest;
-import cn.graydove.ndovel.server.api.model.request.BookPageRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterIdRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterPageRequest;
+import cn.graydove.ndovel.server.api.model.request.*;
 import cn.graydove.ndovel.server.api.model.vo.BookVO;
 import cn.graydove.ndovel.server.api.model.vo.ChapterVO;
 import cn.graydove.ndovel.server.center.service.BookService;
@@ -32,6 +29,11 @@ public class BookReadFacadeImpl implements BookReadFacade {
     @Override
     public Paging<ChapterVO> pageChapter(ChapterPageRequest chapterPageRequest) {
         return chapterService.pageByBookId(chapterPageRequest);
+    }
+
+    @Override
+    public Paging<ChapterVO> pageAllChapter(ChapterPageAllRequest chapterPageAllRequest) {
+        return chapterService.pageAll(chapterPageAllRequest);
     }
 
     @Override

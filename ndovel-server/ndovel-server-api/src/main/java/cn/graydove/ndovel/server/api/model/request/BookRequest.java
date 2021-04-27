@@ -20,6 +20,8 @@ public class BookRequest implements Serializable {
 
     private String author;
 
+    private Long authorId;
+
     private String cover;
 
     private Set<String> category;

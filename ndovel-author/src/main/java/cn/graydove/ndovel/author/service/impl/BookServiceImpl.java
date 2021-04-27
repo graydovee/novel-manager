@@ -19,6 +19,7 @@ import cn.hutool.core.util.ObjectUtil;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collections;
 
 /**
@@ -48,17 +49,25 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Paging<ChapterVO> listReviewFailChapter(PageChapterDTO pageChapterDTO) {
-        ChapterPageRequest request = BeanUtil.toBean(pageChapterDTO, ChapterPageRequest.class);
-        request.setStatuses(Collections.singleton(PublishStatus.SAVE));
-        request.setQueryContent(false);
-        return bookReadFacade.pageChapter(request);
+        if (null == pageChapterDTO.getBookId()) {
+            ChapterPageAllRequest request = BeanUtil.toBean(pageChapterDTO, ChapterPageAllRequest.class);
+            request.setStatuses(Collections.singleton(PublishStatus.SAVE));
+            request.setQueryContent(true);
+            return bookReadFacade.pageAllChapter(request);
+        } else {
+            ChapterPageRequest request = BeanUtil.toBean(pageChapterDTO, ChapterPageRequest.class);
+            request.setStatuses(Collections.singleton(PublishStatus.SAVE));
+            request.setQueryContent(true);
+            return bookReadFacade.pageChapter(request);
+        }
     }
 
     @Override
     public Long createBook(BookDTO bookDTO) {
         BookRequest bookRequest = BeanUtil.toBean(bookDTO, BookRequest.class);
         UserVO user = UserContext.getUserOrEx();
-        bookRequest.setAuthor(user.getUsername());
+        bookRequest.setAuthorId(user.getId());
+        bookRequest.setAuthor(user.getNickname());
         bookRequest.setStatus(PublishStatus.SAVE);
         return bookWriteFacade.createBook(bookRequest);
     }
@@ -89,17 +98,21 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Boolean submitBook(SubmitDTO submitDTO) {
-        assertService.assertBookIsOwner(submitDTO.getId());
+        Long id = submitDTO.getId();
+        assertService.assertBookIsOwner(id);
         UpdateBookRequest request = new UpdateBookRequest();
-        request.setStatus(PublishStatus.RELEASE);
+        request.setId(id);
+        request.setStatus(PublishStatus.REVIEW);
         return bookWriteFacade.updateBook(request);
     }
 
     @Override
     public Boolean submitChapter(SubmitDTO submitDTO) {
-        assertService.assertChapterIsOwner(submitDTO.getId());
+        Long id = submitDTO.getId();
+        assertService.assertChapterIsOwner(id);
         UpdateChapterRequest request = new UpdateChapterRequest();
-        request.setStatus(PublishStatus.RELEASE);
+        request.setId(id);
+        request.setStatus(PublishStatus.REVIEW);
         return bookWriteFacade.updateChapter(request);
     }
 

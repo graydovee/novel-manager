@@ -19,4 +19,6 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     Page<Chapter> findByBookId(Long bookId, Pageable pageable);
 
     Page<Chapter> findByBookIdAndStatusIn(Long bookId, Collection<PublishStatus> statuses, Pageable pageable);
+
+    Page<Chapter> findByStatusIn(Collection<PublishStatus> statuses, Pageable pageable);
 }

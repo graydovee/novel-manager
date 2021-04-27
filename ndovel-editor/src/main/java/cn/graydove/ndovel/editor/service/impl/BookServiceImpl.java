@@ -39,9 +39,15 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Paging<ChapterVO> pageReviewChapter(ChapterPageDTO chapterPageDTO) {
-        ChapterPageRequest request = BeanUtil.toBean(chapterPageDTO, ChapterPageRequest.class);
-        request.setStatuses(Collections.singleton(PublishStatus.REVIEW));
-        return bookReadFacade.pageChapter(request);
+        if (null == chapterPageDTO.getBookId()) {
+            ChapterPageAllRequest request = BeanUtil.toBean(chapterPageDTO, ChapterPageAllRequest.class);
+            request.setStatuses(Collections.singleton(PublishStatus.REVIEW));
+            return bookReadFacade.pageAllChapter(request);
+        } else {
+            ChapterPageRequest request = BeanUtil.toBean(chapterPageDTO, ChapterPageRequest.class);
+            request.setStatuses(Collections.singleton(PublishStatus.REVIEW));
+            return bookReadFacade.pageChapter(request);
+        }
     }
 
     @Override

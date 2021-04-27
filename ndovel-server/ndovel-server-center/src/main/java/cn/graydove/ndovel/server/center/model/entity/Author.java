@@ -27,8 +27,4 @@ public class Author extends BaseEntity {
 
     public Author() {
     }
-
-    public Author(String name) {
-        this.name = name;
-    }
 }

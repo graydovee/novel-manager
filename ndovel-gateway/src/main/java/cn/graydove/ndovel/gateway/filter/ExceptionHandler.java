@@ -21,7 +21,7 @@ import reactor.core.publisher.Mono;
  * @author graydove
  */
 @Slf4j
-@Component
+//@Component
 @AllArgsConstructor
 public class ExceptionHandler implements ErrorWebExceptionHandler {
 

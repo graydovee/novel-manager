@@ -5,6 +5,7 @@ import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.server.api.contant.ServerTopic;
 import cn.graydove.ndovel.server.api.enums.PublishStatus;
 import cn.graydove.ndovel.server.api.model.request.*;
+import cn.graydove.ndovel.server.api.model.vo.CategoryVO;
 import cn.graydove.ndovel.server.center.model.entity.Author;
 import cn.graydove.ndovel.server.center.model.entity.Book;
 import cn.graydove.ndovel.server.center.model.entity.Category;
@@ -57,7 +58,12 @@ public class BookServiceImpl implements BookService {
         book.setName(bookRequest.getName());
         book.setIntroduce(bookRequest.getIntroduce());
         Author author = authorRepository.findByName(bookRequest.getAuthor())
-                .orElseGet(() -> authorRepository.save(new Author(bookRequest.getAuthor())));
+                .orElseGet(() -> {
+                    Author a = new Author();
+                    a.setName(bookRequest.getAuthor());
+                    a.setUserId(bookRequest.getAuthorId());
+                    return authorRepository.save(a);
+                });
         book.setAuthor(author);
         Set<Category> categorySet = Optional.ofNullable(bookRequest.getCategory())
                 .map(categories -> categories.stream()
@@ -82,7 +88,14 @@ public class BookServiceImpl implements BookService {
         } else {
             bookPage = bookRepository.findAllByStatusIn(bookPageRequest.getStatuses(), bookPageRequest.toPageable());
         }
-        return Paging.ofWithMap(bookPage, book->BeanUtil.toBean(book, BookVO.class));
+        return Paging.ofWithMap(bookPage, book-> {
+            BookVO bookVO = BeanUtil.toBean(book, BookVO.class);
+            bookVO.setType(book.getCategory().stream()
+                    .map(c -> BeanUtil.toBean(c, CategoryVO.class))
+                    .collect(Collectors.toList())
+            );
+            return bookVO;
+        });
     }
 
     @Override
