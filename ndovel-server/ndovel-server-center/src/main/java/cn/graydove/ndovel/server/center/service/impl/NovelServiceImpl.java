@@ -2,7 +2,6 @@ package cn.graydove.ndovel.server.center.service.impl;
 
 import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.logger.model.dto.VisitStatisticDTO;
-import cn.graydove.ndovel.logger.rocketmq.NovelProducer;
 import cn.graydove.ndovel.server.api.model.request.NovelPutRequest;
 import cn.graydove.ndovel.server.api.model.request.NovelSearchRequest;
 import cn.graydove.ndovel.server.api.model.vo.NovelVO;
@@ -17,8 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.StringJoiner;
