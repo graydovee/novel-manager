@@ -17,4 +17,6 @@ public interface BookService {
     Boolean updateBook(UpdateBookRequest updateBookRequest);
 
     BookVO findBook(BookIdRequest bookIdRequest);
+
+    Boolean deleteBook(BookDeleteRequest bookDeleteRequest);
 }

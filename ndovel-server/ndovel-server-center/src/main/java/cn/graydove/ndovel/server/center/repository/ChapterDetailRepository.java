@@ -20,4 +20,6 @@ public interface ChapterDetailRepository extends MongoRepository<ChapterDetail, 
     List<ChapterDetail> findByChapterIdIn(Collection<Long> chapterIds);
 
     Optional<ChapterDetail> findByChapterId(Long chapterId);
+
+    void deleteByBookId(Long bookId);
 }

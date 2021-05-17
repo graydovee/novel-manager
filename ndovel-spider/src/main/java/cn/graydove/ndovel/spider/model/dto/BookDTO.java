@@ -22,8 +22,5 @@ public class BookDTO {
     @NotBlank
     private String cover;
 
-    @NotBlank
-    private String firstChapterUrl;
-
     private Set<String> category;
 }

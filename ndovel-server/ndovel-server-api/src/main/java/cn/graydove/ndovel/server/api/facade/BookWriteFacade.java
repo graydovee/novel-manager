@@ -1,9 +1,6 @@
 package cn.graydove.ndovel.server.api.facade;
 
-import cn.graydove.ndovel.server.api.model.request.BookRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
-import cn.graydove.ndovel.server.api.model.request.UpdateBookRequest;
-import cn.graydove.ndovel.server.api.model.request.UpdateChapterRequest;
+import cn.graydove.ndovel.server.api.model.request.*;
 
 /**
  * @author graydove
@@ -15,6 +12,8 @@ public interface BookWriteFacade {
     Long appendChapter(ChapterRequest chapterRequest);
 
     Boolean updateBook(UpdateBookRequest updateBookRequest);
+
+    Boolean deleteBook(BookDeleteRequest bookDeleteRequest);
 
     Boolean updateChapter(UpdateChapterRequest updateChapterRequest);
 }

@@ -1,27 +1,19 @@
 package cn.graydove.ndovel.spider.service.impl;
 
+import cn.graydove.ndovel.common.oss.OssTemplate;
 import cn.graydove.ndovel.common.response.Response;
 import cn.graydove.ndovel.server.api.facade.NovelFacade;
-import cn.graydove.ndovel.server.api.model.request.NovelPutRequest;
-import cn.graydove.ndovel.spider.config.Tenant;
-import cn.graydove.ndovel.spider.config.TenantManager;
-import cn.graydove.ndovel.spider.model.dto.BookDTO;
-import cn.graydove.ndovel.spider.model.dto.BroadCastDTO;
-import cn.graydove.ndovel.spider.model.dto.NovelPutDTO;
+import cn.graydove.ndovel.server.api.model.request.*;
+import cn.graydove.ndovel.spider.model.dto.*;
 import cn.graydove.ndovel.spider.service.SpiderService;
 import cn.graydove.ndovel.server.api.facade.BookWriteFacade;
 import cn.graydove.ndovel.server.api.enums.PublishStatus;
-import cn.graydove.ndovel.server.api.model.request.BookRequest;
-import cn.graydove.ndovel.server.api.model.request.ChapterRequest;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author graydove
@@ -30,31 +22,20 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class SpiderServiceImpl implements SpiderService {
 
-    private static final String PUBLISH_MESSAGE_UUID = "ndovel:publish:broadcast:";
-
     @DubboReference
     private BookWriteFacade bookWriteFacade;
 
     @DubboReference
     private NovelFacade novelFacade;
 
-    private TenantManager tenantManager;
-
-    private RestTemplate restTemplate;
-
-    private StringRedisTemplate stringRedisTemplate;
-
-    public SpiderServiceImpl(TenantManager tenantManager, RestTemplate restTemplate) {
-        this.tenantManager = tenantManager;
-        this.restTemplate = restTemplate;
-    }
+    @Autowired
+    private OssTemplate ossTemplate;
 
     @Override
     public void spider(BookDTO bookDTO) {
         BookRequest bookRequest = BeanUtil.toBean(bookDTO, BookRequest.class);
         bookRequest.setStatus(PublishStatus.RELEASE);
         Long bookId = bookWriteFacade.createBook(bookRequest);
-
         for (int i=0; i < 25; ++i) {
             ChapterRequest chapterRequest = new ChapterRequest();
             chapterRequest.setBookId(bookId);
@@ -71,45 +52,39 @@ public class SpiderServiceImpl implements SpiderService {
     }
 
     @Override
-    public boolean publishNovel(NovelPutDTO novelPutDTO) {
-        String uuid = novelPutDTO.getUuid();
-        Boolean bool = stringRedisTemplate.opsForValue().setIfAbsent(PUBLISH_MESSAGE_UUID + uuid, "true", 24, TimeUnit.HOURS);
-        if (Boolean.TRUE.equals(bool)) {
-            log.info("publish novel: {}", novelPutDTO);
-            novelFacade.putNovel(novelPutDTO);
-            return true;
-        } else {
-            log.warn("repeat publish: {}", novelPutDTO);
-            return false;
-        }
+    public Boolean deleteBook(BookDeleteDTO bookDeleteDTO) {
+        BookDeleteRequest bookDeleteRequest = new BookDeleteRequest();
+        bookDeleteRequest.setBookId(bookDeleteDTO.getId());
+        return bookWriteFacade.deleteBook(bookDeleteRequest);
     }
 
     @Override
-    public void broadCaster(BroadCastDTO broadCastDTO) {
-        Tenant tenant = tenantManager.getTenant();
-        publish(tenant, broadCastDTO);
-        //广播父节点
-        for (Tenant value : tenant.getParents().values()) {
-            publish(value, broadCastDTO);
-        }
-        //广播子节点
-        for (Tenant value : tenant.getChildren().values()) {
-            publish(value, broadCastDTO);
-        }
-    }
-
-    private void publish(Tenant tenant, BroadCastDTO broadCastDTO) {
-        if (tenant == null) {
-            return;
-        }
-        if (StrUtil.equals(tenant.getUid(), broadCastDTO.getSenderUid())) {
-            return;
-        }
+    public Long createBook(BookDTO bookDTO) {
+        BookRequest bookRequest = BeanUtil.toBean(bookDTO, BookRequest.class);
+        bookRequest.setStatus(PublishStatus.RELEASE);
+        Long id = bookWriteFacade.createBook(bookRequest);
         try {
-            restTemplate.postForObject(tenant.getPublishAddress(), broadCastDTO, Response.class);
-        } catch (Throwable e) {
-            log.error("publish error: " + e.getMessage(), e);
+            uploadCover(bookDTO.getCover(), id);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
+        return id;
     }
 
+    @Override
+    public void createChapter(ChapterDTO chapterDTO) {
+        ChapterRequest chapterRequest = BeanUtil.toBean(chapterDTO, ChapterRequest.class);
+        chapterRequest.setStatus(PublishStatus.RELEASE);
+        bookWriteFacade.appendChapter(chapterRequest);
+    }
+
+    private void uploadCover(String url, Long bookId) {
+        Response<String> coverUrl = ossTemplate.upload(url, "cover/spider_cover_" + bookId);
+        if (coverUrl.getSuccess() && StrUtil.isNotBlank(coverUrl.getResult())) {
+            UpdateBookRequest request = new UpdateBookRequest();
+            request.setId(bookId);
+            request.setCover(coverUrl.getResult());
+            bookWriteFacade.updateBook(request);
+        }
+    }
 }

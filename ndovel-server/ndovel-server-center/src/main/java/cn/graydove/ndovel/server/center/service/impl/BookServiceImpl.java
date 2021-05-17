@@ -2,7 +2,6 @@ package cn.graydove.ndovel.server.center.service.impl;
 
 import cn.graydove.ndovel.common.properties.NovelProperties;
 import cn.graydove.ndovel.common.response.Paging;
-import cn.graydove.ndovel.server.api.contant.ServerTopic;
 import cn.graydove.ndovel.server.api.enums.PublishStatus;
 import cn.graydove.ndovel.server.api.model.request.*;
 import cn.graydove.ndovel.server.api.model.vo.CategoryVO;
@@ -10,9 +9,7 @@ import cn.graydove.ndovel.server.center.model.entity.Author;
 import cn.graydove.ndovel.server.center.model.entity.Book;
 import cn.graydove.ndovel.server.center.model.entity.Category;
 import cn.graydove.ndovel.server.api.model.vo.BookVO;
-import cn.graydove.ndovel.server.center.repository.AuthorRepository;
-import cn.graydove.ndovel.server.center.repository.BookRepository;
-import cn.graydove.ndovel.server.center.repository.CategoryRepository;
+import cn.graydove.ndovel.server.center.repository.*;
 import cn.graydove.ndovel.server.center.service.BookService;
 import cn.graydove.ndovel.server.center.service.NovelService;
 import cn.hutool.core.bean.BeanUtil;
@@ -20,7 +17,6 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import lombok.AllArgsConstructor;
-import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +44,11 @@ public class BookServiceImpl implements BookService {
 
     private NovelService novelService;
 
-    private RocketMQTemplate rocketMqTemplate;
+    private NovelRepository novelRepository;
+
+    private ChapterRepository chapterRepository;
+
+    private ChapterDetailRepository chapterDetailRepository;
 
 
     @Transactional(rollbackFor = {Throwable.class})
@@ -121,23 +121,46 @@ public class BookServiceImpl implements BookService {
                 .orElse(null);
     }
 
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public Boolean deleteBook(BookDeleteRequest bookDeleteRequest) {
+        Long id = bookDeleteRequest.getBookId();
+        Book book = bookRepository.findById(id).orElse(null);
+        if (null == book) {
+            return false;
+        }
+        bookRepository.deleteById(id);
+        chapterRepository.deleteByBookId(id);
+        chapterDetailRepository.deleteByBookId(id);
+        novelRepository.deleteByBookId(id);
+        return true;
+    }
+
     private void publishBook(Book book) {
         NovelPutRequest novelPutRequest = new NovelPutRequest();
-        novelPutRequest.setBookId(book.getId());
-        novelPutRequest.setName(book.getName());
-        novelPutRequest.setAuthor(book.getAuthor().getName());
-        novelPutRequest.setCover(book.getCover());
-        novelPutRequest.setIntroduce(book.getIntroduce());
-        novelPutRequest.setType(book.getCategory().stream().map(Category::getName).collect(Collectors.toSet()));
-        novelPutRequest.setFrom(novelProperties.getAddress());
-        novelPutRequest.setVisit(0L);
-        novelPutRequest.setCreateTime(new Date(LocalDateTimeUtil.toEpochMilli(book.getCreateTime())));
-        novelPutRequest.setUpdateTime(new Date(LocalDateTimeUtil.toEpochMilli(book.getUpdateTime())));
 
-        //写入本机es
-        novelService.saveNovel(novelPutRequest);
+        Long id = book.getId();
+        if (Boolean.TRUE.equals(novelService.exist(id))) {
+            novelService.updateNovel(id, novelDO -> {
+                novelDO.setName(book.getName());
+                novelDO.setIntroduce(book.getIntroduce());
+                novelDO.setCover(book.getCover());
+                return novelDO;
+            });
+        } else {
+            novelPutRequest.setBookId(book.getId());
+            novelPutRequest.setName(book.getName());
+            novelPutRequest.setAuthor(book.getAuthor().getName());
+            novelPutRequest.setCover(book.getCover());
+            novelPutRequest.setIntroduce(book.getIntroduce());
+            novelPutRequest.setType(book.getCategory().stream().map(Category::getName).collect(Collectors.toSet()));
+            novelPutRequest.setFrom(novelProperties.getAddress());
+            novelPutRequest.setVisit(0L);
+            novelPutRequest.setCreateTime(new Date(LocalDateTimeUtil.toEpochMilli(book.getCreateTime())));
+            novelPutRequest.setUpdateTime(new Date(LocalDateTimeUtil.toEpochMilli(book.getUpdateTime())));
 
-        //广播新建信息
-        rocketMqTemplate.convertAndSend(ServerTopic.TOPIC_PUBLISH_NOVEL, novelPutRequest);
+            //写入本机es
+            novelService.saveNovel(novelPutRequest);
+        }
     }
 }

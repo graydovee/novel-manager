@@ -2,6 +2,7 @@ package cn.graydove.ndovel.server.center.service.impl;
 
 import cn.graydove.ndovel.common.response.Paging;
 import cn.graydove.ndovel.logger.model.dto.VisitStatisticDTO;
+import cn.graydove.ndovel.server.api.model.request.BookIdRequest;
 import cn.graydove.ndovel.server.api.model.request.NovelPutRequest;
 import cn.graydove.ndovel.server.api.model.request.NovelSearchRequest;
 import cn.graydove.ndovel.server.api.model.vo.NovelVO;
@@ -18,7 +19,10 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author graydove
@@ -35,6 +39,28 @@ public class NovelServiceImpl implements NovelService {
         NovelDO novelDO = NovelConverter.toNovelDO(novelPutRequest);
         NovelDO save = novelRepository.save(novelDO);
         return save.getBookId();
+    }
+
+    @Override
+    public NovelVO updateNovel(Long bookId, Function<NovelDO, NovelDO> novel) {
+
+
+        return novelRepository.findByBookId(bookId)
+                .map(novel)
+                .map(novelRepository::save)
+                .map(NovelConverter::toNovelVO)
+                .orElse(null);
+    }
+
+    @Override
+    public Boolean exist(Long bookId) {
+        return novelRepository.existsByBookId(bookId) != null;
+    }
+
+    @Override
+    public Optional<NovelVO> findNovel(BookIdRequest bookIdRequest) {
+        Optional<NovelDO> novelDO = novelRepository.findByBookId(bookIdRequest.getBookId());
+        return novelDO.map(NovelConverter::toNovelVO);
     }
 
     @Override

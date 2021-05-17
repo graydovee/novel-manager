@@ -1,5 +1,7 @@
 package cn.graydove.ndovel.user.server.service.impl;
 
+import cn.graydove.ndovel.user.api.crypto.PasswordEncoder;
+import cn.graydove.ndovel.user.api.enums.RoleEnum;
 import cn.graydove.ndovel.user.api.model.dto.UserDTO;
 import cn.graydove.ndovel.user.api.model.request.AddRoleRequest;
 import cn.graydove.ndovel.user.api.model.request.UpdateUserRequest;
@@ -16,6 +18,7 @@ import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,6 +36,8 @@ public class UserServiceImpl implements UserService {
 
     private RoleRepository roleRepository;
 
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserVO findUserById(Long userId) {
         return userRepository.findById(userId).map(this::toUserVO).orElse(null);
@@ -45,8 +50,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO createUser(UserDTO userDTO) {
-        UserDO userDO = BeanUtil.toBean(userDTO, UserDO.class);
-        userDO.setRoles(roleRepository.findAllByNameIn(userDTO.getRoles()));
+        UserDO userDO = new UserDO();
+        userDO.setNickname(userDTO.getNickname());
+        userDO.setUsername(userDTO.getUsername());
+        userDO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        userDO.setRoles(roleRepository.findAllByNameIn(Collections.singleton(RoleEnum.ROLE_READER.name())));
         userRepository.save(userDO);
         return toUserVO(userDO);
     }
@@ -69,7 +77,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserVO addRole(AddRoleRequest addRoleRequest) {
-        if (CollectionUtil.isNotEmpty(addRoleRequest.getRoles())) {
+        if (CollectionUtil.isEmpty(addRoleRequest.getRoles())) {
             return null;
         }
         return userRepository.findById(addRoleRequest.getUserId()).map(userDO -> {

@@ -13,4 +13,8 @@ import java.util.Optional;
 public interface NovelRepository extends ElasticsearchRepository<NovelDO, String> {
 
     Optional<NovelDO> findByBookId(Long bookId);
+
+    NovelDO existsByBookId(Long bookId);
+
+    void deleteByBookId(Long bookId);
 }

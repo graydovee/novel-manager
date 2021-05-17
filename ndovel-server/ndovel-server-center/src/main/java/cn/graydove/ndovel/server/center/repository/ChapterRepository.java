@@ -21,4 +21,6 @@ public interface ChapterRepository extends JpaRepository<Chapter, Long> {
     Page<Chapter> findByBookIdAndStatusIn(Long bookId, Collection<PublishStatus> statuses, Pageable pageable);
 
     Page<Chapter> findByStatusIn(Collection<PublishStatus> statuses, Pageable pageable);
+
+    void deleteByBookId(Long bookId);
 }
