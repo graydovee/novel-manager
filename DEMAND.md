@@ -10,8 +10,7 @@
 
 
 ## 功能模块划分
-- ndovel-api：接口模块
-- ndovel-frame：框架模块，进行一些全局配置
+- ndovel-common：通用模块，进行一些全局配置
 - ndovel-gateway：网关模块，唯一对外提供服务接口
 - ndovel-server：服务器模块（服务提供者），执行业务逻辑
     - 数据维护：小说数据
@@ -49,6 +48,8 @@
     - 数据权限：读写
     - 功能：
         - 操作数据发布状态
+- ndovel-spider：直接新增小说接口
+- ndovel-logger：日志模块，进行一些定时任务，~~主要用于数据统计
 
-> - [权限框架](https://github.com/graydovee/jwt-spring-boot-starter)
-> - [http请求框架](https://github.com/graydovee/httpMaster)
+> - [~~权限框架~~](https://github.com/graydovee/jwt-spring-boot-starter)
+> - [~~http请求框架~~](https://github.com/graydovee/httpMaster)
