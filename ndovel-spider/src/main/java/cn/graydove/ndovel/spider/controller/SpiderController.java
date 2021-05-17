@@ -3,7 +3,7 @@ package cn.graydove.ndovel.spider.controller;
 import cn.graydove.ndovel.spider.model.dto.BookDTO;
 import cn.graydove.ndovel.spider.model.dto.BookDeleteDTO;
 import cn.graydove.ndovel.spider.model.dto.ChapterDTO;
-import cn.graydove.ndovel.spider.service.SpiderService;
+import cn.graydove.ndovel.spider.service.BookService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,20 +19,20 @@ import javax.validation.Valid;
 @AllArgsConstructor
 public class SpiderController {
 
-    private SpiderService spiderService;
+    private BookService bookService;
 
     @PostMapping("/book")
     public Long createBook(@RequestBody @Valid BookDTO bookDTO) {
-        return spiderService.createBook(bookDTO);
+        return bookService.createBook(bookDTO);
     }
 
     @PostMapping("/chapter")
     public void createChapter(@RequestBody @Valid ChapterDTO chapterDTO) {
-        spiderService.createChapter(chapterDTO);
+        bookService.createChapter(chapterDTO);
     }
 
     @DeleteMapping("/book")
     public void deleteBook(@Valid BookDeleteDTO bookDeleteDTO) {
-        spiderService.deleteBook(bookDeleteDTO);
+        bookService.deleteBook(bookDeleteDTO);
     }
 }

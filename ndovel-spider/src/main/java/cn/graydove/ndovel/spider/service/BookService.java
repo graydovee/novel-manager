@@ -5,9 +5,7 @@ import cn.graydove.ndovel.spider.model.dto.*;
 /**
  * @author graydove
  */
-public interface SpiderService {
-
-    void spider(BookDTO bookDTO);
+public interface BookService {
 
     Long createBook(BookDTO bookDTO);
 
