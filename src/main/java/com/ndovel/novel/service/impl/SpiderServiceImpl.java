@@ -11,9 +11,8 @@ import com.ndovel.novel.service.SpiderService;
 import com.ndovel.novel.spider.core.IndexSpider;
 import com.ndovel.novel.spider.core.NovelSpider;
 import com.ndovel.novel.spider.core.SearchSpider;
-import com.ndovel.novel.spider.core.impl.CommonNovelSpider;
-import com.ndovel.novel.spider.core.impl.IndexSpiderImpl;
-import com.ndovel.novel.spider.core.impl.SearchSpiderImpl;
+import com.ndovel.novel.spider.core.impl.*;
+import com.ndovel.novel.spider.remote.service.SpiderHttpService;
 import com.ndovel.novel.spider.util.HttpClientUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -34,6 +33,7 @@ public class SpiderServiceImpl implements SpiderService {
     private VisitRepository visitRepository;
     private SpiderInfoRepository spiderInfoRepository;
     private AsyncService asyncService;
+    private SpiderHttpService spiderHttpService;
 
     public SpiderServiceImpl(AuthorRepository authorRepository,
                              MatchRexRepository matchRexRepository,
@@ -41,7 +41,8 @@ public class SpiderServiceImpl implements SpiderService {
                              VisitRepository visitRepository,
                              SpiderInfoRepository spiderInfoRepository,
                              AsyncService asyncService,
-                             SpiderProperties spiderProperties) {
+                             SpiderProperties spiderProperties,
+                             SpiderHttpService spiderHttpService) {
         this.authorRepository = authorRepository;
         this.matchRexRepository = matchRexRepository;
         this.bookRepository = bookRepository;
@@ -49,6 +50,7 @@ public class SpiderServiceImpl implements SpiderService {
         this.spiderInfoRepository = spiderInfoRepository;
         this.asyncService = asyncService;
         this.spiderProperties = spiderProperties;
+        this.spiderHttpService = spiderHttpService;
     }
 
     @Override
@@ -120,13 +122,13 @@ public class SpiderServiceImpl implements SpiderService {
     @Override
     public List<SearchResult> spiderByName(String name) {
         log.info("搜索小说：" + name);
-        SearchSpider searchSpider = new SearchSpiderImpl();
+        SearchSpider searchSpider = new RemoteSearchSpider(spiderHttpService);
         return searchSpider.search(name);
     }
 
     @Override
     public TempBook spiderByIndex(String url) {
-        IndexSpider indexSpider = new IndexSpiderImpl();
+        IndexSpider indexSpider = new RemoteIndexSpider(spiderHttpService);
         return indexSpider.getTempBook(url);
     }
 

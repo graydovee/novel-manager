@@ -3,6 +3,7 @@ package com.ndovel.novel.controller;
 import com.ndovel.novel.model.dto.VisitDTO;
 import com.ndovel.novel.model.vo.Response;
 import com.ndovel.novel.service.VisitService;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -28,7 +29,7 @@ public class VisitController {
     }
 
     @GetMapping("/admin/visit")
-    public Response detail(Integer bookId, Date begin, Date end) {
+    public Response detail(Integer bookId, @DateTimeFormat(pattern="yyyy-MM-dd") Date begin, @DateTimeFormat(pattern="yyyy-MM-dd")Date end) {
         if (bookId != null && bookId > 0) {
             return Response.success(visitService.getData(bookId, begin, end));
         }

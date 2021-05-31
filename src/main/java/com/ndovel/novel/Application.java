@@ -1,5 +1,6 @@
 package com.ndovel.novel;
 
+import cn.graydove.httpmaster.starter.config.EnableHttpMaster;
 import com.ndovel.novel.repository.base.BaseRepositoryFactoryBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -11,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaRepositories(basePackages = "com.ndovel.novel.repository", repositoryFactoryBeanClass = BaseRepositoryFactoryBean.class)
 @EnableAsync
 @EnableScheduling
+@EnableHttpMaster
 public class Application {
 
 	public static void main(String[] args) {
