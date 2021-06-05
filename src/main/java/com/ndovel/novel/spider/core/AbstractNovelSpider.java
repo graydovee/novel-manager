@@ -3,6 +3,7 @@ package com.ndovel.novel.spider.core;
 
 import com.ndovel.novel.model.dto.ChapterDTO;
 import com.ndovel.novel.model.dto.ContentDTO;
+import com.ndovel.novel.model.dto.TempChapter;
 import com.ndovel.novel.spider.util.UrlUtils;
 import com.ndovel.novel.utils.StringUtils;
 import lombok.Getter;
@@ -91,4 +92,15 @@ public abstract class AbstractNovelSpider extends AbstractSpider implements Nove
 
     }
 
+    @Override
+    public TempChapter getTempChapter() {
+        TempChapter tempChapter = null;
+        if (content != null) {
+            tempChapter = new TempChapter();
+            tempChapter.setContent(content.getInfo());
+            tempChapter.setUrl(url);
+            tempChapter.setTitle(chapter.getTitle());
+        }
+        return tempChapter;
+    }
 }

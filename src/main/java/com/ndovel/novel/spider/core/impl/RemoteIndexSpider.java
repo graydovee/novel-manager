@@ -28,7 +28,7 @@ public class RemoteIndexSpider implements IndexSpider {
 
     @Override
     public TempBook getTempBook(String url) {
-        SpiderHttpService.ResponseNovelIndex response = spiderHttpService.index(url);
+        Response<NovelIndex> response = spiderHttpService.index(url);
         if (response.getCode() == 200) {
             NovelIndex index = response.getData();
             TempBook tempBook = new TempBook();

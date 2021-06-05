@@ -2,6 +2,7 @@ package com.ndovel.novel.spider.remote.service;
 
 import cn.graydove.httpmaster.starter.annotation.HttpService;
 import cn.graydove.httpmaster.starter.annotation.method.HttpGet;
+import com.ndovel.novel.spider.remote.model.NovelChapter;
 import com.ndovel.novel.spider.remote.model.NovelIndex;
 import com.ndovel.novel.spider.remote.model.Response;
 import com.ndovel.novel.spider.remote.model.SearchResult;
@@ -13,14 +14,11 @@ import com.ndovel.novel.spider.remote.model.SearchResult;
 public interface SpiderHttpService {
 
     @HttpGet(path = "search")
-    ResponseSearchResult search(String name, String url);
+    Response<SearchResult> search(String name, String url);
 
     @HttpGet(path = "index")
-    ResponseNovelIndex index(String url);
+    Response<NovelIndex> index(String url);
 
-    class ResponseNovelIndex extends Response<NovelIndex> {
-    }
-
-    class ResponseSearchResult extends Response<SearchResult> {
-    }
+    @HttpGet(path = "chapter")
+    Response<NovelChapter> chapter(String url);
 }

@@ -14,7 +14,7 @@ import com.ndovel.novel.repository.ContentRepository;
 import com.ndovel.novel.repository.SpiderInfoRepository;
 import com.ndovel.novel.service.AsyncService;
 import com.ndovel.novel.spider.core.NovelSpider;
-import com.ndovel.novel.spider.core.impl.CommonNovelSpider;
+import com.ndovel.novel.spider.core.SpiderFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -27,39 +27,44 @@ public class AsyncServiceImpl implements AsyncService {
     private ChapterRepository chapterRepository;
     private BookRepository bookRepository;
     private SpiderInfoRepository spiderInfoRepository;
+    private SpiderFactory spiderFactory;
 
     public AsyncServiceImpl(ContentRepository contentRepository,
                             ChapterRepository chapterRepository,
                             BookRepository bookRepository,
-                            SpiderInfoRepository spiderInfoRepository) {
+                            SpiderInfoRepository spiderInfoRepository,
+                            SpiderFactory spiderFactory) {
         this.contentRepository = contentRepository;
         this.chapterRepository = chapterRepository;
         this.bookRepository = bookRepository;
         this.spiderInfoRepository = spiderInfoRepository;
+        this.spiderFactory = spiderFactory;
     }
 
     @Async
     @Override
-    public void down(SpiderInfo spiderInfo, Boolean isNotFist){
+    public void down(SpiderInfo spiderInfo, Boolean isNotFist) {
         Book book = spiderInfo.getBook();
-        if(book==null)
+        if (book == null) {
             throw new InvalidArgsException();
+        }
 
-        NovelSpider spider = new CommonNovelSpider(new SpiderInfoDTO().init(spiderInfo));
+        NovelSpider spider = spiderFactory.newNovelSpider(new SpiderInfoDTO().init(spiderInfo));
 
-        if (isNotFist)
+        if (isNotFist) {
             spider.run();
+        }
 
 
         int spiderTimes = 0;
         //爬取
-        while (spider.hasNext()){
+        while (spider.hasNext()) {
             String preUrl = spider.getUrl();
             spider.run();
 
             ChapterDTO chapter = spider.getChapter();
             ContentDTO content = spider.getContent();
-            if(chapter!=null && content!=null){
+            if (chapter != null && content != null) {
                 spiderInfo.setUrl(preUrl);
 
                 log.info(chapter.getTitle());
@@ -72,8 +77,8 @@ public class AsyncServiceImpl implements AsyncService {
                 chapterRepository.save(newChapter);
 
                 Chapter oldChapter = spiderInfo.getFinalChapter();
-                if(spiderInfo.getFinalChapter() == null){
-                    if(!isNotFist){
+                if (spiderInfo.getFinalChapter() == null) {
+                    if (!isNotFist) {
                         book.setFirstChapter(newChapter.getId());
                         bookRepository.save(book);
                     }
@@ -92,6 +97,6 @@ public class AsyncServiceImpl implements AsyncService {
     @Async
     @Override
     public void down(SpiderInfo spiderInfo) {
-        down(spiderInfo ,false);
+        down(spiderInfo, false);
     }
 }

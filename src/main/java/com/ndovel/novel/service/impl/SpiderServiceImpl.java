@@ -11,8 +11,8 @@ import com.ndovel.novel.service.SpiderService;
 import com.ndovel.novel.spider.core.IndexSpider;
 import com.ndovel.novel.spider.core.NovelSpider;
 import com.ndovel.novel.spider.core.SearchSpider;
+import com.ndovel.novel.spider.core.SpiderFactory;
 import com.ndovel.novel.spider.core.impl.*;
-import com.ndovel.novel.spider.remote.service.SpiderHttpService;
 import com.ndovel.novel.spider.util.HttpClientUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -33,7 +33,7 @@ public class SpiderServiceImpl implements SpiderService {
     private VisitRepository visitRepository;
     private SpiderInfoRepository spiderInfoRepository;
     private AsyncService asyncService;
-    private SpiderHttpService spiderHttpService;
+    private SpiderFactory spiderFactory;
 
     public SpiderServiceImpl(AuthorRepository authorRepository,
                              MatchRexRepository matchRexRepository,
@@ -42,7 +42,7 @@ public class SpiderServiceImpl implements SpiderService {
                              SpiderInfoRepository spiderInfoRepository,
                              AsyncService asyncService,
                              SpiderProperties spiderProperties,
-                             SpiderHttpService spiderHttpService) {
+                             SpiderFactory spiderFactory) {
         this.authorRepository = authorRepository;
         this.matchRexRepository = matchRexRepository;
         this.bookRepository = bookRepository;
@@ -50,7 +50,7 @@ public class SpiderServiceImpl implements SpiderService {
         this.spiderInfoRepository = spiderInfoRepository;
         this.asyncService = asyncService;
         this.spiderProperties = spiderProperties;
-        this.spiderHttpService = spiderHttpService;
+        this.spiderFactory = spiderFactory;
     }
 
     @Override
@@ -61,10 +61,11 @@ public class SpiderServiceImpl implements SpiderService {
         spiderInfo.setMatchRex(matchRexRepository.findOneIsExist(spiderIndex.getMatchRexId())
                 .orElseGet(()->{
                     Page<MatchRex> isExist = matchRexRepository.findIsExist(PageRequest.of(0, 1));
-                    if (isExist.getTotalElements() > 0)
+                    if (isExist.getTotalElements() > 0){
                         return  isExist.getContent().get(0);
-                    else
+                    } else {
                         throw new DataIsNotExistException();
+                    }
                 }));
 
         log.info("开始爬取：" + spiderIndex.getBookName());
@@ -122,13 +123,13 @@ public class SpiderServiceImpl implements SpiderService {
     @Override
     public List<SearchResult> spiderByName(String name) {
         log.info("搜索小说：" + name);
-        SearchSpider searchSpider = new RemoteSearchSpider(spiderHttpService);
+        SearchSpider searchSpider = spiderFactory.newSearchSpider();
         return searchSpider.search(name);
     }
 
     @Override
     public TempBook spiderByIndex(String url) {
-        IndexSpider indexSpider = new RemoteIndexSpider(spiderHttpService);
+        IndexSpider indexSpider = spiderFactory.newIndexSpider();
         return indexSpider.getTempBook(url);
     }
 
@@ -150,9 +151,10 @@ public class SpiderServiceImpl implements SpiderService {
             spiderInfo.setMatchRex(new MatchRexDTO().init(rex));
         }
 
-        return new CommonNovelSpider(spiderInfo);
+        return spiderFactory.newNovelSpider(spiderInfo);
     }
 
+    @Override
     public void saveImg(String imgUrl, String imgName) throws RequestException, IOException {
         File file = new File(spiderProperties.getCoverPath());
         if (!file.exists()) {

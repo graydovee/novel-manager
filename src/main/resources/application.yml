@@ -24,7 +24,10 @@ logging:
     path: ./logs
 
 http-master:
-  engine: httpClient
+  engine:
+    type: httpClient
+    retry:
+      enable: true
 
 spider:
   coverPath: ./cover
