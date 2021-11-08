@@ -1,5 +1,6 @@
 package com.ndovel.novel.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ndovel.novel.model.dto.VisitDTO;
 import com.ndovel.novel.model.vo.Response;
 import com.ndovel.novel.service.VisitService;
@@ -29,7 +30,7 @@ public class VisitController {
     }
 
     @GetMapping("/admin/visit")
-    public Response detail(Integer bookId, @DateTimeFormat(pattern="yyyy-MM-dd") Date begin, @DateTimeFormat(pattern="yyyy-MM-dd")Date end) {
+    public Response detail(Integer bookId, @JsonFormat(pattern="yyyy-MM-dd") Date begin, @JsonFormat(pattern="yyyy-MM-dd")Date end) {
         if (bookId != null && bookId > 0) {
             return Response.success(visitService.getData(bookId, begin, end));
         }
