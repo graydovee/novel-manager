@@ -1,5 +1,4 @@
 # Created by .ignore support plugin (hsz.mobi)
-.gitignore
 .idea/.gitignore
 .idea/.name
 .idea/compiler.xml
@@ -10,4 +9,7 @@
 .idea/misc.xml
 .idea/modules.xml
 .idea/vcs.xml
+/target
+/logs
+application.yml
 novel.iml
