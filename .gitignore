@@ -1,15 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea/.gitignore
-.idea/.name
-.idea/compiler.xml
-.idea/encodings.xml
-.idea/inspectionProfiles/
-.idea/jarRepositories.xml
-.idea/libraries/
-.idea/misc.xml
-.idea/modules.xml
-.idea/vcs.xml
-/target
-/logs
+.idea
+target
+logs
 application.yml
 novel.iml
