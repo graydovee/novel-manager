@@ -16,7 +16,7 @@ public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
-    @JsonIgnore
+//    @JsonIgnore
     private Integer id;
 
     @Column(name = "name", columnDefinition = "varchar(50)", unique = true)
